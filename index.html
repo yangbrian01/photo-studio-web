@@ -24,9 +24,6 @@
         .filter-item.active { border-color: #000; background-color: #f8f9fa; }
         .slide-up { animation: slideUp 0.3s ease-out forwards; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        /* 復原按鈕禁用狀態 */
-        .history-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     </style>
 </head>
 <body class="text-gray-900 antialiased relative py-10">
@@ -43,8 +40,7 @@
 
         <div id="step1-container" class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100 transition-all">
             <h2 class="text-base font-medium mb-6 flex items-center tracking-wider text-gray-700">
-                <span class="w-6 h-6 shrink-0 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">1</span>
-                填寫訂單資訊
+                <span class="w-6 h-6 shrink-0 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">1</span>填寫訂單資訊
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
@@ -53,9 +49,7 @@
                 </div>
                 <input type="text" id="orderID" placeholder="蝦皮訂單編號" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black transition font-light text-sm">
             </div>
-            <button id="nextStepBtn" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-black transition text-sm shadow-md">
-                進入線上設計
-            </button>
+            <button id="nextStepBtn" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-black transition text-sm shadow-md">進入線上設計</button>
         </div>
 
         <div id="step2-container" class="bg-white rounded-2xl shadow-sm border border-gray-100 hidden fade-in overflow-hidden relative">
@@ -81,7 +75,6 @@
                         <div class="grid grid-cols-8 gap-1.5 justify-items-center" id="colorPalette"></div>
                     </div>
                 </div>
-
                 <div class="flex items-center gap-2">
                     <button onclick="deleteObj()" class="w-10 h-10 bg-red-50 text-red-400 hover:text-red-600 hover:bg-red-100 rounded-xl transition"><i class="fa-regular fa-trash-can"></i></button>
                 </div>
@@ -103,34 +96,38 @@
                     </div>
                 </div>
 
-                <div class="flex justify-between items-center max-w-md mx-auto">
-                    <div class="flex gap-2">
-                        <button id="undoBtn" onclick="undo()" disabled class="history-btn w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition"><i class="fa-solid fa-arrow-rotate-left"></i></button>
-                        <button id="redoBtn" onclick="redo()" disabled class="history-btn w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition"><i class="fa-solid fa-arrow-rotate-right"></i></button>
-                    </div>
-
-                    <div class="flex gap-4">
-                        <label class="flex flex-col items-center gap-1.5 cursor-pointer text-gray-600 hover:text-black">
-                            <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-regular fa-image"></i></div><span class="text-[10px] font-light">照片</span>
-                            <input type="file" id="imageInput" accept="image/*" class="hidden">
-                        </label>
-                        <button onclick="addText()" class="flex flex-col items-center gap-1.5 text-gray-600 hover:text-black">
-                            <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-solid fa-t"></i></div><span class="text-[10px] font-light">文字</span>
-                        </button>
-                        <button onclick="openLibrary()" class="flex flex-col items-center gap-1.5 text-gray-600 hover:text-black">
-                            <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-regular fa-face-smile"></i></div><span class="text-[10px] font-light">貼紙</span>
-                        </button>
-                        <button onclick="clearCanvas()" class="flex flex-col items-center gap-1.5 text-red-400 hover:text-red-500">
-                            <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-lg"><i class="fa-regular fa-trash-can"></i></div><span class="text-[10px] font-light">清空</span>
-                        </button>
-                    </div>
+                <div class="flex justify-around items-center max-w-md mx-auto">
+                    <label class="flex flex-col items-center gap-1.5 cursor-pointer text-gray-600 hover:text-black transition">
+                        <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-regular fa-image"></i></div><span class="text-xs font-light">載入照片</span>
+                        <input type="file" id="imageInput" accept="image/*" class="hidden">
+                    </label>
+                    <button onclick="addText()" class="flex flex-col items-center gap-1.5 text-gray-600 hover:text-black transition">
+                        <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-solid fa-t"></i></div><span class="text-xs font-light">文字</span>
+                    </button>
+                    <button onclick="openLibrary()" class="flex flex-col items-center gap-1.5 text-gray-600 hover:text-black transition">
+                        <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-regular fa-face-smile"></i></div><span class="text-xs font-light">貼紙圖庫</span>
+                    </button>
+                    <button onclick="clearCanvas()" class="flex flex-col items-center gap-1.5 text-red-300 hover:text-red-500 transition">
+                        <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-lg"><i class="fa-solid fa-rotate-left"></i></div><span class="text-xs font-light">清空畫布</span>
+                    </button>
                 </div>
             </div>
-        </div>
 
-        <div class="max-w-xs mx-auto mt-6">
-            <button id="submitBtn" onclick="uploadDesign()" class="w-full bg-black text-white py-4 rounded-xl font-light tracking-[0.2em] hover:bg-gray-800 transition duration-300 text-sm hidden fade-in shadow-xl">確認並上傳設計</button>
-            <p id="statusMsg" class="mt-4 text-center text-sm font-light tracking-wide"></p>
+            <div class="bg-gray-900 px-6 py-4 flex justify-between items-center text-white">
+                <div class="flex flex-col">
+                    <span class="text-xs font-light tracking-wide text-gray-400">目前購物車</span>
+                    <span class="text-lg font-medium tracking-wide">已設計 <span id="cartCount" class="text-blue-400">0</span> 張</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="addToCart()" class="bg-white text-black px-4 py-2 rounded-lg text-xs font-medium tracking-wide hover:bg-gray-200 transition">
+                        + 暫存此張
+                    </button>
+                    <button id="submitBtn" onclick="uploadCart()" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-xs font-medium tracking-wide hover:bg-blue-600 transition disabled:opacity-50">
+                        全部送出
+                    </button>
+                </div>
+            </div>
+            <p id="statusMsg" class="pb-4 bg-gray-900 text-center text-xs font-light tracking-wide text-gray-400"></p>
         </div>
     </div>
 
@@ -142,7 +139,7 @@
             <div class="space-y-3">
                 <button onclick="alert('前往蝦皮')" class="w-full bg-black text-white py-3 rounded-xl font-light tracking-widest text-sm">前往蝦皮下單</button>
                 <button onclick="enterPreview()" class="w-full bg-white text-gray-500 border border-gray-200 py-3 rounded-xl font-light tracking-widest text-sm">我只想先預覽效果</button>
-                <button onclick="document.getElementById('orderModal').classList.add('hidden')" class="text-xs text-gray-400 mt-2">返回修改</button>
+                <button onclick="document.getElementById('orderModal').classList.add('hidden')" class="text-xs text-gray-400 mt-2 hover:text-gray-600">返回修改</button>
             </div>
         </div>
     </div>
@@ -162,24 +159,25 @@
     </div>
 
     <script>
+        // 你的最新 GAS 網址
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
+        
         let isPreviewMode = false, canvas, userImageObject;
         const C_W = 300, C_H = 456, P_LEFT = 18, P_TOP = 18, P_WIDTH = 264, P_HEIGHT = 338; 
         let isPolaroidLayout = true; 
 
-        // 歷史紀錄系統變數
-        let historyStack = [];
-        let historyIndex = -1;
-        let isHistoryProcessing = false;
+        // 🛒 購物車陣列
+        let photoCart = [];
 
         const PREMIUM_COLORS = ['#000000', '#595959', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#fce4ec', '#fff0f5', '#1976d2', '#64b5f6', '#bbdefb', '#e6f7ff'];
 
-        // --- 步驟邏輯 ---
+        // --- 步驟一 ---
         document.getElementById('nextStepBtn').onclick = () => {
-            const userName = document.getElementById('userName').value.trim();
-            if (!userName) { document.getElementById('nameError').classList.remove('hidden'); return; }
-            document.getElementById('nameError').classList.add('hidden');
-            if (!document.getElementById('orderID').value.trim()) { document.getElementById('orderModal').classList.remove('hidden'); } 
+            const userNameInput = document.getElementById('userName');
+            const orderIDInput = document.getElementById('orderID');
+            if (!userNameInput.value.trim()) { document.getElementById('nameError').classList.remove('hidden'); userNameInput.classList.add('border-red-400'); return; }
+            document.getElementById('nameError').classList.add('hidden'); userNameInput.classList.remove('border-red-400');
+            if (!orderIDInput.value.trim()) { document.getElementById('orderModal').classList.remove('hidden'); } 
             else { isPreviewMode = false; unlockStep2(); }
         };
         function enterPreview() { document.getElementById('orderModal').classList.add('hidden'); isPreviewMode = true; unlockStep2(); }
@@ -187,84 +185,23 @@
         function unlockStep2() {
             document.getElementById('step1-container').classList.add('opacity-50', 'pointer-events-none');
             document.getElementById('step2-container').classList.remove('hidden');
-            document.getElementById('submitBtn').classList.remove('hidden');
-            if (isPreviewMode) {
-                document.getElementById('submitBtn').innerText = "預覽完成，請前往蝦皮下單";
-                document.getElementById('submitBtn').classList.replace('bg-black', 'bg-gray-400');
-            }
             setTimeout(() => { if (!canvas) initCanvas(); document.getElementById('step2-container').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
         }
 
-        // --- 畫布與歷史紀錄 ---
+        // --- 畫布系統 ---
         function initCanvas() {
-            // 自訂 toObject 以保留客製化屬性 (這對 Undo/Redo 遮罩很重要)
-            fabric.Object.prototype.toObject = (function(toObject) {
-                return function() { return fabric.util.object.extend(toObject.call(this), { id: this.id, frameId: this.frameId }); };
-            })(fabric.Object.prototype.toObject);
-
             canvas = new fabric.Canvas('editorCanvas', { width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true });
-            
             const palette = document.getElementById('colorPalette');
-            PREMIUM_COLORS.forEach((color, i) => {
-                const dot = document.createElement('div'); dot.className = `color-dot ${i === 0 ? 'active' : ''}`; dot.style.backgroundColor = color;
+            PREMIUM_COLORS.forEach((color, index) => {
+                const dot = document.createElement('div'); dot.className = `color-dot ${index === 0 ? 'active' : ''}`; dot.style.backgroundColor = color;
                 dot.onclick = () => { document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active')); dot.classList.add('active'); setTextColor(color); };
                 palette.appendChild(dot);
             });
-            fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 9 });
-            
+            fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 9, cornerStyle: 'circle' });
             const placeholder = new fabric.Rect({ id: 'placeholder', left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, fill: '#f9fafb', stroke: '#e5e7eb', strokeDashArray: [3, 3], selectable: false, evented: false });
             canvas.add(placeholder);
-
             canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection);
             canvas.on('selection:cleared', () => document.getElementById('objectTools').classList.add('hidden'));
-
-            // 監聽畫布改變，存入歷史紀錄
-            canvas.on('object:added', saveHistory);
-            canvas.on('object:modified', saveHistory);
-            canvas.on('object:removed', saveHistory);
-            saveHistory(); // 存初始空白狀態
-        }
-
-        // --- 歷史紀錄 (Undo/Redo) 核心 ---
-        function saveHistory() {
-            if (isHistoryProcessing) return;
-            // 如果在歷史中間插入新動作，砍掉後面的未來
-            if (historyIndex < historyStack.length - 1) { historyStack = historyStack.slice(0, historyIndex + 1); }
-            historyStack.push(JSON.stringify(canvas));
-            historyIndex++;
-            updateHistoryButtons();
-        }
-
-        function updateHistoryButtons() {
-            document.getElementById('undoBtn').disabled = historyIndex <= 0;
-            document.getElementById('redoBtn').disabled = historyIndex >= historyStack.length - 1;
-        }
-
-        function undo() {
-            if (historyIndex > 0) {
-                isHistoryProcessing = true;
-                historyIndex--;
-                canvas.loadFromJSON(historyStack[historyIndex], function() {
-                    canvas.renderAll();
-                    // 重新抓取 userImageObject 參照
-                    userImageObject = canvas.getObjects().find(o => o.frameId === 'userImage');
-                    isHistoryProcessing = false;
-                    updateHistoryButtons();
-                });
-            }
-        }
-
-        function redo() {
-            if (historyIndex < historyStack.length - 1) {
-                isHistoryProcessing = true;
-                historyIndex++;
-                canvas.loadFromJSON(historyStack[historyIndex], function() {
-                    canvas.renderAll();
-                    userImageObject = canvas.getObjects().find(o => o.frameId === 'userImage');
-                    isHistoryProcessing = false;
-                    updateHistoryButtons();
-                });
-            }
         }
 
         function onSelection() {
@@ -277,13 +214,13 @@
         }
 
         function toggleLayout() {
-            isPolaroidLayout = !isPolaroidLayout; document.getElementById('layoutText').innerText = isPolaroidLayout ? "目前: 白框" : "目前: 滿版";
+            isPolaroidLayout = !isPolaroidLayout; document.getElementById('layoutText').innerText = isPolaroidLayout ? "目前: 拍立得白框" : "目前: 全滿版";
             const placeholder = canvas.getObjects().find(o => o.id === 'placeholder'); if (placeholder) placeholder.set('opacity', isPolaroidLayout ? 1 : 0);
             if (userImageObject) {
                 if (isPolaroidLayout) userImageObject.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
                 else userImageObject.set('clipPath', null);
             }
-            canvas.requestRenderAll(); saveHistory();
+            canvas.requestRenderAll();
         }
 
         document.getElementById('imageInput').onchange = (e) => {
@@ -291,31 +228,34 @@
             const reader = new FileReader();
             reader.onload = (f) => {
                 fabric.Image.fromURL(f.target.result, (img) => {
+                    if (userImageObject) canvas.remove(userImageObject); // 替換舊圖
+                    userImageObject = img;
                     const targetW = isPolaroidLayout ? P_WIDTH : C_W; const targetH = isPolaroidLayout ? P_HEIGHT : C_H;
                     const scale = Math.max(targetW / img.width, targetH / img.height);
                     img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center', left: C_W / 2, top: isPolaroidLayout ? P_TOP + (P_HEIGHT / 2) : C_H / 2, frameId: 'userImage' });
                     if (isPolaroidLayout) img.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
-                    
-                    // 刪除舊照片
-                    if (userImageObject) canvas.remove(userImageObject);
-                    userImageObject = img;
                     canvas.add(img); canvas.sendToBack(img); canvas.bringForward(img); canvas.setActiveObject(img);
                 });
             }; reader.readAsDataURL(file); e.target.value = '';
         };
 
         function addText() { const text = new fabric.IText('輸入文字...', { left: C_W / 2, top: C_H - 50, fontFamily: 'Noto Sans TC', fontSize: 24, fill: '#000000', originX: 'center', originY: 'center' }); canvas.add(text); canvas.bringToFront(text); canvas.setActiveObject(text); }
-        function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); saveHistory(); } }
-        document.getElementById('fontFamily').addEventListener('change', async function(e) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { await document.fonts.load(`16px "${e.target.value}"`); obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); saveHistory(); } });
+        function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); } }
+        document.getElementById('fontFamily').addEventListener('change', async function(e) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { await document.fonts.load(`16px "${e.target.value}"`); obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); } });
 
         function openLibrary() { document.getElementById('libraryModal').classList.remove('hidden'); }
         function addSticker(url) { document.getElementById('libraryModal').classList.add('hidden'); fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2 }); canvas.add(img); canvas.bringToFront(img); canvas.setActiveObject(img); }); }
 
-        // 濾鏡
+        // 💣 徹底修復的濾鏡系統 (移除 clipPath 影響)
         function applyFilter(filterName, btn) {
             document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             if (!userImageObject) return;
+
+            // 解決 Fabric.js 濾鏡縮到左上角的 Bug: 暫時拔掉 clipPath
+            const tempClip = userImageObject.clipPath;
+            userImageObject.clipPath = null;
             userImageObject.filters = [];
+
             switch (filterName) {
                 case 'Original': break; 
                 case 'KPop': userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 })); userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffe4e1', mode: 'tint', alpha: 0.25 })); break;
@@ -326,25 +266,72 @@
                 case 'Mono': userImageObject.filters.push(new fabric.Image.filters.Grayscale()); break;
                 case 'Fresh': userImageObject.filters.push(new fabric.Image.filters.Saturation({ saturation: 0.15 })); userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); break;
             }
-            userImageObject.applyFilters(); canvas.requestRenderAll(); saveHistory();
+            
+            userImageObject.applyFilters();
+            // 算完濾鏡後，再把 clipPath 裝回去
+            userImageObject.clipPath = tempClip;
+            canvas.requestRenderAll();
         }
 
         function bringFront() { const obj = canvas.getActiveObject(); if(obj) { canvas.bringToFront(obj); canvas.requestRenderAll(); } }
         function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); if(userImageObject) canvas.bringForward(userImageObject); canvas.requestRenderAll(); } }
         function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { if(obj === userImageObject) userImageObject = null; canvas.remove(obj); canvas.discardActiveObject(); document.getElementById('objectTools').classList.add('hidden'); } }
-        function clearCanvas() { if(confirm("確定重置？")) { canvas.clear(); canvas.setBackgroundColor('#ffffff'); initCanvas(); userImageObject = null; historyStack = []; historyIndex = -1; saveHistory(); } }
+        
+        function clearCanvas() { 
+            if(confirm("確定重置當前畫布？")) { 
+                canvas.clear(); canvas.setBackgroundColor('#ffffff'); initCanvas(); userImageObject = null; 
+                document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active'));
+                document.querySelector('.filter-item').classList.add('active');
+            } 
+        }
 
-        async function uploadDesign() {
-            if (isPreviewMode) { alert("預覽模式不儲存。"); return; }
-            if (canvas.getObjects().length <= 1) { alert("請先加入設計！"); return; }
-            const submitBtn = document.getElementById('submitBtn'), msg = document.getElementById('statusMsg');
-            submitBtn.disabled = true; submitBtn.innerText = "打包高清檔案中..."; msg.innerText = "處理中...";
+        // 🛒 購物車邏輯
+        function addToCart() {
+            if (canvas.getObjects().length <= 1) { alert("請先加入照片或設計文字！"); return; }
             canvas.discardActiveObject(); canvas.requestRenderAll();
+            
+            // 存入陣列 (高清 3 倍輸出)
             const base64Image = canvas.toDataURL({ format: 'png', multiplier: 3 });
+            photoCart.push(base64Image);
+            
+            // 更新 UI
+            document.getElementById('cartCount').innerText = photoCart.length;
+            
+            // 清空畫布準備下一張
+            canvas.clear(); canvas.setBackgroundColor('#ffffff'); initCanvas(); userImageObject = null;
+            document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active'));
+            document.querySelector('.filter-item').classList.add('active');
+            
+            alert(`已暫存第 ${photoCart.length} 張設計！請繼續設計下一張。`);
+        }
+
+        // 🛒 結算上傳全部
+        async function uploadCart() {
+            if (isPreviewMode) { alert("預覽模式不儲存。"); return; }
+            if (photoCart.length === 0) { alert("購物車裡沒有設計好的照片喔！請先按「暫存此張」"); return; }
+
+            const submitBtn = document.getElementById('submitBtn'); const statusMsg = document.getElementById('statusMsg');
+            submitBtn.disabled = true; submitBtn.innerText = "打包上傳中...";
+            statusMsg.innerText = `正在為您上傳 ${photoCart.length} 張相片，請稍候...`; 
+
             try {
-                await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim() || "無", imageB64: base64Image }), mode: 'no-cors' });
-                msg.innerText = "✓ 成功！"; btn.innerText = "完成";
-            } catch (error) { msg.innerText = "失敗"; submitBtn.disabled = false; }
+                await fetch(SCRIPT_URL, { 
+                    method: "POST", 
+                    body: JSON.stringify({ 
+                        userName: document.getElementById('userName').value.trim(), 
+                        orderID: document.getElementById('orderID').value.trim() || "無", 
+                        images: photoCart // 傳送陣列給 GAS
+                    }), 
+                    mode: 'no-cors' 
+                });
+                statusMsg.innerText = `✓ 成功！${photoCart.length} 張設計已送達工作室。`; 
+                statusMsg.className = "pb-4 bg-gray-900 text-center text-sm font-medium tracking-wide text-green-400"; 
+                submitBtn.innerText = "訂單完成";
+                photoCart = []; // 清空購物車
+            } catch (error) { 
+                statusMsg.innerText = "上傳失敗，請檢查網路。"; 
+                submitBtn.disabled = false; submitBtn.innerText = "重新送出"; 
+            }
         }
     </script>
 </body>
