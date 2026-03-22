@@ -23,6 +23,8 @@
         .filter-item.active { border-color: #000; background-color: #f8f9fa; }
         .slide-up { animation: slideUp 0.3s ease-out forwards; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        /* 讓排版選單的按鈕不會被擠壓換行 */
+        .layout-btn { flex: 0 0 auto; }
     </style>
 </head>
 <body class="text-gray-900 antialiased relative py-8">
@@ -62,10 +64,11 @@
                 <span id="progressText" class="font-medium text-blue-400">第 1 / ? 張</span>
             </div>
 
-            <div class="bg-white border-b border-gray-100 p-3 flex justify-center gap-2 overflow-x-auto">
-                <button onclick="switchLayout('polaroid')" id="btn-polaroid" class="px-5 py-2 rounded-full text-xs font-medium border border-black bg-black text-white transition">拍立得</button>
-                <button onclick="switchLayout('full')" id="btn-full" class="px-5 py-2 rounded-full text-xs font-medium border border-gray-200 text-gray-500 transition">全滿版</button>
-                <button onclick="switchLayout('fourCut')" id="btn-fourCut" class="px-5 py-2 rounded-full text-xs font-medium border border-gray-200 text-gray-500 transition">人生四格</button>
+            <div class="bg-white border-b border-gray-100 p-3 flex justify-start md:justify-center gap-2 overflow-x-auto filter-scroll">
+                <button onclick="switchLayout('polaroid')" id="btn-polaroid" class="layout-btn px-4 py-1.5 rounded-full text-xs font-medium border border-black bg-black text-white transition">拍立得</button>
+                <button onclick="switchLayout('full')" id="btn-full" class="layout-btn px-4 py-1.5 rounded-full text-xs font-medium border border-gray-200 text-gray-500 transition">全滿版</button>
+                <button onclick="switchLayout('fourCutSingle')" id="btn-fourCutSingle" class="layout-btn px-4 py-1.5 rounded-full text-xs font-medium border border-gray-200 text-gray-500 transition">四格 (單圖)</button>
+                <button onclick="switchLayout('fourCutMulti')" id="btn-fourCutMulti" class="layout-btn px-4 py-1.5 rounded-full text-xs font-medium border border-gray-200 text-gray-500 transition">四格 (多圖)</button>
             </div>
 
             <div class="bg-gray-100/50 py-8 relative flex justify-center border-b border-gray-50">
@@ -90,7 +93,7 @@
 
             <div class="px-5 py-5 bg-white space-y-5">
                 <div class="p-4 border border-gray-100 rounded-xl bg-gray-50/50">
-                    <label class="text-[11px] text-gray-400 font-medium mb-3 block text-center tracking-widest">風格濾鏡 (請點選要套用的照片)</label>
+                    <label class="text-[11px] text-gray-400 font-medium mb-3 block text-center tracking-widest">風格濾鏡 (請先點選照片)</label>
                     <div class="flex overflow-x-auto gap-3.5 filter-scroll pb-2 snap-x">
                         <button onclick="applyFilter('Original', this)" class="filter-item active text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5"><span class="text-[10px] font-light">原圖</span></button>
                         <button onclick="applyFilter('KPop', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 hue-rotate-15 contrast-125 saturate-150"><span class="text-[10px] font-medium text-pink-500">女團粉</span></button>
@@ -200,21 +203,21 @@
     <div id="frameModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end justify-center hidden backdrop-blur-sm">
         <div class="bg-white w-full max-w-md h-[40vh] rounded-t-3xl shadow-2xl flex flex-col slide-up">
             <div class="p-4 flex justify-between items-center border-b border-gray-100">
-                <h3 class="font-medium tracking-wide ml-4 text-gray-800">質感相框庫</h3>
+                <h3 class="font-medium tracking-wide ml-4 text-gray-800">質感相框底圖 (置於最底層)</h3>
                 <button onclick="closeModal('frameModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-6 grid grid-cols-3 gap-4 content-start bg-gray-50">
-                <div onclick="addFrame('https://i.imgur.com/KzXG5Rj.png')" class="cursor-pointer flex flex-col items-center">
+                <div onclick="addFrame('https://i.imgur.com/KzXG5Rj.png')" class="cursor-pointer flex flex-col items-center hover:-translate-y-1 transition">
                     <img src="https://i.imgur.com/KzXG5Rj.png" class="w-full h-auto border border-gray-200 rounded-lg shadow-sm bg-white p-1">
-                    <span class="text-[10px] text-gray-500 mt-2 font-light">彩虹框</span>
+                    <span class="text-[10px] text-gray-500 mt-2 font-light">彩虹相框</span>
                 </div>
-                <div onclick="addFrame('https://i.imgur.com/vH7T7bM.png')" class="cursor-pointer flex flex-col items-center">
+                <div onclick="addFrame('https://i.imgur.com/vH7T7bM.png')" class="cursor-pointer flex flex-col items-center hover:-translate-y-1 transition">
                     <img src="https://i.imgur.com/vH7T7bM.png" class="w-full h-auto border border-gray-200 rounded-lg shadow-sm bg-white p-1">
                     <span class="text-[10px] text-gray-500 mt-2 font-light">經典拍立得</span>
                 </div>
-                <div onclick="removeFrame()" class="cursor-pointer flex flex-col items-center justify-center h-full min-h-[100px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-100 hover:bg-gray-200">
+                <div onclick="removeFrame()" class="cursor-pointer flex flex-col items-center justify-center h-[120px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-100 hover:bg-gray-200 transition">
                     <i class="fa-solid fa-ban text-gray-400 mb-1"></i>
-                    <span class="text-[10px] text-gray-500 font-light">無相框</span>
+                    <span class="text-[10px] text-gray-500 font-light">移除相框</span>
                 </div>
             </div>
         </div>
@@ -223,17 +226,18 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
         let canvas, overlayFrameGroup;
-        const C_W = 300, C_H = 456; 
+        const C_W = 300, C_H = 456, P_LEFT = 18, P_TOP = 18, P_WIDTH = 264, P_HEIGHT = 338; 
         
         let currentLayout = 'polaroid';
         let isPreviewMode = false;
         let expectedPhotos = 1; let photoCart = []; 
 
-        // 🚀 核心：定義各版型的插槽座標與大小
+        // 🚀 四格單圖 vs 多圖的插槽定義
         const layouts = {
             'polaroid': [{ left: 18, top: 18, width: 264, height: 338 }],
             'full': [{ left: 0, top: 0, width: C_W, height: C_H }],
-            'fourCut': [
+            'fourCutSingle': [{ left: 18, top: 30, width: 264, height: 350 }], // 橫跨四格的大插槽
+            'fourCutMulti': [
                 { left: 18, top: 30, width: 127, height: 170 },
                 { left: 155, top: 30, width: 127, height: 170 },
                 { left: 18, top: 210, width: 127, height: 170 },
@@ -292,7 +296,7 @@
             const saveBtn = document.getElementById('saveNextBtn'); const batchBtn = document.getElementById('batchBtn');
 
             if (isPreviewMode) {
-                saveBtn.innerText = "預覽完成，綁定單號"; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
+                saveBtn.innerText = "預覽完成，前往綁定單號"; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
             } else if (current > expectedPhotos) {
                 saveBtn.innerText = "確認並上傳所有設計"; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
             } else {
@@ -300,6 +304,7 @@
             }
         }
 
+        // --- 2. 畫布系統 ---
         function initCanvas() {
             fabric.filterBackend = new fabric.Canvas2dFilterBackend();
             canvas = new fabric.Canvas('editorCanvas', { width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true });
@@ -326,7 +331,7 @@
                 rects.push(new fabric.Rect({ left: 0, top: 356, width: C_W, height: 100, fill: '#f8f9fa' })); 
                 rects.push(new fabric.Rect({ left: 0, top: 18, width: 18, height: 338, fill: '#f8f9fa' })); 
                 rects.push(new fabric.Rect({ left: 282, top: 18, width: 18, height: 338, fill: '#f8f9fa' })); 
-            } else if (currentLayout === 'fourCut') {
+            } else if (currentLayout === 'fourCutSingle' || currentLayout === 'fourCutMulti') {
                 rects.push(new fabric.Rect({ left: 0, top: 0, width: C_W, height: 30, fill: '#f8f9fa' })); 
                 rects.push(new fabric.Rect({ left: 0, top: 380, width: C_W, height: 76, fill: '#f8f9fa' })); 
                 rects.push(new fabric.Rect({ left: 0, top: 30, width: 18, height: 350, fill: '#f8f9fa' })); 
@@ -342,20 +347,27 @@
             sortLayers(); 
         }
 
+        // 🚀 切換排版，不刪除任何照片，自動拔除 ClipPath
         function switchLayout(mode) {
-            if(canvas.getObjects().filter(o => o.isUserImage).length > 0) {
-                if(!confirm("切換版型會清空目前畫布上的照片，確定嗎？")) return;
-            }
             currentLayout = mode;
-            ['polaroid', 'full', 'fourCut'].forEach(m => document.getElementById(`btn-${m}`).className = "px-4 py-1.5 rounded-full text-xs font-medium border border-gray-200 text-gray-500 transition");
-            document.getElementById(`btn-${mode}`).className = "px-4 py-1.5 rounded-full text-xs font-medium border border-black bg-black text-white transition";
-            clearCanvas();
+            ['polaroid', 'full', 'fourCutSingle', 'fourCutMulti'].forEach(m => {
+                document.getElementById(`btn-${m}`).className = "layout-btn px-4 py-1.5 rounded-full text-xs font-medium border border-gray-200 text-gray-500 transition";
+            });
+            document.getElementById(`btn-${mode}`).className = "layout-btn px-4 py-1.5 rounded-full text-xs font-medium border border-black bg-black text-white transition";
+            
+            // 拔除舊照片的硬裁切遮罩，讓它們適應新版型
+            canvas.getObjects().filter(o => o.isUserImage).forEach(img => img.set('clipPath', null));
             drawOverlay();
         }
 
+        // 🚀 圖層自動排序 (相框置底 -> 照片 -> 白框遮罩 -> 文字貼紙)
         function sortLayers() {
+            // 1. 相框丟到最底下
+            canvas.getObjects().filter(o => o.isFrame).forEach(o => canvas.sendToBack(o));
+            // 2. 照片預設就在相框上面
+            // 3. 把白框遮罩拉到照片上面
             if (overlayFrameGroup) canvas.bringToFront(overlayFrameGroup);
-            canvas.getObjects().filter(o => o.isFrame).forEach(o => canvas.bringToFront(o));
+            // 4. 文字與貼紙保證在絕對頂層
             canvas.getObjects().filter(o => o.isSticker).forEach(o => canvas.bringToFront(o));
             canvas.getObjects().filter(o => o.type === 'i-text').forEach(o => canvas.bringToFront(o));
             canvas.requestRenderAll();
@@ -369,7 +381,7 @@
             } else { document.getElementById('textTools').classList.add('hidden'); document.getElementById('textTools').classList.remove('flex'); }
         }
 
-        // 🚀 智慧排序：一次上傳多張圖，自動填入對應的格子
+        // 🚀 自動將多張圖片填入對應的空插槽
         document.getElementById('imageInput').onchange = (e) => {
             const files = Array.from(e.target.files); if (!files.length) return;
             const slots = layouts[currentLayout];
@@ -379,13 +391,14 @@
             function processNext() {
                 if (fileIndex >= files.length) return;
                 
+                // 找出哪個格子還沒放照片
                 const usedSlots = canvas.getObjects().filter(o => o.isUserImage).map(o => o.slotIndex);
                 let freeSlot = -1;
                 for(let i=0; i<slots.length; i++) {
                     if(!usedSlots.includes(i)) { freeSlot = i; break; }
                 }
                 
-                if (freeSlot === -1) { alert("此版型的照片格已滿！"); return; }
+                if (freeSlot === -1) { alert("此版型的照片格已滿！請先刪除不要的照片。"); return; }
 
                 loadImage(files[fileIndex], function (imgCanvas) {
                     if(imgCanvas.type === "error") { alert("圖片載入失敗"); return; }
@@ -393,23 +406,26 @@
                         const slot = slots[freeSlot];
                         const scale = Math.max(slot.width / img.width, slot.height / img.height);
                         
+                        let clipPath = null;
+                        if(currentLayout === 'fourCutMulti') {
+                            // 多圖模式才需要硬性 ClipPath，單圖模式靠 overlayFrameGroup 視覺遮罩即可
+                            clipPath = new fabric.Rect({ left: slot.left, top: slot.top, width: slot.width, height: slot.height, absolutePositioned: true });
+                        }
+
                         img.set({ 
                             scaleX: scale, scaleY: scale, originX: 'left', originY: 'top',
                             left: slot.left + (slot.width - img.width * scale) / 2, 
                             top: slot.top + (slot.height - img.height * scale) / 2, 
                             isUserImage: true, slotIndex: freeSlot,
-                            clipPath: new fabric.Rect({ left: slot.left, top: slot.top, width: slot.width, height: slot.height, absolutePositioned: true })
+                            clipPath: clipPath
                         });
                         
-                        canvas.add(img); canvas.sendToBack(img); canvas.setActiveObject(img); sortLayers();
-                        
-                        fileIndex++;
-                        processNext(); 
+                        canvas.add(img); canvas.setActiveObject(img); sortLayers();
+                        fileIndex++; processNext(); 
                     });
                 }, { orientation: true, canvas: true, maxWidth: 1200 }); 
             }
-            processNext();
-            e.target.value = '';
+            processNext(); e.target.value = '';
         };
 
         function addPresetText(type) {
@@ -426,23 +442,25 @@
         function openLibrary() { openModal('libraryModal'); }
         function addSticker(url) { closeModal('libraryModal'); fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2, isSticker: true }); canvas.add(img); canvas.setActiveObject(img); sortLayers(); }); }
 
+        // 🚀 加入相框：將相框設定為最底層的底圖，並切換到全滿版模式顯示
         function addFrame(url) {
             closeModal('frameModal'); removeFrame();
-            fabric.Image.fromURL(url, (img) => { img.set({ scaleX: C_W/img.width, scaleY: C_H/img.height, left: 0, top: 0, selectable: false, evented: false, isFrame: true }); canvas.add(img); sortLayers(); });
+            fabric.Image.fromURL(url, (img) => { 
+                img.set({ scaleX: C_W/img.width, scaleY: C_H/img.height, left: 0, top: 0, selectable: false, evented: false, isFrame: true }); 
+                canvas.add(img); 
+                switchLayout('full'); // 自動切換全滿版，不讓預設白框擋住相框
+                sortLayers(); // 自動排到最底層
+            });
         }
         function removeFrame() { const frames = canvas.getObjects().filter(o => o.isFrame); frames.forEach(f => canvas.remove(f)); canvas.requestRenderAll(); }
 
-        // 🎨 濾鏡：安全繞過 clipPath Bug
         function applyFilter(filterName, btn) {
             document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             let targetImg = canvas.getActiveObject();
             if (!targetImg || !targetImg.isUserImage) targetImg = canvas.getObjects().find(o => o.isUserImage);
-            if (!targetImg) { alert("請先加入照片喔！"); return; }
+            if (!targetImg) { alert("請先點選想套用濾鏡的照片喔！"); return; }
 
-            const tempClip = targetImg.clipPath;
-            targetImg.clipPath = null;
-            targetImg.filters = [];
-            
+            const tempClip = targetImg.clipPath; targetImg.clipPath = null; targetImg.filters = [];
             switch (filterName) {
                 case 'Original': break; 
                 case 'KPop': targetImg.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); targetImg.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 })); targetImg.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffe4e1', mode: 'tint', alpha: 0.25 })); break;
@@ -453,40 +471,39 @@
                 case 'Fresh': targetImg.filters.push(new fabric.Image.filters.Saturation({ saturation: 0.15 })); targetImg.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); break;
                 case 'Mono': targetImg.filters.push(new fabric.Image.filters.Grayscale()); break;
             }
-            targetImg.applyFilters();
-            targetImg.clipPath = tempClip; 
-            canvas.requestRenderAll();
+            targetImg.applyFilters(); targetImg.clipPath = tempClip; canvas.requestRenderAll();
         }
 
         function bringFront() { const obj = canvas.getActiveObject(); if(obj) { canvas.bringToFront(obj); sortLayers(); } }
         function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); sortLayers(); } }
         function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { canvas.remove(obj); canvas.discardActiveObject(); document.getElementById('objectTools').classList.add('hidden'); } }
-        function clearCanvas() { const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame'); objects.forEach(o => canvas.remove(o)); document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); document.querySelector('.filter-item').classList.add('active'); } 
+        function clearCanvas() { if(confirm("確定重置當前版面？")) { const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame'); objects.forEach(o => canvas.remove(o)); document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); document.querySelector('.filter-item').classList.add('active'); } }
 
+        // --- 3. 結算與批量洗相片 ---
         async function saveAndNext() {
             if (photoCart.length >= expectedPhotos && !isPreviewMode) { await executeUpload(); return; }
             if (isPreviewMode) { openModal('previewDoneModal'); return; }
-            if (canvas.getObjects().filter(o => o.isUserImage).length === 0) { alert("畫布上還沒有照片喔！"); return; }
+            if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("畫布上還沒有照片喔！"); return; }
             
             canvas.discardActiveObject(); canvas.requestRenderAll();
             photoCart.push(canvas.toDataURL({ format: 'png', multiplier: 3 }));
             
             updateProgressUI();
             if (photoCart.length < expectedPhotos) {
-                clearCanvas();
+                const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame'); objects.forEach(o => canvas.remove(o)); 
                 document.getElementById('statusMsg').innerText = `第 ${photoCart.length} 張已暫存！請繼續設計。`;
             }
         }
 
         function batchDuplicate() {
-            if (canvas.getObjects().filter(o => o.isUserImage).length === 0) { alert("請先設計好要洗的照片！"); return; }
+            if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("請先設計好要洗的照片！"); return; }
             const remaining = expectedPhotos - photoCart.length;
             if (remaining <= 0) return;
             canvas.discardActiveObject(); canvas.requestRenderAll();
             const base64 = canvas.toDataURL({ format: 'png', multiplier: 3 });
             for (let i = 0; i < remaining; i++) { photoCart.push(base64); }
             updateProgressUI();
-            document.getElementById('statusMsg').innerText = `✓ 已為您自動複製並填滿剩餘張數！請點擊藍色按鈕上傳。`;
+            document.getElementById('statusMsg').innerText = `✓ 已為您自動複製剩餘的 ${remaining} 張！請點擊藍色按鈕上傳。`;
             document.getElementById('statusMsg').className = "mt-4 text-center text-sm font-medium tracking-wide text-green-500";
         }
 
