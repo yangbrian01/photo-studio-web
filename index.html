@@ -3,86 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OWLPICS PRO STUDIO | 高品質小卡客製化</title>
+    <title>PRO PHOTO STUDIO | 高品質影像處理</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        /* 引入極簡乾淨的字體組合 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Roboto:wght@300;400&display=swap');
+        body { 
+            font-family: 'Roboto', 'Noto Sans TC', sans-serif; 
+            background-color: #f8f9fa; 
+        }
         .cropper-container { max-height: 500px !important; }
-        /* Loading 旋轉動畫 */
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .spinner { animation: spin 1s linear infinite; }
     </style>
 </head>
 <body class="text-gray-900 antialiased">
 
     <div class="max-w-2xl mx-auto px-6 py-12">
-        <header class="text-center mb-16 flex flex-col items-center">
-            <svg class="w-12 h-12 mb-4 text-black" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="currentColor"/>
-                <path d="M8 11C8.55228 11 9 10.5523 9 10C9 9.44772 8.55228 9 8 9C7.44772 9 7 9.44772 7 10C7 10.5523 7.44772 11 8 11Z" fill="currentColor"/>
-                <path d="M16 11C16.5523 11 17 10.5523 17 10C17 9.44772 16.5523 9 16 9C15.4477 9 15 9.44772 15 10C15 10.5523 15.4477 11 16 11Z" fill="currentColor"/>
-                <path d="M12 16C10 16 8.5 14.5 8 13L16 13C15.5 14.5 14 16 12 16Z" fill="currentColor"/>
-            </svg>
-            <h1 class="text-4xl font-light tracking-widest uppercase mb-2">OWLPICS PRO</h1>
-            <p class="text-gray-500 text-sm tracking-wide">高品質影像熱昇華處理系統</p>
+        <header class="text-center mb-14 mt-4">
+            <h1 class="text-3xl md:text-4xl font-light tracking-[0.3em] uppercase mb-3 text-gray-800">
+                PRO PHOTO STUDIO
+            </h1>
+            <p class="text-gray-500 text-sm tracking-widest font-light">
+                Xiaomi Pro 熱昇華高品質影像處理系統
+            </p>
         </header>
 
-        <div class="bg-white rounded-3xl shadow-sm p-10 mb-8 border border-gray-100">
-            <h2 class="text-xl font-semibold mb-8 flex items-center tracking-tight">
-                <span class="w-7 h-7 bg-black text-white rounded-full text-sm flex items-center justify-center mr-4">1</span>
+        <div class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100">
+            <h2 class="text-lg font-medium mb-6 flex items-center tracking-wide">
+                <span class="w-6 h-6 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">1</span>
                 填寫訂單資訊
             </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <input type="text" id="userName" placeholder="蝦皮帳號 / 姓名 (必填)" class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black transition placeholder:text-gray-400">
-                <input type="text" id="orderID" placeholder="訂單編號 (選填)" class="w-full px-5 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black transition placeholder:text-gray-400">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="userName" placeholder="蝦皮帳號 / 姓名 (必填)" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black transition font-light text-sm">
+                <input type="text" id="orderID" placeholder="訂單編號 (選填)" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black transition font-light text-sm">
             </div>
         </div>
 
-        <div class="bg-white rounded-3xl shadow-sm p-10 mb-8 border border-gray-100">
-            <h2 class="text-xl font-semibold mb-8 flex items-center tracking-tight">
-                <span class="w-7 h-7 bg-black text-white rounded-full text-sm flex items-center justify-center mr-4">2</span>
+        <div class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100">
+            <h2 class="text-lg font-medium mb-6 flex items-center tracking-wide">
+                <span class="w-6 h-6 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">2</span>
                 編輯照片 (自動固定 2:3 比例)
             </h2>
             
-            <label id="uploadPlaceHolder" class="block mb-8">
-                <div class="flex items-center justify-center w-full h-40 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:bg-gray-50 hover:border-gray-300 transition">
+            <label class="block mb-6">
+                <div class="flex items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:bg-gray-50 transition">
                     <div class="text-center">
-                        <svg class="w-10 h-10 mx-auto text-gray-300 mb-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 14.9999V8.82988L8.71 11.1199L7.29 9.69988L12 4.99988L16.71 9.69988L15.29 11.1199L13 8.82988V14.9999H11Z" fill="currentColor"/><path d="M4 18H20V12H22V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V12H4V18Z" fill="currentColor"/></svg>
-                        <span class="text-gray-400 text-sm font-medium">點擊或拖放照片</span>
-                        <input type="file" id="imageInput" accept="image/*" class="hidden" required>
+                        <span class="text-gray-400 text-sm font-light tracking-wide">點擊上傳或拖放照片</span>
+                        <input type="file" id="imageInput" accept="image/*" class="hidden">
                     </div>
                 </div>
             </label>
 
             <div id="editorSection" class="hidden">
-                <div class="rounded-2xl overflow-hidden bg-gray-100 mb-8 border border-gray-200">
+                <div class="rounded-xl overflow-hidden bg-gray-100 mb-6 flex justify-center">
                     <img id="previewImage" class="max-w-full block">
                 </div>
-                <div class="flex justify-center space-x-3">
-                    <button onclick="cropper.rotate(-90)" class="px-5 py-2.5 text-xs font-medium border border-gray-200 rounded-full hover:bg-gray-100 transition">↺ 左旋轉</button>
-                    <button onclick="cropper.rotate(90)" class="px-5 py-2.5 text-xs font-medium border border-gray-200 rounded-full hover:bg-gray-100 transition">↻ 右旋轉</button>
-                    <button onclick="cropper.setDragMode('move')" class="px-5 py-2.5 text-xs font-medium border border-gray-200 rounded-full hover:bg-gray-100 transition">✥ 移動</button>
-                    <button onclick="cropper.reset()" class="px-5 py-2.5 text-xs font-medium border border-gray-200 rounded-full hover:bg-gray-100 transition">重設</button>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="cropper.rotate(-90)" class="px-5 py-2 text-xs border border-gray-200 rounded-full hover:bg-gray-100 tracking-wide font-light transition">↺ 旋轉</button>
+                    <button onclick="cropper.setDragMode('move')" class="px-5 py-2 text-xs border border-gray-200 rounded-full hover:bg-gray-100 tracking-wide font-light transition">✥ 移動</button>
+                    <button onclick="cropper.setDragMode('crop')" class="px-5 py-2 text-xs border border-gray-200 rounded-full hover:bg-gray-100 tracking-wide font-light transition">✂ 裁切</button>
                 </div>
             </div>
         </div>
 
-        <button id="submitBtn" class="w-full flex items-center justify-center bg-black text-white py-5 rounded-3xl font-semibold tracking-wider hover:bg-gray-800 disabled:bg-gray-300 transition duration-300 group">
-            <span id="btnText" class="group-hover:translate-x-1 transition-transform">確認並上傳至工作室 →</span>
-            
-            <div id="btnLoading" class="hidden flex items-center">
-                <svg class="spinner w-5 h-5 mr-3 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                正在加密傳送中...
-            </div>
+        <button id="submitBtn" class="w-full bg-black text-white py-4 rounded-2xl font-light tracking-[0.2em] hover:bg-gray-800 disabled:bg-gray-300 transition duration-300 text-sm">
+            確認並上傳至工作室
         </button>
 
-        <p id="statusMsg" class="mt-6 text-center text-sm font-medium h-5"></p>
+        <p id="statusMsg" class="mt-4 text-center text-sm font-light tracking-wide"></p>
     </div>
 
     <script>
@@ -90,15 +79,13 @@
         const imageInput = document.getElementById('imageInput');
         const previewImage = document.getElementById('previewImage');
         const editorSection = document.getElementById('editorSection');
-        const uploadPlaceHolder = document.getElementById('uploadPlaceHolder');
         const submitBtn = document.getElementById('submitBtn');
-        const btnText = document.getElementById('btnText');
-        const btnLoading = document.getElementById('btnLoading');
         const statusMsg = document.getElementById('statusMsg');
 
-        // 請在此處貼上你的 GAS 部署網址
+        // 已替換為你最新的 GAS 部署網址
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
 
+        // 監聽圖片上傳
         imageInput.onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -107,44 +94,37 @@
             reader.onload = (event) => {
                 previewImage.src = event.target.result;
                 editorSection.classList.remove('hidden');
-                uploadPlaceHolder.classList.add('hidden'); // 隱藏上傳框
                 
                 if (cropper) cropper.destroy();
                 cropper = new Cropper(previewImage, {
-                    aspectRatio: 2 / 3,
+                    aspectRatio: 2 / 3, // 強制 2:3 比例
                     viewMode: 1,
                     autoCropArea: 1,
-                    dragMode: 'move',
-                    background: false,
                 });
             };
             reader.readAsDataURL(file);
         };
 
+        // 提交到 GAS
         submitBtn.onclick = async () => {
-            const userName = document.getElementById('userName').value.trim();
-            
-            if (!userName) {
-                alert("請填寫蝦皮帳號或姓名。");
-                return;
-            }
-            if (!cropper) {
-                alert("請上傳一張照片。");
+            const userName = document.getElementById('userName').value;
+            if (!userName || !cropper) {
+                alert("請填寫姓名並上傳照片");
                 return;
             }
 
-            // --- UX 升級：切換 Loading 狀態 ---
             submitBtn.disabled = true;
-            btnText.classList.add('hidden');
-            btnLoading.classList.remove('hidden');
-            statusMsg.innerText = "";
+            submitBtn.innerText = "處理中...";
+            statusMsg.innerText = "正在處理影像並上傳...";
+            statusMsg.className = "mt-4 text-center text-sm text-blue-500 tracking-wide";
 
-            const canvas = cropper.getCroppedCanvas({ width: 1200 }); // 高解析度
+            // 取得裁切後的 Base64 圖片 (提升解析度至 1200px)
+            const canvas = cropper.getCroppedCanvas({ width: 1200 });
             const base64Image = canvas.toDataURL('image/png');
 
             const payload = {
                 userName: userName,
-                orderID: document.getElementById('orderID').value.trim() || "N/A",
+                orderID: document.getElementById('orderID').value || "N/A",
                 imageB64: base64Image
             };
 
@@ -153,27 +133,18 @@
                 await fetch(SCRIPT_URL, {
                     method: "POST",
                     body: JSON.stringify(payload),
-                    mode: 'no-cors' 
+                    mode: 'no-cors' // 繞過跨網域限制
                 });
 
-                // --- UX 升級：成功反饋 ---
-                statusMsg.innerText = "✓ 成功！照片已傳送至工作室，請回到蝦皮聊聊告知我們。";
-                statusMsg.className = "mt-6 text-center text-sm text-green-600 font-semibold";
-                
-                // 重置表單 (保險起見)
-                document.getElementById('orderID').value = "";
-                // 可選擇不重置名稱，方便連續上傳
-                // cropper.destroy(); editorSection.classList.add('hidden'); uploadPlaceHolder.classList.remove('hidden');
-
+                statusMsg.innerText = "✓ 成功！照片已送達工作室，請回到蝦皮告知我們。";
+                statusMsg.className = "mt-4 text-center text-sm text-gray-800 font-medium tracking-wide";
+                submitBtn.innerText = "上傳完成";
             } catch (error) {
                 console.error(error);
-                statusMsg.innerText = "上傳失敗，請檢查網路，或請私訊聊聊。";
-                statusMsg.className = "mt-6 text-center text-sm text-red-600";
-            } finally {
-                // --- UX 升級：恢復按鈕狀態 ---
+                statusMsg.innerText = "上傳失敗，請檢查網路或聯繫客服。";
+                statusMsg.className = "mt-4 text-center text-sm text-red-500 tracking-wide";
+                submitBtn.innerText = "確認並上傳至工作室";
                 submitBtn.disabled = false;
-                btnText.classList.remove('hidden');
-                btnLoading.classList.add('hidden');
             }
         };
     </script>
