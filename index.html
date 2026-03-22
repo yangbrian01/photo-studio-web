@@ -18,15 +18,25 @@
         .color-dot { width: 22px; height: 22px; cursor: pointer; border-radius: 50%; border: 1px solid #e5e7eb; transition: all 0.2s; }
         .color-dot:hover { transform: scale(1.15); box-shadow: 0 0 5px rgba(0,0,0,0.1); }
         .color-dot.active { border: 2px solid #000; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
-        .filter-item { border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.2s; background-color: white; padding: 4px; }
+        
+        /* 濾鏡滑動區與樣式 */
+        .filter-scroll::-webkit-scrollbar { display: none; } /* 隱藏捲動條但可滑動 */
+        .filter-item { flex: 0 0 65px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.2s; background-color: white; padding: 4px; }
         .filter-item.active { border-color: #000; background-color: #f8f9fa; }
         
-        /* 抽屜滑出動畫 */
         .slide-up { animation: slideUp 0.3s ease-out forwards; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     </style>
 </head>
 <body class="text-gray-900 antialiased relative py-10">
+
+    <div style="visibility: hidden; position: absolute; top: -9999px;">
+        <span style="font-family: 'Noto Serif TC';">預載</span>
+        <span style="font-family: 'Ma Shan Zheng';">預載</span>
+        <span style="font-family: 'Zhi Mang Xing';">預載</span>
+        <span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span>
+        <span style="font-family: 'ZCOOL KuaiLe';">預載</span>
+    </div>
 
     <div class="max-w-3xl mx-auto px-6">
         <header class="text-center mb-10">
@@ -60,8 +70,8 @@
             <div id="objectTools" class="px-6 py-4 bg-white hidden flex justify-between gap-6 transition border-b border-gray-50 relative z-10">
                 <div class="flex gap-4 items-center">
                     <div class="flex gap-1.5 border border-gray-100 p-1 rounded-lg bg-gray-50/50">
-                        <button onclick="bringFront()" title="上移一層" class="w-9 h-9 text-gray-500 hover:text-black hover:bg-white rounded-md flex flex-col items-center justify-center gap-0.5"><i class="fa-solid fa-layer-group"></i><span class="text-[9px]">上層</span></button>
-                        <button onclick="sendBack()" title="下移一層" class="w-9 h-9 text-gray-500 hover:text-black hover:bg-white rounded-md flex flex-col items-center justify-center gap-0.5"><i class="fa-solid fa-layer-group fa-flip-vertical"></i><span class="text-[9px]">下層</span></button>
+                        <button onclick="bringFront()" class="w-9 h-9 text-gray-500 hover:text-black hover:bg-white rounded-md flex flex-col items-center justify-center gap-0.5"><i class="fa-solid fa-layer-group"></i><span class="text-[9px]">上層</span></button>
+                        <button onclick="sendBack()" class="w-9 h-9 text-gray-500 hover:text-black hover:bg-white rounded-md flex flex-col items-center justify-center gap-0.5"><i class="fa-solid fa-layer-group fa-flip-vertical"></i><span class="text-[9px]">下層</span></button>
                     </div>
                 </div>
 
@@ -73,7 +83,7 @@
                         <option value="Zhi Mang Xing">藝術狂草</option>
                         <option value="ZCOOL QingKe HuangYou">麥克筆體</option>
                         <option value="ZCOOL KuaiLe">可愛圓體</option>
-                        <option value="Caveat">英文手寫(僅限英文)</option>
+                        <option value="Caveat">純英文手寫</option>
                     </select>
                     <div class="flex-1 max-w-sm border border-gray-100 p-2 rounded-xl bg-gray-50/50">
                         <div class="grid grid-cols-8 gap-1.5 justify-items-center" id="colorPalette"></div>
@@ -88,22 +98,35 @@
             <div class="px-6 py-5 bg-white space-y-5">
                 
                 <div class="p-4 border border-gray-100 rounded-xl bg-gray-50/50">
-                    <label class="text-[11px] text-gray-400 font-medium mb-3 block tracking-widest text-center">拍立得風格濾鏡 (僅適用於照片)</label>
-                    <div class="grid grid-cols-5 gap-3 max-w-lg mx-auto">
-                        <button onclick="applyFilter('Original', this)" class="filter-item active text-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 grayscale-0" alt="Original"><span class="text-[10px] font-light">Original</span>
+                    <label class="text-[11px] text-gray-400 font-medium mb-3 block tracking-widest text-center">風格濾鏡 (可左右滑動)</label>
+                    <div class="flex overflow-x-auto gap-3 filter-scroll pb-2 max-w-lg mx-auto snap-x">
+                        <button onclick="applyFilter('Original', this)" class="filter-item active text-center snap-center">
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 grayscale-0">
+                            <span class="text-[10px] font-light">原圖</span>
                         </button>
-                        <button onclick="applyFilter('Vintage', this)" class="filter-item text-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 sepia" alt="Vintage"><span class="text-[10px] font-light">Vintage</span>
+                        <button onclick="applyFilter('KPop', this)" class="filter-item text-center snap-center">
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 hue-rotate-15 contrast-125 saturate-150">
+                            <span class="text-[10px] font-medium text-pink-500">K-Pop粉</span>
                         </button>
-                        <button onclick="applyFilter('Mono', this)" class="filter-item text-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 grayscale" alt="Mono"><span class="text-[10px] font-light">Mono</span>
+                        <button onclick="applyFilter('Cool', this)" class="filter-item text-center snap-center">
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 contrast-125 hue-rotate-180 brightness-110">
+                            <span class="text-[10px] font-medium text-blue-500">冷白皮</span>
                         </button>
-                        <button onclick="applyFilter('Faded', this)" class="filter-item text-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 opacity-80" alt="Faded"><span class="text-[10px] font-light">Faded</span>
+                        <button onclick="applyFilter('Fresh', this)" class="filter-item text-center snap-center">
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 saturate-150">
+                            <span class="text-[10px] font-light">清新</span>
                         </button>
-                        <button onclick="applyFilter('Fresh', this)" class="filter-item text-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 hue-rotate-15" alt="Fresh"><span class="text-[10px] font-light">Fresh</span>
+                        <button onclick="applyFilter('Film', this)" class="filter-item text-center snap-center">
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 sepia-[.3] contrast-125">
+                            <span class="text-[10px] font-light">底片感</span>
+                        </button>
+                        <button onclick="applyFilter('Vintage', this)" class="filter-item text-center snap-center">
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 sepia">
+                            <span class="text-[10px] font-light">復古黃</span>
+                        </button>
+                        <button onclick="applyFilter('Mono', this)" class="filter-item text-center snap-center">
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 grayscale">
+                            <span class="text-[10px] font-light">黑白</span>
                         </button>
                     </div>
                 </div>
@@ -146,7 +169,7 @@
             <div class="space-y-3">
                 <button onclick="alert('前往蝦皮')" class="w-full bg-black text-white py-3 rounded-xl font-light tracking-widest text-sm">前往蝦皮下單</button>
                 <button onclick="enterPreview()" class="w-full bg-white text-gray-500 border border-gray-200 py-3 rounded-xl font-light tracking-widest text-sm">我只想先預覽效果</button>
-                <button onclick="document.getElementById('orderModal').classList.add('hidden')" class="text-xs text-gray-400 mt-2 hover:text-gray-600">返回修改</button>
+                <button onclick="document.getElementById('orderModal').classList.add('hidden')" class="text-xs text-gray-400 mt-2">返回修改</button>
             </div>
         </div>
     </div>
@@ -155,12 +178,12 @@
         <div class="bg-white w-full max-w-md h-[40vh] rounded-t-3xl shadow-2xl flex flex-col slide-up">
             <div class="p-4 flex justify-between items-center border-b border-gray-100">
                 <h3 class="font-medium tracking-wide ml-4 text-gray-800">可愛貼紙庫</h3>
-                <button onclick="document.getElementById('libraryModal').classList.add('hidden')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="document.getElementById('libraryModal').classList.add('hidden')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-6 grid grid-cols-4 gap-4 content-start bg-gray-50">
-                <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer hover:border-black shadow-sm transition hover:-translate-y-1">
-                <img onclick="addSticker('https://i.imgur.com/L1MhM2P.png')" src="https://i.imgur.com/L1MhM2P.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer hover:border-black shadow-sm transition hover:-translate-y-1">
-                <img onclick="addSticker('https://i.imgur.com/R3O2b9S.png')" src="https://i.imgur.com/R3O2b9S.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer hover:border-black shadow-sm transition hover:-translate-y-1">
+                <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
+                <img onclick="addSticker('https://i.imgur.com/L1MhM2P.png')" src="https://i.imgur.com/L1MhM2P.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
+                <img onclick="addSticker('https://i.imgur.com/R3O2b9S.png')" src="https://i.imgur.com/R3O2b9S.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
             </div>
         </div>
     </div>
@@ -169,91 +192,47 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
         let isPreviewMode = false;
         let canvas;
-        
-        const C_W = 300;  
-        const C_H = 456;  
-        const P_LEFT = 18; const P_TOP = 18;
-        const P_WIDTH = 264; const P_HEIGHT = 338; 
-
+        const C_W = 300; const C_H = 456;  
+        const P_LEFT = 18; const P_TOP = 18; const P_WIDTH = 264; const P_HEIGHT = 338; 
         const PREMIUM_COLORS = ['#000000', '#595959', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#fce4ec', '#fff0f5', '#1976d2', '#64b5f6', '#bbdefb', '#e6f7ff'];
 
-        // --- 步驟一邏輯 ---
+        // 步驟一
         document.getElementById('nextStepBtn').onclick = () => {
             const userNameInput = document.getElementById('userName');
             const orderIDInput = document.getElementById('orderID');
             const nameError = document.getElementById('nameError');
-            
-            if (!userNameInput.value.trim()) {
-                nameError.classList.remove('hidden');
-                userNameInput.classList.add('border-red-400');
-                return;
-            }
-            nameError.classList.add('hidden');
-            userNameInput.classList.remove('border-red-400');
-
-            if (!orderIDInput.value.trim()) {
-                document.getElementById('orderModal').classList.remove('hidden');
-            } else {
-                isPreviewMode = false;
-                unlockStep2();
-            }
+            if (!userNameInput.value.trim()) { nameError.classList.remove('hidden'); userNameInput.classList.add('border-red-400'); return; }
+            nameError.classList.add('hidden'); userNameInput.classList.remove('border-red-400');
+            if (!orderIDInput.value.trim()) { document.getElementById('orderModal').classList.remove('hidden'); } 
+            else { isPreviewMode = false; unlockStep2(); }
         };
 
-        function enterPreview() {
-            document.getElementById('orderModal').classList.add('hidden');
-            isPreviewMode = true;
-            unlockStep2();
-        }
+        function enterPreview() { document.getElementById('orderModal').classList.add('hidden'); isPreviewMode = true; unlockStep2(); }
 
-        // 💣 修復預覽 Bug：使用 setTimeout 確保容器顯示後才初始化 Canvas
         function unlockStep2() {
             document.getElementById('step1-container').classList.add('opacity-50', 'pointer-events-none');
             document.getElementById('step2-container').classList.remove('hidden');
             document.getElementById('submitBtn').classList.remove('hidden');
-
             if (isPreviewMode) {
                 document.getElementById('modeBadge').classList.remove('hidden');
                 document.getElementById('submitBtn').innerText = "預覽完成，請前往蝦皮下單";
                 document.getElementById('submitBtn').classList.replace('bg-black', 'bg-gray-400');
             }
-
-            // 延遲 50ms 等待 display:block 生效，再初始化畫布
-            setTimeout(() => {
-                if (!canvas) initCanvas();
-                document.getElementById('step2-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 50);
+            setTimeout(() => { if (!canvas) initCanvas(); document.getElementById('step2-container').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
         }
 
-        // --- 畫布與編輯器系統 ---
         function initCanvas() {
-            canvas = new fabric.Canvas('editorCanvas', {
-                width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true
-            });
-
+            canvas = new fabric.Canvas('editorCanvas', { width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true });
             const palette = document.getElementById('colorPalette');
             PREMIUM_COLORS.forEach((color, index) => {
-                const dot = document.createElement('div');
-                dot.className = `color-dot ${index === 0 ? 'active' : ''}`;
-                dot.style.backgroundColor = color;
-                dot.onclick = () => {
-                    document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-                    dot.classList.add('active');
-                    setTextColor(color);
-                };
+                const dot = document.createElement('div'); dot.className = `color-dot ${index === 0 ? 'active' : ''}`; dot.style.backgroundColor = color;
+                dot.onclick = () => { document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active')); dot.classList.add('active'); setTextColor(color); };
                 palette.appendChild(dot);
             });
-
-            fabric.Object.prototype.set({
-                transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 9, cornerStyle: 'circle'
-            });
-
-            const placeholder = new fabric.Rect({
-                left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, fill: '#f9fafb', stroke: '#e5e7eb', strokeDashArray: [3, 3], selectable: false, evented: false
-            });
+            fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 9, cornerStyle: 'circle' });
+            const placeholder = new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, fill: '#f9fafb', stroke: '#e5e7eb', strokeDashArray: [3, 3], selectable: false, evented: false });
             canvas.add(placeholder);
-
-            canvas.on('selection:created', onSelection);
-            canvas.on('selection:updated', onSelection);
+            canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection);
             canvas.on('selection:cleared', () => document.getElementById('objectTools').classList.add('hidden'));
         }
 
@@ -263,70 +242,71 @@
             if (activeObj && activeObj.type === 'i-text') {
                 document.getElementById('textTools').classList.remove('hidden');
                 document.getElementById('fontFamily').value = activeObj.fontFamily;
-            } else {
-                document.getElementById('textTools').classList.add('hidden');
-            }
+            } else { document.getElementById('textTools').classList.add('hidden'); }
         }
 
-        // 照片匯入
         document.getElementById('imageInput').onchange = (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+            const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (f) => {
                 fabric.Image.fromURL(f.target.result, (img) => {
                     const scale = Math.max(P_WIDTH / img.width, P_HEIGHT / img.height);
-                    img.set({
-                        scaleX: scale, scaleY: scale, originX: 'center', originY: 'center',
-                        left: C_W / 2, top: P_TOP + (P_HEIGHT / 2), frameId: 'userImage'
-                    });
-                    const clipPath = new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true });
-                    img.set('clipPath', clipPath);
-                    
-                    canvas.add(img);
-                    canvas.sendToBack(img);
-                    canvas.bringForward(img); 
-                    canvas.setActiveObject(img);
+                    img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center', left: C_W / 2, top: P_TOP + (P_HEIGHT / 2), frameId: 'userImage' });
+                    img.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
+                    canvas.add(img); canvas.sendToBack(img); canvas.bringForward(img); canvas.setActiveObject(img);
                 });
-            };
-            reader.readAsDataURL(file);
-            e.target.value = '';
+            }; reader.readAsDataURL(file); e.target.value = '';
         };
 
-        // 中文文字功能
         function addText() {
-            const text = new fabric.IText('點擊修改文字', {
-                left: C_W / 2, top: C_H - 50, 
-                fontFamily: 'Noto Sans TC', fontSize: 24, fill: '#000000', originX: 'center', originY: 'center'
-            });
-            canvas.add(text);
-            canvas.bringToFront(text);
-            canvas.setActiveObject(text);
+            const text = new fabric.IText('輸入文字...', { left: C_W / 2, top: C_H - 50, fontFamily: 'Noto Sans TC', fontSize: 24, fill: '#000000', originX: 'center', originY: 'center' });
+            canvas.add(text); canvas.bringToFront(text); canvas.setActiveObject(text);
         }
 
         function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); } }
-        document.getElementById('fontFamily').addEventListener('change', function(e) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); } });
+        
+        // 💣 非同步強制重新渲染字體
+        document.getElementById('fontFamily').addEventListener('change', async function(e) { 
+            const obj = canvas.getActiveObject(); 
+            if (obj && obj.type === 'i-text') { 
+                const newFont = e.target.value;
+                // 強制等瀏覽器抓到字體
+                await document.fonts.load(`16px "${newFont}"`);
+                obj.set('fontFamily', newFont); 
+                canvas.requestRenderAll(); 
+            } 
+        });
 
-        // 貼紙庫功能
         function openLibrary() { document.getElementById('libraryModal').classList.remove('hidden'); }
         function addSticker(url) {
             document.getElementById('libraryModal').classList.add('hidden');
-            fabric.Image.fromURL(url, (img) => {
-                img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2 });
-                canvas.add(img); canvas.bringToFront(img); canvas.setActiveObject(img);
-            });
+            fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2 }); canvas.add(img); canvas.bringToFront(img); canvas.setActiveObject(img); });
         }
 
-        // 濾鏡
+        // 超強濾鏡
         function applyFilter(filterName, btn) {
-            document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             const imgObj = canvas.getObjects().find(obj => obj.frameId === 'userImage');
             if (!imgObj) return;
 
             imgObj.filters = [];
             switch (filterName) {
                 case 'Original': break; 
+                case 'KPop': 
+                    imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 }));
+                    imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 }));
+                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffe4e1', mode: 'tint', alpha: 0.25 }));
+                    break;
+                case 'Cool':
+                    imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 }));
+                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#e0f7fa', mode: 'tint', alpha: 0.2 }));
+                    break;
+                case 'Film':
+                    imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.15 }));
+                    imgObj.filters.push(new fabric.Image.filters.Noise({ noise: 20 }));
+                    imgObj.filters.push(new fabric.Image.filters.Sepia());
+                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#000000', mode: 'overlay', alpha: 0.1 }));
+                    break;
                 case 'Vintage': imgObj.filters.push(new fabric.Image.filters.Sepia()); imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: -0.1 })); break;
                 case 'Mono': imgObj.filters.push(new fabric.Image.filters.Grayscale()); break;
                 case 'Faded': imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: -0.15 })); imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#e0ffff', mode: 'screen', alpha: 0.2 })); break;
@@ -335,37 +315,27 @@
             imgObj.applyFilters(); canvas.requestRenderAll();
         }
 
-        // 排列控制
         function bringFront() { const obj = canvas.getActiveObject(); if(obj) { canvas.bringToFront(obj); canvas.requestRenderAll(); } }
         function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); canvas.bringForward(obj); canvas.requestRenderAll(); } }
         function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { canvas.remove(obj); canvas.discardActiveObject(); } }
         function clearCanvas() { if(confirm("確定要清空設計？")) { canvas.clear(); canvas.setBackgroundColor('#ffffff'); initCanvas(); } }
 
-        // --- 上傳 GAS ---
         async function uploadDesign() {
             if (isPreviewMode) { alert("您目前處於預覽模式，系統不會儲存照片。\n請至蝦皮賣場下單取得訂單編號後，重新整理網頁填寫上傳！"); return; }
             if (canvas.getObjects().length <= 1) { alert("請先加入照片或設計文字！"); return; }
 
-            const submitBtn = document.getElementById('submitBtn');
-            const statusMsg = document.getElementById('statusMsg');
-
+            const submitBtn = document.getElementById('submitBtn'); const statusMsg = document.getElementById('statusMsg');
             submitBtn.disabled = true; submitBtn.innerText = "正在打包設計成品...";
-            statusMsg.innerText = "正在封裝高清圖檔 (套用濾鏡中)..."; statusMsg.className = "mt-4 text-center text-sm tracking-wide text-blue-500";
+            statusMsg.innerText = "正在封裝高清圖檔..."; statusMsg.className = "mt-4 text-center text-sm tracking-wide text-blue-500";
 
             canvas.discardActiveObject(); canvas.requestRenderAll();
             const base64Image = canvas.toDataURL({ format: 'png', multiplier: 3 });
 
             try {
-                await fetch(SCRIPT_URL, {
-                    method: "POST",
-                    body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim() || "無", imageB64: base64Image }),
-                    mode: 'no-cors'
-                });
-                statusMsg.innerText = "✓ 成功！您的設計已送達工作室。"; statusMsg.className = "mt-4 text-center text-sm font-medium tracking-wide text-green-600";
-                submitBtn.innerText = "上傳完成";
+                await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim() || "無", imageB64: base64Image }), mode: 'no-cors' });
+                statusMsg.innerText = "✓ 成功！您的設計已送達工作室。"; statusMsg.className = "mt-4 text-center text-sm font-medium tracking-wide text-green-600"; submitBtn.innerText = "上傳完成";
             } catch (error) {
-                statusMsg.innerText = "上傳失敗，請檢查網路。"; statusMsg.className = "mt-4 text-center text-sm tracking-wide text-red-500";
-                submitBtn.innerText = "確認並上傳設計"; submitBtn.disabled = false;
+                statusMsg.innerText = "上傳失敗，請檢查網路。"; statusMsg.className = "mt-4 text-center text-sm tracking-wide text-red-500"; submitBtn.innerText = "確認並上傳設計"; submitBtn.disabled = false;
             }
         }
     </script>
