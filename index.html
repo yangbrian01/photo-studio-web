@@ -3,16 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRO PHOTO STUDIO | 高品質影像處理</title>
+    <title>PRO PHOTO STUDIO | 全功能設計工作室</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Roboto:wght@300;400&display=swap');
+        /* 引入專業字體組合 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Roboto:wght@300;400;500&family=Dancing+Script:wght@500&family=VT323&display=swap');
+        
         body { font-family: 'Roboto', 'Noto Sans TC', sans-serif; background-color: #f8f9fa; }
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        /* 讓畫布置中並加上好看的陰影 */
-        .canvas-container { margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden; }
+
+        /* 畫布陰影與質感 */
+        .canvas-container { 
+            margin: 0 auto; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05);
+            border-radius: 8px; 
+            overflow: hidden; 
+            background-color: white;
+            transition: transform 0.2s ease;
+        }
+        .canvas-container:hover { transform: translateY(-5px); }
+
+        /* 側邊視窗 (Modal) 的平滑動畫 */
+        .slide-in-right { animation: slideInRight 0.3s ease-out; }
+        @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        /* 屬性面板的小控制方塊 */
+        .prop-box { width: 32px; height: 32px; cursor: pointer; border-radius: 6px; border: 1px solid #e5e7eb; transition: all 0.2s; }
+        .prop-box:hover { background-color: #f3f4f6; border-color: #d1d5db; }
     </style>
 </head>
 <body class="text-gray-900 antialiased relative">
@@ -23,13 +43,13 @@
                 PRO PHOTO STUDIO
             </h1>
             <p class="text-gray-500 text-sm tracking-widest font-light">
-                Xiaomi Pro 熱昇華高品質影像處理系統
+                Xiaomi Pro 線上設計與高品質影印系統
             </p>
         </header>
 
         <div id="step1-container" class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100 transition-all">
-            <h2 class="text-lg font-medium mb-6 flex items-center tracking-wide">
-                <span class="w-6 h-6 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">1</span>
+            <h2 class="text-lg font-medium mb-6 flex items-center tracking-wide overflow-x-auto">
+                <span class="w-6 h-6 shrink-0 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">1</span>
                 填寫訂單資訊
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -39,95 +59,173 @@
                 </div>
                 <input type="text" id="orderID" placeholder="蝦皮訂單編號" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black transition font-light text-sm">
             </div>
-            
             <button id="nextStepBtn" class="w-full bg-gray-900 text-white py-3 rounded-xl font-light tracking-widest hover:bg-black transition duration-300 text-sm mt-2">
-                下一步：編輯照片
+                下一步：線上設計
             </button>
         </div>
 
-        <div id="step2-container" class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100 hidden fade-in">
-            <div class="flex justify-between items-center mb-6">
+        <div id="step2-container" class="bg-white rounded-2xl shadow-sm border border-gray-100 hidden fade-in overflow-hidden">
+            
+            <div class="px-8 pt-8 pb-5 border-b border-gray-100 flex justify-between items-center">
                 <h2 class="text-lg font-medium flex items-center tracking-wide">
-                    <span class="w-6 h-6 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">2</span>
-                    編輯設計 (2:3 畫布)
+                    <span class="w-6 h-6 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal overflow-x-auto">2</span>
+                    拍立得設計工作室
                 </h2>
                 <span id="modeBadge" class="text-xs px-3 py-1 bg-gray-100 text-gray-500 rounded-full tracking-wider hidden">預覽模式</span>
             </div>
             
-            <label class="block mb-6">
-                <div class="flex items-center justify-center w-full h-24 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:bg-gray-50 transition">
-                    <div class="text-center">
-                        <span class="text-gray-400 text-sm font-light tracking-wide">+ 點擊上傳照片</span>
-                        <input type="file" id="imageInput" accept="image/*" class="hidden">
-                    </div>
-                </div>
-            </label>
-
-            <div id="editorSection" class="hidden">
-                <div class="bg-gray-50 p-4 rounded-xl mb-6">
+            <div class="p-8 flex gap-6 relative">
+                <div class="bg-gray-50 p-6 rounded-2xl w-[300px] h-[450px] shrink-0">
                     <canvas id="editorCanvas"></canvas>
                 </div>
-                
-                <div class="flex justify-center space-x-3">
-                    <button onclick="addText()" class="px-5 py-2 text-xs border border-gray-200 rounded-full hover:bg-gray-100 tracking-wide font-light transition">
-                        ✎ 新增文字
+
+                <div id="objectProperties" class="flex-1 bg-white p-6 border border-gray-100 rounded-xl shadow-sm hidden">
+                    <h4 class="text-sm font-medium tracking-wide text-gray-800 mb-5">物件編輯</h4>
+                    <div class="space-y-4">
+                        <div id="textOnlyProps" class="space-y-4 hidden">
+                            <div>
+                                <label class="text-xs text-gray-400 font-light mb-1.5 block">字體風格</label>
+                                <select id="fontFamily" class="w-full text-xs px-3 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-black">
+                                    <option value="Roboto" selected>經典黑體</option>
+                                    <option value="Dancing Script">手寫風</option>
+                                    <option value="VT323">像素風</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 font-light mb-1.5 block">文字顏色</label>
+                                <div class="flex gap-2">
+                                    <div onclick="setTextColor('#000000')" class="w-7 h-7 bg-black rounded cursor-pointer border border-gray-200"></div>
+                                    <div onclick="setTextColor('#ff4d4f')" class="w-7 h-7 bg-[#ff4d4f] rounded cursor-pointer border border-gray-200"></div>
+                                    <div onclick="setTextColor('#52c41a')" class="w-7 h-7 bg-[#52c41a] rounded cursor-pointer border border-gray-200"></div>
+                                    <div onclick="setTextColor('#1890ff')" class="w-7 h-7 bg-[#1890ff] rounded cursor-pointer border border-gray-200"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-gray-400 font-light mb-1.5 block">排列與操作</label>
+                            <div class="grid grid-cols-4 gap-2">
+                                <div onclick="flip('h')" title="水平翻轉" class="prop-box flex items-center justify-center text-sm text-gray-600"><i class="fa-solid fa-arrows-left-right"></i></div>
+                                <div onclick="flip('v')" title="垂直翻轉" class="prop-box flex items-center justify-center text-sm text-gray-600"><i class="fa-solid fa-arrows-up-down"></i></div>
+                                <div onclick="bringToFront()" title="移至最上層" class="prop-box flex items-center justify-center text-sm text-gray-600"><i class="fa-solid fa-layer-group"></i></div>
+                                <div onclick="sendToBack()" title="移至最下層" class="prop-box flex items-center justify-center text-sm text-gray-600"><i class="fa-solid fa-layer-group fa-flip-vertical"></i></div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 mt-2 border-t border-gray-100">
+                            <button onclick="deleteSelected()" class="w-full text-xs px-4 py-2 border border-red-200 text-red-500 rounded-lg hover:bg-red-50 transition tracking-wide">
+                                🗑 刪除選取物件
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="addPhotoPrompt" class="flex-1 bg-gray-50 p-6 rounded-xl flex items-center justify-center text-center">
+                    <p class="text-sm text-gray-400 font-light tracking-wide leading-relaxed">
+                        點擊下方「照片」<br>在畫布中匯入照片
+                    </p>
+                </div>
+            </div>
+
+            <div class="px-8 py-5 bg-gray-50/50 border-t border-gray-100">
+                <div class="flex justify-around items-center max-w-lg mx-auto">
+                    <label class="flex flex-col items-center gap-1 cursor-pointer text-gray-600 hover:text-black transition">
+                        <div class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-regular fa-image"></i>
+                        </div>
+                        <span class="text-[11px] font-light tracking-wide">照片</span>
+                        <input type="file" id="imageInput" accept="image/*" class="hidden">
+                    </label>
+                    <button onclick="toggleLibraryModal()" class="flex flex-col items-center gap-1 text-gray-600 hover:text-black transition">
+                        <div class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-regular fa-face-smile"></i>
+                        </div>
+                        <span class="text-[11px] font-light tracking-wide">圖庫/貼紙</span>
                     </button>
-                    <button onclick="deleteSelected()" class="px-5 py-2 text-xs border border-red-200 text-red-500 rounded-full hover:bg-red-50 tracking-wide font-light transition">
-                        🗑 刪除選取
+                    <button onclick="addText()" class="flex flex-col items-center gap-1 text-gray-600 hover:text-black transition">
+                        <div class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-t"></i>
+                        </div>
+                        <span class="text-[11px] font-light tracking-wide">文字</span>
+                    </button>
+                    <button onclick="clearCanvas()" class="flex flex-col items-center gap-1 text-red-400 hover:text-red-500 transition">
+                        <div class="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </div>
+                        <span class="text-[11px] font-light tracking-wide">清空畫布</span>
                     </button>
                 </div>
             </div>
         </div>
 
-        <button id="submitBtn" class="w-full bg-black text-white py-4 rounded-2xl font-light tracking-[0.2em] hover:bg-gray-800 transition duration-300 text-sm hidden fade-in">
-            確認並上傳至工作室
-        </button>
-
-        <p id="statusMsg" class="mt-4 text-center text-sm font-light tracking-wide"></p>
+        <div class="max-w-md mx-auto">
+            <button id="submitBtn" class="w-full bg-black text-white py-4 mt-6 rounded-2xl font-light tracking-[0.2em] hover:bg-gray-800 transition duration-300 text-sm hidden fade-in shadow-xl">
+                確認並上傳設計成品
+            </button>
+            <p id="statusMsg" class="mt-4 text-center text-sm font-light tracking-wide"></p>
+        </div>
     </div>
 
     <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center hidden fade-in backdrop-blur-sm">
         <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full mx-4 text-center">
-            <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
-                <span class="text-xl">🛒</span>
-            </div>
+            <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">🛒</div>
             <h3 class="text-lg font-medium text-gray-900 mb-2 tracking-wide">尚未填寫訂單編號</h3>
             <p class="text-sm text-gray-500 font-light mb-6 leading-relaxed">
                 系統偵測到您尚未填寫訂單編號。<br>建議您先至蝦皮賣場完成下單，以利工作室為您安排印製。
             </p>
             <div class="space-y-3">
-                <button onclick="goToShopee()" class="w-full bg-black text-white py-3 rounded-xl font-light tracking-widest text-sm hover:bg-gray-800 transition">
-                    前往蝦皮賣場下單
-                </button>
-                <button onclick="enterPreviewMode()" class="w-full bg-white text-gray-500 border border-gray-200 py-3 rounded-xl font-light tracking-widest text-sm hover:bg-gray-50 transition">
-                    我只想先預覽編輯效果
-                </button>
-                <button onclick="closeModal()" class="text-xs text-gray-400 mt-2 hover:text-gray-600 tracking-wide">
-                    返回修改訂單資訊
-                </button>
+                <button onclick="goToShopee()" class="w-full bg-black text-white py-3 rounded-xl font-light tracking-widest text-sm hover:bg-gray-800 transition">前往蝦皮賣場下單</button>
+                <button onclick="enterPreviewMode()" class="w-full bg-white text-gray-500 border border-gray-200 py-3 rounded-xl font-light tracking-widest text-sm hover:bg-gray-50 transition">我只想先預覽編輯效果</button>
+                <button onclick="closeModal()" class="text-xs text-gray-400 mt-2 hover:text-gray-600 tracking-wide overflow-x-auto">返回修改訂單資訊</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="libraryModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-end hidden backdrop-blur-sm">
+        <div class="bg-white h-full w-[400px] shadow-xl p-8 slide-in-right flex flex-col">
+            <div class="flex justify-between items-center mb-8 shrink-0">
+                <h3 class="text-xl font-medium tracking-wide">素材圖庫</h3>
+                <button onclick="toggleLibraryModal()" class="text-gray-400 hover:text-gray-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="flex gap-4 border-b border-gray-100 shrink-0 mb-6 overflow-x-auto">
+                <button onclick="setLibraryTab('frames')" id="tabFrames" class="text-sm px-1 py-3 font-medium text-black border-b-2 border-black transition tracking-wide">相框</button>
+                <button onclick="setLibraryTab('stickersHearts')" id="tabStickersHearts" class="text-sm px-1 py-3 font-light text-gray-400 hover:text-black transition tracking-wide">貼紙(愛心)</button>
+                <button onclick="setLibraryTab('stickersStars')" id="tabStickersStars" class="text-sm px-1 py-3 font-light text-gray-400 hover:text-black transition tracking-wide">貼紙(星星)</button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto pr-2 space-y-5" id="libraryContent">
+                <div id="libraryFrames" class="grid grid-cols-2 gap-4">
+                    <div onclick="addFrameToCanvas('rainbow')" class="border border-gray-200 p-3 rounded-xl cursor-pointer hover:border-black transition">
+                        <img src="https://i.imgur.com/KzXG5Rj.png" alt="彩虹框" class="w-full h-auto object-contain mb-2 rounded shadow-sm">
+                        <p class="text-center text-[11px] font-light tracking-wide text-gray-600">彩虹框</p>
+                    </div>
+                    <div onclick="addFrameToCanvas('classic')" class="border border-gray-200 p-3 rounded-xl cursor-pointer hover:border-black transition">
+                        <img src="https://i.imgur.com/vH7T7bM.png" alt="經典白框" class="w-full h-auto object-contain mb-2 rounded shadow-sm">
+                        <p class="text-center text-[11px] font-light tracking-wide text-gray-600">經典白框</p>
+                    </div>
+                </div>
+
+                <div id="libraryStickersHearts" class="grid grid-cols-3 gap-3 hidden">
+                    <img onclick="addStickerToCanvas('heart_red')" src="https://i.imgur.com/B9O6zF6.png" class="w-full border border-gray-100 rounded-lg p-2 cursor-pointer hover:border-black transition">
+                    <img onclick="addStickerToCanvas('heart_pink')" src="https://i.imgur.com/L1MhM2P.png" class="w-full border border-gray-100 rounded-lg p-2 cursor-pointer hover:border-black transition">
+                </div>
+
+                <div id="libraryStickersStars" class="grid grid-cols-3 gap-3 hidden">
+                    <img onclick="addStickerToCanvas('star_gold')" src="https://i.imgur.com/R3O2b9S.png" class="w-full border border-gray-100 rounded-lg p-2 cursor-pointer hover:border-black transition">
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 你的 GAS 網址
+        // === GAS 連接配置 ===
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
 
         let isPreviewMode = false; 
-        let canvas; // Fabric 畫布變數
+        let canvas; // Fabric 畫布
 
-        // 初始化畫布 (2:3 比例)
-        function initCanvas() {
-            if (!canvas) {
-                canvas = new fabric.Canvas('editorCanvas', {
-                    width: 300,
-                    height: 450,
-                    backgroundColor: '#ffffff'
-                });
-            }
-        }
-
-        // --- 步驟 1 邏輯 (完全沒變) ---
+        // === 步驟 1：訂單資訊邏輯 (完全沒變) ===
         const step1Container = document.getElementById('step1-container');
         const step2Container = document.getElementById('step2-container');
         const nextStepBtn = document.getElementById('nextStepBtn');
@@ -178,21 +276,75 @@
                 submitBtn.classList.replace('bg-black', 'bg-gray-400');
             } else {
                 modeBadge.classList.add('hidden');
-                submitBtn.innerText = "確認並上傳至工作室";
+                submitBtn.innerText = "確認並上傳設計成品";
                 submitBtn.classList.replace('bg-gray-400', 'bg-black');
             }
             step2Container.scrollIntoView({ behavior: 'smooth', block: 'start' });
             
             // 解鎖步驟 2 時，初始化畫布
-            initCanvas();
+            if (!canvas) initCanvas();
         }
 
-        // --- 步驟 2：Fabric.js 編輯邏輯 ---
+        // === 步驟 2：全功能設計畫布系統核心 (做好做滿) ===
+
+        // 1. 初始化 Fabric 畫布 (固定 2:3 比例)
+        function initCanvas() {
+            canvas = new fabric.Canvas('editorCanvas', {
+                width: 300,
+                height: 450,
+                backgroundColor: '#ffffff',
+                preserveObjectStacking: true // 確保圖層疊放順序不會錯
+            });
+
+            // 監聽物件選取事件，控制右上角屬性面板
+            canvas.on('selection:created', onObjectSelected);
+            canvas.on('selection:updated', onObjectSelected);
+            canvas.on('selection:cleared', onSelectionCleared);
+
+            // 如果畫布為空，顯示提示字，否則隱藏
+            canvas.on('after:render', () => {
+                const prompt = document.getElementById('addPhotoPrompt');
+                if (canvas.getObjects().length > 0) {
+                    prompt.classList.add('hidden');
+                } else {
+                    prompt.classList.remove('hidden');
+                }
+            });
+        }
+
+        // 當物件被選取時：顯示屬性面板，判斷是否為文字
+        const objectProperties = document.getElementById('objectProperties');
+        const addPhotoPrompt = document.getElementById('addPhotoPrompt');
+        const textOnlyProps = document.getElementById('textOnlyProps');
+        const fontFamilySelect = document.getElementById('fontFamily');
+
+        function onObjectSelected(e) {
+            objectProperties.classList.remove('hidden');
+            addPhotoPrompt.classList.add('hidden');
+
+            const activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'i-text') {
+                // 如果選中文字，顯示文字專屬屬性，同步字體設定
+                textOnlyProps.classList.remove('hidden');
+                fontFamilySelect.value = activeObject.fontFamily;
+            } else {
+                textOnlyProps.classList.add('hidden');
+            }
+        }
+
+        // 當選取取消時：隱藏屬性面板，恢復提示字
+        function onSelectionCleared() {
+            objectProperties.classList.add('hidden');
+            textOnlyProps.classList.add('hidden');
+            if (canvas.getObjects().length === 0) addPhotoPrompt.classList.remove('hidden');
+        }
+
+        // 2. 底部工具列功能
+
+        // 2a. 照片上傳與匯入
         document.getElementById('imageInput').onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
-            document.getElementById('editorSection').classList.remove('hidden');
 
             const reader = new FileReader();
             reader.onload = function(f) {
@@ -202,10 +354,13 @@
                     const scale = (300 * 0.9) / img.width;
                     img.set({
                         scaleX: scale, scaleY: scale,
+                        originX: 'center', originY: 'center',
                         cornerStyle: 'circle', cornerColor: 'black', borderColor: 'black', transparentCorners: false
                     });
                     canvas.centerObject(img);
                     canvas.add(img);
+                    // 將照片設為最底層圖層 (但高於背景色)
+                    canvas.sendToBack(img);
                     canvas.setActiveObject(img);
                 });
             };
@@ -213,15 +368,69 @@
             e.target.value = ''; // 允許重複上傳
         };
 
+        // 2b. 新增文字工具 (與屬性同步)
         function addText() {
             const text = new fabric.IText('點擊修改文字', {
-                left: 150, top: 225,
+                left: 150, top: 400, // 設在拍立得下方的厚邊框處
                 fontFamily: 'Noto Sans TC', fontSize: 24, fill: '#000000',
                 originX: 'center', originY: 'center',
                 cornerStyle: 'circle', cornerColor: 'black', borderColor: 'black', transparentCorners: false
             });
             canvas.add(text);
+            // 預設將文字移至最上層
+            canvas.bringToFront(text);
             canvas.setActiveObject(text);
+        }
+
+        // 2c. 一鍵清空畫布
+        function clearCanvas() {
+            if (confirm("確定要清空目前的設計重新開始嗎？")) {
+                canvas.clear();
+                canvas.setBackgroundColor('#ffffff', canvas.renderAll.bind(canvas));
+            }
+        }
+
+        // 3. 右上角物件屬性面板功能 (像 Image 7/8)
+
+        // 文字顏色、字體選取
+        function setTextColor(color) {
+            const activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'i-text') {
+                activeObject.set('fill', color);
+                canvas.requestRenderAll();
+            }
+        }
+
+        fontFamilySelect.addEventListener('change', function(e) {
+            const activeObject = canvas.getActiveObject();
+            if (activeObject && activeObject.type === 'i-text') {
+                activeObject.set('fontFamily', e.target.value);
+                canvas.requestRenderAll();
+            }
+        });
+
+        // 通用物件操作：翻轉、移至上/下層、刪除
+        function flip(type) {
+            const activeObject = canvas.getActiveObject();
+            if (!activeObject) return;
+            if (type === 'h') activeObject.set('flipX', !activeObject.flipX);
+            if (type === 'v') activeObject.set('flipY', !activeObject.flipY);
+            canvas.requestRenderAll();
+        }
+
+        function bringToFront() {
+            const activeObject = canvas.getActiveObject();
+            if (!activeObject) return;
+            canvas.bringToFront(activeObject);
+            canvas.requestRenderAll();
+        }
+
+        function sendToBack() {
+            const activeObject = canvas.getActiveObject();
+            if (!activeObject) return;
+            // 發送至最下層，但確保高於背景色
+            canvas.sendToBack(activeObject);
+            canvas.requestRenderAll();
         }
 
         function deleteSelected() {
@@ -232,7 +441,90 @@
             }
         }
 
-        // --- 步驟 3：上傳邏輯 (還原上傳到 GAS) ---
+        // 4. 圖庫 Modal 與貼紙/相框功能 (像 Image 9/10)
+
+        // 彈窗控制
+        const libraryModal = document.getElementById('libraryModal');
+        function toggleLibraryModal() {
+            libraryModal.classList.toggle('hidden');
+        }
+
+        // 頁籤控制
+        function setLibraryTab(tab) {
+            // 所有內容隱藏，所有頁籤灰色
+            document.querySelectorAll('#libraryContent > div').forEach(div => div.classList.add('hidden'));
+            document.querySelectorAll('#libraryContent button').forEach(btn => btn.classList.replace('font-medium', 'font-light'));
+            document.querySelectorAll('#libraryContent button').forEach(btn => btn.classList.add('text-gray-400', 'border-transparent'));
+            document.querySelectorAll('#libraryContent button').forEach(btn => btn.classList.remove('text-black', 'border-black'));
+
+            // 顯示當前內容，設當前頁籤為黑色粗體
+            document.getElementById('library' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+            const currentTab = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+            currentTab.classList.replace('font-light', 'font-medium');
+            currentTab.classList.replace('text-gray-400', 'text-black');
+            currentTab.classList.remove('border-transparent');
+            currentTab.classList.add('border-black');
+        }
+
+        // 從圖庫加入相框至畫布 (自動適應畫布大小且設為最底層)
+        const frameUrls = {
+            'rainbow': 'https://i.imgur.com/KzXG5Rj.png',
+            'classic': 'https://i.imgur.com/vH7T7bM.png'
+        };
+
+        function addFrameToCanvas(frameId) {
+            toggleLibraryModal();
+            // 如果已有相框物件，先刪除，一個設計只能有一個框
+            const objects = canvas.getObjects('image');
+            objects.forEach(obj => {
+                if (obj.frameId) canvas.remove(obj);
+            });
+
+            fabric.Image.fromURL(frameUrls[frameId], function(img) {
+                img.set({
+                    // 強制拉伸至滿版 2:3 畫布
+                    scaleX: canvas.width / img.width,
+                    scaleY: canvas.height / img.height,
+                    originX: 'left',
+                    originY: 'top',
+                    left: 0, top: 0,
+                    selectable: false, // 不可被客戶編輯/選取
+                    hoverCursor: 'default',
+                    evented: false, // 不觸發事件
+                    frameId: frameId // 標記它是相框
+                });
+                canvas.add(img);
+                // 確保相框是所有物件的最底層圖層
+                canvas.sendToBack(img);
+                canvas.requestRenderAll();
+            });
+        }
+
+        // 從圖庫加入貼紙至畫布
+        const stickerUrls = {
+            'heart_red': 'https://i.imgur.com/B9O6zF6.png',
+            'heart_pink': 'https://i.imgur.com/L1MhM2P.png',
+            'star_gold': 'https://i.imgur.com/R3O2b9S.png'
+        };
+
+        function addStickerToCanvas(stickerId) {
+            toggleLibraryModal();
+            fabric.Image.fromURL(stickerUrls[stickerId], function(img) {
+                img.set({
+                    scaleX: 0.2, // 初始縮小一些
+                    scaleY: 0.2,
+                    originX: 'center', originY: 'center',
+                    left: canvas.width / 2, top: canvas.height / 2,
+                    cornerStyle: 'circle', cornerColor: 'black', borderColor: 'black', transparentCorners: false
+                });
+                canvas.add(img);
+                // 貼紙預設在最上層
+                canvas.bringToFront(img);
+                canvas.setActiveObject(img);
+            });
+        }
+
+        // === 步驟 3：上傳邏輯 (合併所有圖層上傳沒變) ===
         submitBtn.onclick = async () => {
             if (isPreviewMode) {
                 alert("您目前處於預覽模式，系統不會儲存照片。\n請至蝦皮賣場下單取得訂單編號後，重新整理網頁填寫上傳！");
@@ -241,20 +533,20 @@
 
             // 檢查畫布是否有內容
             if (canvas.getObjects().length === 0) {
-                alert("請先上傳照片或加入設計");
+                alert("請先上傳照片、加入貼紙或新增文字設計");
                 return;
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerText = "處理中...";
+            submitBtn.innerText = "合併設計並上傳中...";
             document.getElementById('statusMsg').innerText = "正在處理影像並上傳...";
-            document.getElementById('statusMsg').className = "mt-4 text-center text-sm text-blue-500 tracking-wide";
+            document.getElementById('statusMsg').className = "mt-4 text-center text-sm text-blue-500 tracking-wide overflow-x-auto";
 
-            // 匯出前取消選取物件 (才不會把控制框也印出來)
+            // 匯出前取消所有選取狀態 (避免印出控制框)
             canvas.discardActiveObject();
             canvas.requestRenderAll();
 
-            // 取得高畫質 Base64 (multiplier: 3 放大三倍解析度)
+            // 取得高清大圖 Base64 (multiplier: 3 放大解析度，確保列印清晰)
             const base64Image = canvas.toDataURL({ format: 'png', multiplier: 3 });
 
             const payload = {
@@ -269,13 +561,13 @@
                     body: JSON.stringify(payload),
                     mode: 'no-cors'
                 });
-                document.getElementById('statusMsg').innerText = "✓ 成功！照片已送達工作室。";
-                document.getElementById('statusMsg').className = "mt-4 text-center text-sm text-gray-800 font-medium tracking-wide";
-                submitBtn.innerText = "上傳完成";
+                document.getElementById('statusMsg').innerText = "✓ 成功！您的設計成品已送達工作室。";
+                document.getElementById('statusMsg').className = "mt-4 text-center text-sm text-gray-800 font-medium tracking-wide overflow-x-auto overflow-x-auto";
+                submitBtn.innerText = "設計成品已上傳";
             } catch (error) {
                 document.getElementById('statusMsg').innerText = "上傳失敗，請檢查網路。";
-                document.getElementById('statusMsg').className = "mt-4 text-center text-sm text-red-500 tracking-wide";
-                submitBtn.innerText = "確認並上傳至工作室";
+                document.getElementById('statusMsg').className = "mt-4 text-center text-sm text-red-500 tracking-wide overflow-x-auto";
+                submitBtn.innerText = "確認並上傳設計成品";
                 submitBtn.disabled = false;
             }
         };
