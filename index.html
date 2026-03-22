@@ -211,7 +211,7 @@
 
         const PREMIUM_COLORS = ['#000000', '#595959', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#fce4ec', '#1976d2', '#64b5f6', '#bbdefb'];
 
-        // --- 1. 訂單驗證 ---
+        // --- 1. 訂單驗證 (破圖終極修復) ---
         async function verifyAndNext() {
             const userName = document.getElementById('userName').value.trim();
             const orderID = document.getElementById('orderID').value.trim();
@@ -220,6 +220,7 @@
 
             if (!userName) { document.getElementById('nameError').classList.remove('hidden'); return; }
             document.getElementById('nameError').classList.add('hidden');
+
             if (!orderID) { document.getElementById('orderModal').classList.remove('hidden'); return; }
 
             msg.classList.add('hidden'); btn.innerText = "驗證訂單中..."; btn.disabled = true;
@@ -231,7 +232,6 @@
                 if (data.status === 'success') {
                     expectedPhotos = parseInt(data.count); isPreviewMode = false; unlockStep2();
                 } else if (data.status === 'completed') {
-                    // 🚀 歷史訂單畫面展示
                     document.getElementById('step1-container').classList.add('hidden');
                     document.getElementById('success-container').classList.remove('hidden');
                     
@@ -243,18 +243,22 @@
                     gallery.innerHTML = '';
                     if(data.images && data.images.length > 0){
                         data.images.forEach((url, index) => {
-                            // 🚀 破圖修復：將 Google Drive 網址轉換為直連圖片網址
+                            // 🚀 終極破圖修復：改用 Google Drive 的「縮圖 (Thumbnail)」官方 API 繞過阻擋
                             let displayUrl = url;
                             const match = url.match(/[-\w]{25,}/);
                             if (match) {
-                                displayUrl = `https://drive.google.com/uc?export=view&id=${match[0]}`;
+                                // 使用 thumbnail API，sz=w800 代表寬度 800px，畫質足夠清晰且不會被 Google 擋
+                                displayUrl = `https://drive.google.com/thumbnail?id=${match[0]}&sz=w800`;
                             }
 
                             const div = document.createElement('div');
-                            div.className = "bg-gray-50 rounded-xl p-2 border border-gray-100 shadow-sm";
-                            div.innerHTML = `<img src="${displayUrl}" class="w-full h-auto rounded shadow-sm"><p class="text-center text-[10px] text-gray-400 mt-2 font-light">第 ${index+1} 張</p>`;
+                            div.className = "bg-gray-50 rounded-xl p-2 border border-gray-100 shadow-sm flex flex-col items-center justify-center min-h-[150px]";
+                            // 加入一個淡色的底色，確保載入前不會是一片白
+                            div.innerHTML = `<img src="${displayUrl}" class="w-full h-auto rounded shadow-sm object-cover" onerror="this.onerror=null; this.src='https://placehold.co/300x456/f3f4f6/a1a1aa?text=Loading...';"><p class="text-center text-[10px] text-gray-400 mt-2 font-light">第 ${index+1} 張</p>`;
                             gallery.appendChild(div);
                         });
+                    } else {
+                        gallery.innerHTML = '<p class="text-xs text-gray-400 col-span-2 text-center py-4">無法載入歷史照片</p>';
                     }
                 } else {
                     msg.innerText = data.message; msg.classList.remove('hidden');
@@ -283,22 +287,20 @@
             const batchBtn = document.getElementById('batchBtn');
 
             if (isPreviewMode) {
-                saveBtn.innerText = "預覽完成，前往上傳";
+                saveBtn.innerText = "預覽完成，前往綁定單號";
                 saveBtn.classList.replace('bg-black', 'bg-blue-600');
                 saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full');
                 batchBtn.classList.add('hidden');
             } else if (current > expectedPhotos) {
-                // 張數已滿，準備上傳
                 saveBtn.innerText = "確認並上傳所有設計";
                 saveBtn.classList.replace('bg-black', 'bg-blue-600');
                 saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full');
                 batchBtn.classList.add('hidden');
             } else {
-                saveBtn.innerText = `存單張 (第 ${current} 張)`;
+                saveBtn.innerText = `存檔單張 (第 ${current} 張)`;
                 saveBtn.classList.replace('bg-blue-600', 'bg-black');
                 saveBtn.classList.remove('w-full'); saveBtn.classList.add('w-1/2');
                 batchBtn.classList.remove('hidden');
-                // 更新批量按鈕文字
                 batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 洗相片(剩 ${expectedPhotos - current + 1} 張)`;
             }
         }
@@ -364,7 +366,6 @@
         function applyFilter(filterName, btn) {
             document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             
-            // 找當前選中的圖片，沒選中就找畫布上的第一張圖
             let targetImg = canvas.getActiveObject();
             if (!targetImg || targetImg.type !== 'image' || targetImg.id === 'overlayFrame') {
                 targetImg = canvas.getObjects().find(o => o.type === 'image' && o.id !== 'overlayFrame');
@@ -470,23 +471,21 @@
                 document.getElementById('success-container').classList.remove('hidden');
                 msg.innerText = ""; msg.classList.add('hidden'); 
                 
-                renderGallery();
-            } catch (error) { msg.innerText = "上傳失敗，請檢查網路。"; btn.disabled = false; btn.innerText = "重新送出"; }
-        }
+                // 為了展示剛上傳的結果，我們直接渲染 photoCart (剛設計的 Base64 圖)
+                document.getElementById('resName').innerText = document.getElementById('userName').value.trim() || "顧客";
+                document.getElementById('resOrderID').innerText = document.getElementById('orderID').value.trim();
+                document.getElementById('resCount').innerText = `${expectedPhotos} 張`;
+                
+                const gallery = document.getElementById('galleryContainer');
+                gallery.innerHTML = ''; 
+                photoCart.forEach((imgBase64, index) => {
+                    const div = document.createElement('div');
+                    div.className = "bg-gray-50 rounded-xl p-2 border border-gray-100 shadow-sm";
+                    div.innerHTML = `<img src="${imgBase64}" class="w-full h-auto rounded shadow-sm object-cover"><p class="text-center text-[10px] text-gray-400 mt-2 font-light">第 ${index+1} 張</p>`;
+                    gallery.appendChild(div);
+                });
 
-        function renderGallery() {
-            document.getElementById('resName').innerText = document.getElementById('userName').value.trim() || "顧客";
-            document.getElementById('resOrderID').innerText = document.getElementById('orderID').value.trim() || "預覽單號";
-            document.getElementById('resCount').innerText = `${expectedPhotos} 張`;
-            
-            const gallery = document.getElementById('galleryContainer');
-            gallery.innerHTML = ''; 
-            photoCart.forEach((imgBase64, index) => {
-                const div = document.createElement('div');
-                div.className = "bg-gray-50 rounded-xl p-2 border border-gray-100 shadow-sm";
-                div.innerHTML = `<img src="${imgBase64}" class="w-full h-auto rounded shadow-sm"><p class="text-center text-[10px] text-gray-400 mt-2 font-light">第 ${index+1} 張</p>`;
-                gallery.appendChild(div);
-            });
+            } catch (error) { msg.innerText = "上傳失敗，請檢查網路。"; btn.disabled = false; btn.innerText = "重新送出"; }
         }
     </script>
 </body>
