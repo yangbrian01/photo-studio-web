@@ -48,7 +48,6 @@
                 </div>
                 <input type="text" id="orderID" placeholder="蝦皮訂單編號" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black transition font-light text-sm">
             </div>
-            
             <button id="nextStepBtn" onclick="verifyAndNext()" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-black transition duration-300 text-sm mt-2 shadow-md">
                 驗證訂單並開始設計
             </button>
@@ -86,7 +85,7 @@
 
             <div class="px-5 py-5 bg-white space-y-5">
                 <div class="p-4 border border-gray-100 rounded-xl bg-gray-50/50">
-                    <label class="text-[11px] text-gray-400 font-medium mb-3 block text-center tracking-widest">風格濾鏡 (相機拍照完美支援)</label>
+                    <label class="text-[11px] text-gray-400 font-medium mb-3 block text-center tracking-widest">風格濾鏡 (請先點選想套用的照片)</label>
                     <div class="flex overflow-x-auto gap-3.5 filter-scroll pb-2 snap-x">
                         <button onclick="applyFilter('Original', this)" class="filter-item active text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5"><span class="text-[10px] font-light">原圖</span></button>
                         <button onclick="applyFilter('KPop', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 hue-rotate-15 contrast-125 saturate-150"><span class="text-[10px] font-medium text-pink-500">女團粉</span></button>
@@ -115,10 +114,14 @@
                 </div>
             </div>
             
-            <div class="px-5 py-4 bg-gray-50 border-t border-gray-200">
-                <button id="saveNextBtn" onclick="saveAndNext()" class="w-full bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md">
-                    存檔並設計下一張
+            <div class="px-5 py-4 bg-gray-50 border-t border-gray-200 flex gap-3">
+                <button id="saveNextBtn" onclick="saveAndNext()" class="w-1/2 bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md">
+                    存單張
                 </button>
+                <label class="w-1/2 bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md text-center cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-bolt"></i> 批量快編
+                    <input type="file" id="batchImageInput" multiple accept="image/*" class="hidden">
+                </label>
             </div>
         </div>
 
@@ -192,16 +195,16 @@
                 <button onclick="document.getElementById('libraryModal').classList.add('hidden')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-6 grid grid-cols-4 gap-4 content-start bg-gray-50">
-                <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
-                <img onclick="addSticker('https://i.imgur.com/L1MhM2P.png')" src="https://i.imgur.com/L1MhM2P.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
-                <img onclick="addSticker('https://i.imgur.com/R3O2b9S.png')" src="https://i.imgur.com/R3O2b9S.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
+                <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
+                <img onclick="addSticker('https://i.imgur.com/L1MhM2P.png')" src="https://i.imgur.com/L1MhM2P.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
+                <img onclick="addSticker('https://i.imgur.com/R3O2b9S.png')" src="https://i.imgur.com/R3O2b9S.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
             </div>
         </div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
-        let canvas, userImageObject, overlayFrameGroup;
+        let canvas, overlayFrameGroup;
         const C_W = 300, C_H = 456, P_LEFT = 18, P_TOP = 18, P_WIDTH = 264, P_HEIGHT = 338; 
         
         let isPolaroidLayout = true; 
@@ -223,31 +226,22 @@
 
             if (!orderID) { document.getElementById('orderModal').classList.remove('hidden'); return; }
 
-            msg.classList.add('hidden');
-            btn.innerText = "驗證訂單中..."; btn.disabled = true;
+            msg.classList.add('hidden'); btn.innerText = "驗證訂單中..."; btn.disabled = true;
 
             try {
                 const response = await fetch(`${SCRIPT_URL}?orderID=${orderID}`);
                 const data = await response.json();
                 
                 if (data.status === 'success') {
-                    // ✅ 全新訂單
-                    expectedPhotos = parseInt(data.count);
-                    isPreviewMode = false;
-                    unlockStep2();
+                    expectedPhotos = parseInt(data.count); isPreviewMode = false; unlockStep2();
                 } else if (data.status === 'completed') {
-                    // 🏆 歷史訂單：直接跳到成功畫面展示！
+                    // 🛑 歷史訂單：顯示「一模一樣」的成功畫面
                     document.getElementById('step1-container').classList.add('hidden');
                     document.getElementById('success-container').classList.remove('hidden');
                     
-                    document.getElementById('successTitle').innerText = "此訂單已成功交件";
-                    document.getElementById('successSub').innerText = "以下為您當時的設計明細";
-                    document.getElementById('successHeader').classList.replace('bg-green-500', 'bg-gray-800');
-                    document.getElementById('successIcon').className = "fa-solid fa-clock-rotate-left text-3xl";
-
                     document.getElementById('resName').innerText = userName;
                     document.getElementById('resOrderID').innerText = orderID;
-                    document.getElementById('resCount').innerText = `${parseInt(data.count)} 張 (已交件)`;
+                    document.getElementById('resCount').innerText = `${parseInt(data.count)} 張`;
                     
                     const gallery = document.getElementById('galleryContainer');
                     gallery.innerHTML = '';
@@ -258,17 +252,13 @@
                             div.innerHTML = `<img src="${url}" class="w-full h-auto rounded shadow-sm"><p class="text-center text-[10px] text-gray-400 mt-2 font-light">第 ${index+1} 張</p>`;
                             gallery.appendChild(div);
                         });
-                    } else {
-                        gallery.innerHTML = '<p class="text-xs text-gray-400 col-span-2 text-center">無法載入歷史照片</p>';
                     }
                 } else {
-                    msg.innerText = data.message;
-                    msg.classList.remove('hidden');
+                    msg.innerText = data.message; msg.classList.remove('hidden');
                     btn.innerText = "驗證訂單並開始設計"; btn.disabled = false;
                 }
             } catch (error) {
-                msg.innerText = "驗證失敗，請檢查網路連線。";
-                msg.classList.remove('hidden');
+                msg.innerText = "驗證失敗，請檢查網路連線。"; msg.classList.remove('hidden');
                 btn.innerText = "驗證訂單並開始設計"; btn.disabled = false;
             }
         }
@@ -285,24 +275,29 @@
         function updateProgressUI() {
             const current = photoCart.length + 1;
             document.getElementById('progressText').innerText = isPreviewMode ? "體驗模式" : `第 ${current} / ${expectedPhotos} 張`;
+            
             const saveBtn = document.getElementById('saveNextBtn');
             if (isPreviewMode) {
                 saveBtn.innerText = "預覽完成，進行綁定";
                 saveBtn.classList.replace('bg-black', 'bg-blue-600');
-            } else if (current === expectedPhotos) {
+                saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full');
+                document.getElementById('batchImageInput').parentElement.classList.add('hidden');
+            } else if (current > expectedPhotos) {
                 saveBtn.innerText = "確認並上傳所有設計";
                 saveBtn.classList.replace('bg-black', 'bg-blue-600');
+                saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full');
+                document.getElementById('batchImageInput').parentElement.classList.add('hidden');
             } else {
-                saveBtn.innerText = `存檔並設計下一張 (第 ${current+1} 張)`;
+                saveBtn.innerText = `存單張 (第 ${current} 張)`;
                 saveBtn.classList.replace('bg-blue-600', 'bg-black');
+                saveBtn.classList.remove('w-full'); saveBtn.classList.add('w-1/2');
+                document.getElementById('batchImageInput').parentElement.classList.remove('hidden');
             }
         }
 
         // --- 2. 畫布系統 ---
         function initCanvas() {
-            // 🚀 終極相機修復：強制使用 Canvas2D 引擎算濾鏡，無懼 1200 萬畫素手機照，絕不縮放！
             fabric.filterBackend = new fabric.Canvas2dFilterBackend();
-
             canvas = new fabric.Canvas('editorCanvas', { width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true });
             
             const palette = document.getElementById('colorPalette');
@@ -330,33 +325,65 @@
             document.getElementById('objectTools').classList.remove('hidden');
             const activeObj = canvas.getActiveObject();
             if (activeObj && activeObj.type === 'i-text') {
-                document.getElementById('textTools').classList.remove('hidden');
-                document.getElementById('textTools').classList.add('flex');
+                document.getElementById('textTools').classList.remove('hidden'); document.getElementById('textTools').classList.add('flex');
                 document.getElementById('fontFamily').value = activeObj.fontFamily;
-            } else { 
-                document.getElementById('textTools').classList.add('hidden'); document.getElementById('textTools').classList.remove('flex');
-            }
+            } else { document.getElementById('textTools').classList.add('hidden'); document.getElementById('textTools').classList.remove('flex'); }
         }
 
         function toggleLayout() {
-            isPolaroidLayout = !isPolaroidLayout; 
-            document.getElementById('layoutText').innerText = isPolaroidLayout ? "目前: 拍立得白框" : "目前: 全螢幕滿版";
+            isPolaroidLayout = !isPolaroidLayout; document.getElementById('layoutText').innerText = isPolaroidLayout ? "目前: 白框" : "目前: 滿版";
             overlayFrameGroup.set('opacity', isPolaroidLayout ? 1 : 0); canvas.requestRenderAll();
         }
 
+        // 🛑 取消限制：上傳新圖不再刪除舊圖 (可做拼貼)
         document.getElementById('imageInput').onchange = (e) => {
             const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (f) => {
                 fabric.Image.fromURL(f.target.result, (img) => {
-                    if (userImageObject) canvas.remove(userImageObject); 
                     const scale = Math.max(P_WIDTH / img.width, P_HEIGHT / img.height);
                     img.set({ scaleX: scale, scaleY: scale, originX: 'left', originY: 'top', left: (C_W - (img.width * scale)) / 2, top: (isPolaroidLayout ? P_TOP + (P_HEIGHT - (img.height * scale)) / 2 : (C_H - (img.height * scale)) / 2), frameId: 'userImage' });
-                    
-                    userImageObject = img;
                     canvas.add(img); canvas.sendToBack(img); canvas.bringToFront(overlayFrameGroup); canvas.setActiveObject(img);
                 });
             }; reader.readAsDataURL(file); e.target.value = '';
+        };
+
+        // 🚀 一鍵批量處理功能
+        document.getElementById('batchImageInput').onchange = async (e) => {
+            const files = Array.from(e.target.files);
+            if (!files.length) return;
+            
+            if (photoCart.length + files.length > expectedPhotos) {
+                alert(`您的訂單只剩 ${expectedPhotos - photoCart.length} 張額度，請重新選擇。`);
+                e.target.value = ''; return;
+            }
+
+            const msg = document.getElementById('statusMsg');
+            msg.innerText = `正在為您快編 ${files.length} 張照片...`; msg.classList.remove('hidden');
+
+            for (let i = 0; i < files.length; i++) {
+                await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (f) => {
+                        fabric.Image.fromURL(f.target.result, (img) => {
+                            // 清空舊圖
+                            const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame');
+                            objects.forEach(o => canvas.remove(o));
+
+                            const scale = Math.max(P_WIDTH / img.width, P_HEIGHT / img.height);
+                            img.set({ scaleX: scale, scaleY: scale, originX: 'left', originY: 'top', left: (C_W - (img.width * scale)) / 2, top: (isPolaroidLayout ? P_TOP + (P_HEIGHT - (img.height * scale)) / 2 : (C_H - (img.height * scale)) / 2), frameId: 'userImage' });
+                            
+                            canvas.add(img); canvas.sendToBack(img); canvas.bringToFront(overlayFrameGroup); canvas.renderAll();
+                            photoCart.push(canvas.toDataURL({ format: 'png', multiplier: 3 }));
+                            resolve();
+                        });
+                    }; reader.readAsDataURL(files[i]);
+                });
+            }
+            
+            msg.innerText = `✓ 批量處理完成！已暫存至購物車。`;
+            updateProgressUI();
+            e.target.value = '';
         };
 
         function addText() { const text = new fabric.IText('輸入文字...', { left: C_W / 2, top: C_H - 50, fontFamily: 'Noto Sans TC', fontSize: 24, fill: '#000000', originX: 'center', originY: 'center' }); canvas.add(text); canvas.bringToFront(text); canvas.setActiveObject(text); }
@@ -365,66 +392,61 @@
         function openLibrary() { document.getElementById('libraryModal').classList.remove('hidden'); }
         function addSticker(url) { document.getElementById('libraryModal').classList.add('hidden'); fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2 }); canvas.add(img); canvas.bringToFront(img); canvas.setActiveObject(img); }); }
 
+        // 🎨 濾鏡：自動套用在當前選取的照片上
         function applyFilter(filterName, btn) {
             document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-            if (!userImageObject) return;
+            let targetImg = canvas.getActiveObject();
+            if (!targetImg || targetImg.frameId !== 'userImage') {
+                targetImg = canvas.getObjects().find(o => o.frameId === 'userImage'); // 如果沒選，預設套用在第一張找到的照片
+            }
+            if (!targetImg) return;
 
-            // 確保相機拍的超高畫素套濾鏡後座標與縮放完全保留
-            const currentScaleX = userImageObject.scaleX;
-            const currentScaleY = userImageObject.scaleY;
-            const currentLeft = userImageObject.left;
-            const currentTop = userImageObject.top;
+            const currentScaleX = targetImg.scaleX; const currentScaleY = targetImg.scaleY; const currentLeft = targetImg.left; const currentTop = targetImg.top;
 
-            userImageObject.filters = [];
+            targetImg.filters = [];
             switch (filterName) {
                 case 'Original': break; 
-                case 'KPop': userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 })); userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffe4e1', mode: 'tint', alpha: 0.25 })); break;
-                case 'BoyBand': userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.15 })); userImageObject.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.15 })); userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#607d8b', mode: 'tint', alpha: 0.2 })); break;
-                case 'Cool': userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#e0f7fa', mode: 'tint', alpha: 0.2 })); break;
-                case 'Film': userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 })); userImageObject.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.1 })); userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#8b4513', mode: 'tint', alpha: 0.15 })); break;
-                case 'Vintage': userImageObject.filters.push(new fabric.Image.filters.Sepia()); userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: -0.1 })); break;
-                case 'Mono': userImageObject.filters.push(new fabric.Image.filters.Grayscale()); break;
-                case 'Fresh': userImageObject.filters.push(new fabric.Image.filters.Saturation({ saturation: 0.15 })); userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); break;
+                case 'KPop': targetImg.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); targetImg.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 })); targetImg.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffe4e1', mode: 'tint', alpha: 0.25 })); break;
+                case 'BoyBand': targetImg.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.15 })); targetImg.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.15 })); targetImg.filters.push(new fabric.Image.filters.BlendColor({ color: '#607d8b', mode: 'tint', alpha: 0.2 })); break;
+                case 'Cool': targetImg.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); targetImg.filters.push(new fabric.Image.filters.BlendColor({ color: '#e0f7fa', mode: 'tint', alpha: 0.2 })); break;
+                case 'Film': targetImg.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 })); targetImg.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.1 })); targetImg.filters.push(new fabric.Image.filters.BlendColor({ color: '#8b4513', mode: 'tint', alpha: 0.15 })); break;
+                case 'Vintage': targetImg.filters.push(new fabric.Image.filters.Sepia()); targetImg.filters.push(new fabric.Image.filters.Brightness({ brightness: -0.1 })); break;
+                case 'Mono': targetImg.filters.push(new fabric.Image.filters.Grayscale()); break;
+                case 'Fresh': targetImg.filters.push(new fabric.Image.filters.Saturation({ saturation: 0.15 })); targetImg.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); break;
             }
-            
-            userImageObject.applyFilters();
-            // 強制復原座標系，防止崩潰位移
-            userImageObject.set({ scaleX: currentScaleX, scaleY: currentScaleY, left: currentLeft, top: currentTop });
-            userImageObject.setCoords();
-            canvas.requestRenderAll();
+            targetImg.applyFilters();
+            targetImg.set({ scaleX: currentScaleX, scaleY: currentScaleY, left: currentLeft, top: currentTop }); targetImg.setCoords(); canvas.requestRenderAll();
         }
 
-        function bringFront() { const obj = canvas.getActiveObject(); if(obj) { canvas.bringToFront(obj); canvas.requestRenderAll(); } }
-        function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); if(userImageObject && obj !== userImageObject) canvas.bringForward(userImageObject); canvas.bringForward(overlayFrameGroup); canvas.requestRenderAll(); } }
-        function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { if(obj === userImageObject) userImageObject = null; canvas.remove(obj); canvas.discardActiveObject(); document.getElementById('objectTools').classList.add('hidden'); } }
-        function clearCanvas() { if(confirm("確定重置當前畫布？")) { const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame'); objects.forEach(o => canvas.remove(o)); userImageObject = null; document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); document.querySelector('.filter-item').classList.add('active'); } }
+        function bringFront() { const obj = canvas.getActiveObject(); if(obj) { canvas.bringToFront(obj); canvas.bringToFront(overlayFrameGroup); canvas.requestRenderAll(); } }
+        function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); canvas.bringToFront(overlayFrameGroup); canvas.requestRenderAll(); } }
+        function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { canvas.remove(obj); canvas.discardActiveObject(); document.getElementById('objectTools').classList.add('hidden'); } }
+        function clearCanvas() { if(confirm("確定重置當前畫布？")) { const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame'); objects.forEach(o => canvas.remove(o)); document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); document.querySelector('.filter-item').classList.add('active'); } }
 
         // --- 3. 預覽轉換與正式上傳 ---
         async function saveAndNext() {
-            if (!userImageObject) { alert("請至少載入一張照片喔！"); return; }
-            
-            // 🛑 如果是預覽模式，強制跳出保留視窗，不執行上傳
-            if (isPreviewMode) {
-                document.getElementById('previewDoneModal').classList.remove('hidden');
+            // 如果已達總數，執行上傳
+            if (photoCart.length >= expectedPhotos && !isPreviewMode) {
+                await executeUpload();
                 return;
             }
+
+            if (isPreviewMode) { document.getElementById('previewDoneModal').classList.remove('hidden'); return; }
             
             canvas.discardActiveObject(); canvas.requestRenderAll();
             photoCart.push(canvas.toDataURL({ format: 'png', multiplier: 3 }));
             
-            if (photoCart.length === expectedPhotos) {
-                await executeUpload();
-            } else {
-                clearCanvas(); updateProgressUI();
-                alert(`第 ${photoCart.length} 張已暫存！請繼續設計下一張。`);
+            updateProgressUI();
+            if (photoCart.length < expectedPhotos) {
+                clearCanvas();
+                document.getElementById('statusMsg').innerText = `第 ${photoCart.length} 張已暫存！請繼續設計。`;
             }
         }
 
-        // 預覽轉正：驗證剛輸入的單號
+        // 預覽轉正
         async function convertPreviewToReal() {
             const newOrderID = document.getElementById('previewOrderID').value.trim();
-            const msg = document.getElementById('previewVerifyMsg');
-            const btn = document.getElementById('convertBtn');
+            const msg = document.getElementById('previewVerifyMsg'); const btn = document.getElementById('convertBtn');
             
             if (!newOrderID) { msg.innerText = "請輸入訂單編號"; msg.classList.remove('hidden'); return; }
             btn.innerText = "驗證中..."; btn.disabled = true; msg.classList.add('hidden');
@@ -434,18 +456,15 @@
                 const data = await response.json();
                 
                 if (data.status === 'success') {
-                    isPreviewMode = false;
-                    expectedPhotos = parseInt(data.count);
+                    isPreviewMode = false; expectedPhotos = parseInt(data.count);
                     document.getElementById('orderID').value = newOrderID; 
                     document.getElementById('previewDoneModal').classList.add('hidden');
                     saveAndNext(); 
                 } else {
-                    msg.innerText = data.message; msg.classList.remove('hidden');
-                    btn.innerText = "驗證並保留設計"; btn.disabled = false;
+                    msg.innerText = data.message; msg.classList.remove('hidden'); btn.innerText = "驗證並保留設計"; btn.disabled = false;
                 }
             } catch (error) {
-                msg.innerText = "驗證失敗，請檢查網路。"; msg.classList.remove('hidden');
-                btn.innerText = "驗證並保留設計"; btn.disabled = false;
+                msg.innerText = "驗證失敗，請檢查網路。"; msg.classList.remove('hidden'); btn.innerText = "驗證並保留設計"; btn.disabled = false;
             }
         }
 
@@ -454,29 +473,23 @@
             btn.disabled = true; btn.innerText = "打包上傳中..."; msg.innerText = "正在傳送至工作室...";
 
             try {
-                await fetch(SCRIPT_URL, { 
-                    method: "POST", 
-                    body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim(), images: photoCart }), 
-                    mode: 'no-cors' 
-                });
+                await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim(), images: photoCart }), mode: 'no-cors' });
                 
                 document.getElementById('step2-container').classList.add('hidden');
                 document.getElementById('success-container').classList.remove('hidden');
                 msg.innerText = ""; msg.classList.add('hidden'); 
                 
                 renderGallery();
-            } catch (error) { 
-                msg.innerText = "上傳失敗，請檢查網路。"; btn.disabled = false; btn.innerText = "重新送出"; 
-            }
+            } catch (error) { msg.innerText = "上傳失敗，請檢查網路。"; btn.disabled = false; btn.innerText = "重新送出"; }
         }
 
         function renderGallery() {
-            document.getElementById('resName').innerText = document.getElementById('userName').value.trim() || "顧客";
+            document.getElementById('resName').innerText = document.getElementById('userName').value.trim();
             document.getElementById('resOrderID').innerText = document.getElementById('orderID').value.trim();
             document.getElementById('resCount').innerText = `${expectedPhotos} 張`;
             
             const gallery = document.getElementById('galleryContainer');
-            gallery.innerHTML = ''; // 清空
+            gallery.innerHTML = ''; 
             photoCart.forEach((imgBase64, index) => {
                 const div = document.createElement('div');
                 div.className = "bg-gray-50 rounded-xl p-2 border border-gray-100 shadow-sm";
