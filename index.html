@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Photo Studio | 高品質小卡客製化</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .cropper-container { max-height: 500px !important; }
+    </style>
+</head>
+<body class="text-gray-900 antialiased">
+
+    <div class="max-w-2xl mx-auto px-6 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-3xl font-light tracking-widest uppercase mb-2">Pro Photo Studio</h1>
+            <p class="text-gray-500 text-sm">Xiaomi Pro 熱昇華高品質影像處理系統</p>
+        </header>
+
+        <div class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100">
+            <h2 class="text-lg font-semibold mb-6 flex items-center">
+                <span class="w-6 h-6 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3">1</span>
+                填寫訂單資訊
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="userName" placeholder="蝦皮帳號 / 姓名" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black transition">
+                <input type="text" id="orderID" placeholder="訂單編號 (選填)" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black transition">
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100">
+            <h2 class="text-lg font-semibold mb-6 flex items-center">
+                <span class="w-6 h-6 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3">2</span>
+                編輯照片 (自動固定 2:3 比例)
+            </h2>
+            
+            <label class="block mb-6">
+                <div class="flex items-center justify-center w-full h-32 border-2 border-dashed border-gray-200 rounded-2xl cursor-pointer hover:bg-gray-50 transition">
+                    <div class="text-center">
+                        <span class="text-gray-400 text-sm">點擊上傳或拖放照片</span>
+                        <input type="file" id="imageInput" accept="image/*" class="hidden">
+                    </div>
+                </div>
+            </label>
+
+            <div id="editorSection" class="hidden">
+                <div class="rounded-xl overflow-hidden bg-gray-100 mb-6">
+                    <img id="previewImage" class="max-w-full block">
+                </div>
+                <div class="flex justify-center space-x-4">
+                    <button onclick="cropper.rotate(-90)" class="px-4 py-2 text-xs border border-gray-200 rounded-full hover:bg-gray-100">↺ 旋轉</button>
+                    <button onclick="cropper.setDragMode('move')" class="px-4 py-2 text-xs border border-gray-200 rounded-full hover:bg-gray-100">✥ 移動</button>
+                    <button onclick="cropper.setDragMode('crop')" class="px-4 py-2 text-xs border border-gray-200 rounded-full hover:bg-gray-100">✂ 裁切</button>
+                </div>
+            </div>
+        </div>
+
+        <button id="submitBtn" class="w-full bg-black text-white py-4 rounded-2xl font-medium tracking-wide hover:bg-gray-800 disabled:bg-gray-300 transition duration-300">
+            確認並上傳至工作室
+        </button>
+
+        <p id="statusMsg" class="mt-4 text-center text-sm font-medium"></p>
+    </div>
+
+    <script>
+        let cropper;
+        const imageInput = document.getElementById('imageInput');
+        const previewImage = document.getElementById('previewImage');
+        const editorSection = document.getElementById('editorSection');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusMsg = document.getElementById('statusMsg');
+
+        // 請在此處貼上你的 GAS 部署網址
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
+
+        // 監聽圖片上傳
+        imageInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                previewImage.src = event.target.result;
+                editorSection.classList.remove('hidden');
+                
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(previewImage, {
+                    aspectRatio: 2 / 3, // 強制 2:3 比例
+                    viewMode: 1,
+                    autoCropArea: 1,
+                });
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // 提交到 GAS
+        submitBtn.onclick = async () => {
+            const userName = document.getElementById('userName').value;
+            if (!userName || !cropper) {
+                alert("請填寫名稱並上傳照片");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            statusMsg.innerText = "正在處理影像並上傳...";
+            statusMsg.className = "mt-4 text-center text-sm text-blue-500";
+
+            // 取得裁切後的 Base64 圖片 (提升解析度至 1200px)
+            const canvas = cropper.getCroppedCanvas({ width: 1200 });
+            const base64Image = canvas.toDataURL('image/png');
+
+            const payload = {
+                userName: userName,
+                orderID: document.getElementById('orderID').value || "N/A",
+                imageB64: base64Image
+            };
+
+            try {
+                // 使用 fetch POST 到 GAS
+                // 注意：GAS 的 CORS 有時會報錯，但資料通常能成功送達
+                await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: JSON.stringify(payload),
+                    mode: 'no-cors' // 這是為了繞過 GAS 的跨網域限制
+                });
+
+                statusMsg.innerText = "✓ 成功！照片已送達工作室，請回到蝦皮告知我們。";
+                statusMsg.className = "mt-4 text-center text-sm text-green-600";
+            } catch (error) {
+                console.error(error);
+                statusMsg.innerText = "上傳失敗，請檢查網路或聯繫客服。";
+                statusMsg.className = "mt-4 text-center text-sm text-red-600";
+            } finally {
+                submitBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
