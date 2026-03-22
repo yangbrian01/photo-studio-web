@@ -3,225 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PRO PHOTO STUDIO | 專屬相印</title>
+    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Pro Studio">
-    <meta name="theme-color" content="#f8f9fa">
-    <link rel="manifest" href="manifest.json"> <title>PRO PHOTO STUDIO | 專屬拍立得</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="https://i.imgur.com/KzXG5Rj.png"> 
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;700&family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=Caveat:wght@600&display=swap');
-        body { font-family: 'Roboto', 'Noto Sans TC', sans-serif; background-color: #f8f9fa; overscroll-behavior: none; -webkit-touch-callout: none; }
+        
+        body { font-family: 'Roboto', 'Noto Sans TC', sans-serif; background-color: #f8f9fa; overscroll-behavior: none; -webkit-user-select: none; }
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
         .canvas-container { margin: 0 auto; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 4px; background-color: white; transition: all 0.3s; }
         .color-dot { width: 22px; height: 22px; cursor: pointer; border-radius: 50%; border: 1px solid #e5e7eb; transition: all 0.2s; }
         .color-dot.active { border: 2px solid #000; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
         .filter-scroll::-webkit-scrollbar { display: none; } 
         .filter-item { flex: 0 0 70px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.2s; background-color: white; padding: 4px; }
         .filter-item.active { border-color: #000; background-color: #f8f9fa; }
-        .slide-up { animation: slideUp 0.3s ease-out forwards; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        /* 隱藏原生滑桿樣式，自訂美顏滑桿 */
-        input[type=range] { -webkit-appearance: none; width: 100px; background: transparent; }
+        
+        /* 原圖對比按鈕的按壓效果 */
+        #compareBtn:active { transform: scale(0.95); background-color: #e5e7eb; }
+        
+        /* 美顏拉桿美化 */
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
         input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #000; cursor: pointer; margin-top: -6px; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; cursor: pointer; background: #e5e7eb; border-radius: 2px; }
     </style>
 </head>
-<body class="text-gray-900 antialiased relative py-6">
+<body class="text-gray-900 antialiased relative py-10">
 
     <div style="visibility: hidden; position: absolute; top: -9999px;">
-        <span style="font-family: 'Noto Serif TC';">預載</span><span style="font-family: 'Ma Shan Zheng';">預載</span>
-        <span style="font-family: 'Zhi Mang Xing';">預載</span><span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span>
-        <span style="font-family: 'ZCOOL KuaiLe';">預載</span><span style="font-family: 'Caveat';">預載</span>
+        <span style="font-family: 'Noto Serif TC';">預載</span><span style="font-family: 'Ma Shan Zheng';">預載</span><span style="font-family: 'Zhi Mang Xing';">預載</span><span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span><span style="font-family: 'ZCOOL KuaiLe';">預載</span>
     </div>
 
-    <div class="max-w-3xl mx-auto px-4">
-        <header class="text-center mb-6">
-            <h1 class="text-2xl font-light tracking-[0.3em] uppercase mb-1 text-gray-800">Pro Studio</h1>
-            <p class="text-gray-400 text-[10px] tracking-widest font-light">Xiaomi Pro 2x3" App</p>
+    <div class="max-w-3xl mx-auto px-6">
+        <header class="text-center mb-10 overflow-x-auto">
+            <h1 class="text-3xl md:text-4xl font-light tracking-[0.3em] uppercase mb-2 text-gray-800">Pro Studio</h1>
+            <p class="text-gray-400 text-xs tracking-widest font-light">Xiaomi Pro 2x3" (PWA 版本)</p>
         </header>
 
-        <div id="step1-container" class="bg-white rounded-2xl shadow-sm p-6 mb-6 border border-gray-100 transition-all">
-            <h2 class="text-sm font-medium mb-4 flex items-center tracking-wider text-gray-700">
-                <span class="w-5 h-5 bg-black text-white rounded-full text-[10px] flex items-center justify-center mr-2 font-normal">1</span>填寫訂單資訊
+        <div id="step1-container" class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100 transition-all">
+            <h2 class="text-base font-medium mb-6 flex items-center tracking-wider text-gray-700">
+                <span class="w-6 h-6 shrink-0 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">1</span>填寫訂單資訊
             </h2>
-            <div class="grid grid-cols-1 gap-3 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <input type="text" id="userName" placeholder="蝦皮帳號 / 姓名 (必填)" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-black font-light text-sm">
-                    <p id="nameError" class="text-red-500 text-xs mt-1 hidden tracking-wide">請填寫您的稱呼或帳號</p>
+                    <input type="text" id="userName" placeholder="蝦皮帳號 / 姓名 (必填)" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black font-light text-sm">
+                    <p id="nameError" class="text-red-500 text-xs mt-1 hidden tracking-wide">請填寫稱呼</p>
                 </div>
-                <input type="text" id="orderID" placeholder="蝦皮訂單編號" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-black font-light text-sm">
+                <input type="text" id="orderID" placeholder="蝦皮訂單編號" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-1 focus:ring-black font-light text-sm">
             </div>
-            <button id="nextStepBtn" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-black transition text-sm shadow-md">
-                進入線上設計
-            </button>
+            <button id="nextStepBtn" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-black transition text-sm shadow-md">進入線上設計</button>
         </div>
 
         <div id="step2-container" class="bg-white rounded-2xl shadow-sm border border-gray-100 hidden fade-in overflow-hidden relative">
             
-            <div class="bg-gray-100/50 py-8 relative flex justify-center border-b border-gray-50">
-                <button onclick="toggleLayout()" class="absolute top-3 right-3 z-20 bg-white shadow-sm border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium tracking-wide text-gray-600">
-                    <i class="fa-solid fa-expand"></i> <span id="layoutText">拍立得框</span>
-                </button>
-                <button id="compareBtn" class="absolute top-3 left-3 z-20 bg-white shadow-sm border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium tracking-wide text-gray-600 hidden select-none">
-                    <i class="fa-solid fa-eye"></i> 按住看原圖
+            <div class="bg-gray-100/50 py-10 relative flex justify-center border-b border-gray-50">
+                <button id="compareBtn" class="absolute top-4 left-4 z-20 bg-white shadow-md border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium tracking-wide text-gray-600 transition flex items-center gap-1.5 select-none touch-none">
+                    <i class="fa-solid fa-eye"></i> <span>長按看原圖</span>
                 </button>
                 
+                <button id="layoutToggleBtn" onclick="toggleLayout()" class="absolute top-4 right-4 z-20 bg-white shadow-md border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium tracking-wide text-gray-600 hover:text-black transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-expand"></i> <span id="layoutText">目前: 白框</span>
+                </button>
                 <canvas id="editorCanvas"></canvas>
             </div>
 
-            <div id="objectTools" class="px-4 py-3 bg-white hidden flex justify-between items-center transition border-b border-gray-50 relative z-10">
-                <div class="flex gap-2">
-                    <button onclick="bringFront()" class="w-8 h-8 text-gray-500 bg-gray-50 rounded text-xs"><i class="fa-solid fa-layer-group"></i></button>
-                    <button onclick="sendBack()" class="w-8 h-8 text-gray-500 bg-gray-50 rounded text-xs"><i class="fa-solid fa-layer-group fa-flip-vertical"></i></button>
-                </div>
-
-                <div id="beautyTools" class="hidden flex items-center gap-2">
-                    <span class="text-[10px] text-gray-500 font-light">美顏強度</span>
-                    <input type="range" id="beautySlider" min="0" max="1" step="0.1" value="0">
-                </div>
-
-                <div id="textTools" class="hidden flex-1 flex gap-2 items-center justify-center">
-                    <select id="fontFamily" class="text-[10px] px-1 py-1 border border-gray-100 rounded focus:outline-none max-w-[80px]">
-                        <option value="Noto Sans TC">黑體</option><option value="Noto Serif TC">宋體</option><option value="Ma Shan Zheng">行書</option><option value="Zhi Mang Xing">狂草</option><option value="ZCOOL QingKe HuangYou">麥克筆</option><option value="ZCOOL KuaiLe">圓體</option><option value="Caveat">英文</option>
-                    </select>
-                    <div class="flex gap-1 overflow-x-auto" id="colorPalette"></div>
-                </div>
-
-                <button onclick="deleteObj()" class="w-8 h-8 text-red-400 bg-red-50 rounded text-xs"><i class="fa-regular fa-trash-can"></i></button>
-            </div>
-
-            <div class="px-4 py-4 bg-white space-y-4">
+            <div id="objectTools" class="px-6 py-4 bg-white hidden flex flex-col gap-4 transition border-b border-gray-50 relative z-10">
                 
-                <div class="p-3 border border-gray-100 rounded-xl bg-gray-50/50">
-                    <label class="text-[10px] text-gray-400 font-medium mb-2 block tracking-widest text-center">風格濾鏡 (所見即所得)</label>
-                    <div class="flex overflow-x-auto gap-2 filter-scroll pb-1 snap-x">
-                        <button onclick="applyFilter('Original', this)" class="filter-item active text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1"><span class="text-[9px]">原圖</span></button>
-                        <button onclick="applyFilter('KPop', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 hue-rotate-15 contrast-125 saturate-150"><span class="text-[9px] text-pink-500">KPop粉</span></button>
-                        <button onclick="applyFilter('Cool', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 contrast-125 hue-rotate-180 brightness-110"><span class="text-[9px] text-blue-500">冷白皮</span></button>
-                        <button onclick="applyFilter('Film', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 sepia-[.3] contrast-125"><span class="text-[9px]">底片感</span></button>
-                        <button onclick="applyFilter('Vintage', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 sepia"><span class="text-[9px]">復古黃</span></button>
-                        <button onclick="applyFilter('Mono', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 grayscale"><span class="text-[9px]">黑白</span></button>
+                <div id="beautyTools" class="hidden w-full space-y-3 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] text-gray-500 w-8">美白</span>
+                        <input type="range" id="brightSlider" min="0" max="0.3" step="0.05" value="0" class="flex-1">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] text-gray-500 w-8">柔膚</span>
+                        <input type="range" id="smoothSlider" min="0" max="0.5" step="0.1" value="0" class="flex-1">
                     </div>
                 </div>
 
-                <div class="flex justify-around items-center">
-                    <label class="flex flex-col items-center gap-1 cursor-pointer text-gray-600">
-                        <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center"><i class="fa-regular fa-image"></i></div><span class="text-[10px]">照片</span>
+                <div class="flex justify-between items-center w-full">
+                    <div class="flex gap-1 border border-gray-100 p-1 rounded-lg bg-gray-50/50">
+                        <button onclick="bringFront()" class="w-9 h-9 text-gray-500 hover:text-black rounded-md"><i class="fa-solid fa-layer-group"></i></button>
+                        <button onclick="sendBack()" class="w-9 h-9 text-gray-500 hover:text-black rounded-md"><i class="fa-solid fa-layer-group fa-flip-vertical"></i></button>
+                    </div>
+
+                    <div id="textTools" class="hidden flex-1 flex gap-5 items-center justify-center">
+                        <select id="fontFamily" class="text-xs px-2 py-1.5 border border-gray-100 rounded-lg max-w-[120px]">
+                            <option value="Noto Sans TC">黑體</option><option value="Noto Serif TC">宋體</option><option value="Ma Shan Zheng">毛筆</option><option value="Zhi Mang Xing">狂草</option><option value="ZCOOL QingKe HuangYou">麥克筆</option><option value="ZCOOL KuaiLe">圓體</option><option value="Caveat">英文手寫</option>
+                        </select>
+                        <div class="flex-1 max-w-sm border border-gray-100 p-2 rounded-xl bg-gray-50/50 overflow-x-auto">
+                            <div class="grid grid-cols-8 gap-1.5 justify-items-center" id="colorPalette"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="deleteObj()" class="w-10 h-10 bg-red-50 text-red-400 rounded-xl"><i class="fa-regular fa-trash-can"></i></button>
+                </div>
+            </div>
+
+            <div class="px-6 py-5 bg-white space-y-5">
+                <div class="p-4 border border-gray-100 rounded-xl bg-gray-50/50">
+                    <label class="text-[11px] text-gray-400 font-medium mb-3 block text-center">風格濾鏡 (可左右滑動)</label>
+                    <div class="flex overflow-x-auto gap-3.5 filter-scroll pb-2 snap-x">
+                        <button onclick="applyFilter('Original', this)" class="filter-item active text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5"><span class="text-[10px] font-light">原圖</span></button>
+                        <button onclick="applyFilter('KPop', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 hue-rotate-15 contrast-125 saturate-150"><span class="text-[10px] font-medium text-pink-500">KPop粉</span></button>
+                        <button onclick="applyFilter('BoyBand', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 contrast-125 saturate-50 hue-rotate-180"><span class="text-[10px] font-medium text-blue-700">冷冽男團</span></button>
+                        <button onclick="applyFilter('Film', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 sepia-[.3] contrast-125"><span class="text-[10px] font-light">底片感</span></button>
+                    </div>
+                </div>
+
+                <div class="flex justify-around items-center max-w-md mx-auto">
+                    <label class="flex flex-col items-center gap-1.5 cursor-pointer text-gray-600 hover:text-black">
+                        <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-regular fa-image"></i></div><span class="text-xs font-light">照片</span>
                         <input type="file" id="imageInput" accept="image/*" class="hidden">
                     </label>
-                    <button onclick="addText()" class="flex flex-col items-center gap-1 text-gray-600">
-                        <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center"><i class="fa-solid fa-t"></i></div><span class="text-[10px]">文字</span>
-                    </button>
-                    <button onclick="openLibrary()" class="flex flex-col items-center gap-1 text-gray-600">
-                        <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center"><i class="fa-regular fa-face-smile"></i></div><span class="text-[10px]">貼紙</span>
-                    </button>
-                    <button onclick="clearCanvas()" class="flex flex-col items-center gap-1 text-red-300">
-                        <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center"><i class="fa-solid fa-rotate-left"></i></div><span class="text-[10px]">清空</span>
+                    <button onclick="addText()" class="flex flex-col items-center gap-1.5 text-gray-600 hover:text-black">
+                        <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-lg"><i class="fa-solid fa-t"></i></div><span class="text-xs font-light">文字</span>
                     </button>
                 </div>
             </div>
-            
-            <button id="submitBtn" onclick="uploadDesign()" class="w-full bg-black text-white py-4 font-light tracking-[0.2em] hover:bg-gray-800 text-sm">
-                確認並上傳印製
-            </button>
         </div>
 
-        <div id="success-container" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center hidden fade-in mt-6">
-            <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fa-solid fa-check"></i></div>
-            <h2 class="text-lg font-medium tracking-wide mb-2">設計上傳成功！</h2>
-            <p class="text-xs text-gray-500 mb-6">訂單：<span id="displayOrderID" class="font-bold"></span><br>目前已為此訂單上傳 <span id="uploadCount" class="text-black font-bold text-base">1</span> 張設計。</p>
-            
-            <button onclick="startNextPhoto()" class="w-full bg-black text-white py-3.5 rounded-xl font-light tracking-widest text-sm mb-3">
-                繼續設計下一張 (同訂單)
-            </button>
-            <button onclick="finishOrder()" class="w-full bg-white border border-gray-200 text-gray-600 py-3.5 rounded-xl font-light tracking-widest text-sm">
-                我已全部上傳完畢
-            </button>
-        </div>
-        
+        <button id="submitBtn" onclick="uploadDesign()" class="w-full bg-black text-white py-4 mt-6 rounded-xl font-light tracking-[0.2em] hover:bg-gray-800 transition text-sm hidden fade-in shadow-xl">確認並上傳</button>
         <p id="statusMsg" class="mt-4 text-center text-sm font-light tracking-wide"></p>
-    </div>
-
-    <div id="libraryModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end justify-center hidden backdrop-blur-sm">
-        <div class="bg-white w-full max-w-md h-[40vh] rounded-t-3xl shadow-2xl flex flex-col slide-up">
-            <div class="p-4 flex justify-between items-center border-b border-gray-100">
-                <h3 class="font-medium tracking-wide ml-4 text-gray-800">可愛貼紙庫</h3>
-                <button onclick="document.getElementById('libraryModal').classList.add('hidden')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="flex-1 overflow-y-auto p-6 grid grid-cols-4 gap-4 content-start bg-gray-50">
-                <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
-                <img onclick="addSticker('https://i.imgur.com/L1MhM2P.png')" src="https://i.imgur.com/L1MhM2P.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
-                <img onclick="addSticker('https://i.imgur.com/R3O2b9S.png')" src="https://i.imgur.com/R3O2b9S.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
-            </div>
-        </div>
-    </div>
-
-    <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center hidden fade-in backdrop-blur-sm">
-        <div class="bg-white p-6 rounded-2xl shadow-xl max-w-[300px] w-full mx-4 text-center">
-            <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3"><span class="text-lg">🛒</span></div>
-            <h3 class="text-base font-medium text-gray-900 mb-2">尚未填寫訂單編號</h3>
-            <p class="text-xs text-gray-500 font-light mb-5">同筆訂單只需填一次，我們會幫您綁定後續所有上傳。</p>
-            <div class="space-y-2">
-                <button onclick="document.getElementById('orderModal').classList.add('hidden')" class="w-full bg-black text-white py-2.5 rounded-xl text-xs">返回填寫</button>
-                <button onclick="enterPreview()" class="w-full bg-white border border-gray-200 text-gray-500 py-2.5 rounded-xl text-xs">我只想先預覽</button>
-            </div>
-        </div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
-        let isPreviewMode = false;
-        let canvas;
-        const C_W = 300; const C_H = 456;  
-        const P_LEFT = 18; const P_TOP = 18; const P_WIDTH = 264; const P_HEIGHT = 338; 
-        
+        let isPreviewMode = false, canvas, userImageObject;
+        const C_W = 300, C_H = 456, P_LEFT = 18, P_TOP = 18, P_WIDTH = 264, P_HEIGHT = 338; 
         let isPolaroidLayout = true; 
-        let userImageObject; 
-        let currentBeautyLevel = 0; // 手動美顏強度 (0~1)
-        let uploadedPhotosCount = 0; // 訂單批次計數器
+        let isComparing = false; // 對比狀態
 
-        const SIMPLE_COLORS = ['#000', '#595959', '#ef5350', '#1976d2', '#6d4c41'];
+        const PREMIUM_COLORS = ['#000000', '#595959', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#ef5350', '#1976d2'];
 
-        // --- 步驟一 ---
+        // --- 初始化與步驟 ---
         document.getElementById('nextStepBtn').onclick = () => {
-            const userNameInput = document.getElementById('userName');
-            const orderIDInput = document.getElementById('orderID');
-            if (!userNameInput.value.trim()) { document.getElementById('nameError').classList.remove('hidden'); userNameInput.classList.add('border-red-400'); return; }
-            document.getElementById('nameError').classList.add('hidden'); userNameInput.classList.remove('border-red-400');
-            if (!orderIDInput.value.trim()) { document.getElementById('orderModal').classList.remove('hidden'); } 
-            else { isPreviewMode = false; unlockStep2(); }
+            const userName = document.getElementById('userName').value.trim();
+            if (!userName) { document.getElementById('nameError').classList.remove('hidden'); return; }
+            document.getElementById('nameError').classList.add('hidden');
+            unlockStep2();
         };
-        function enterPreview() { document.getElementById('orderModal').classList.add('hidden'); isPreviewMode = true; unlockStep2(); }
 
         function unlockStep2() {
             document.getElementById('step1-container').classList.add('opacity-50', 'pointer-events-none');
             document.getElementById('step2-container').classList.remove('hidden');
-            if (isPreviewMode) { document.getElementById('submitBtn').innerText = "預覽完成，去下單"; document.getElementById('submitBtn').classList.replace('bg-black', 'bg-gray-400'); }
-            setTimeout(() => { if (!canvas) initCanvas(); document.getElementById('step2-container').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
+            document.getElementById('submitBtn').classList.remove('hidden');
+            setTimeout(() => { if (!canvas) initCanvas(); document.getElementById('step2-container').scrollIntoView({ behavior: 'smooth' }); }, 50);
         }
 
-        // --- 畫布系統 ---
         function initCanvas() {
             canvas = new fabric.Canvas('editorCanvas', { width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true });
-            
             const palette = document.getElementById('colorPalette');
-            SIMPLE_COLORS.forEach((color, index) => {
-                const dot = document.createElement('div'); dot.className = `color-dot w-4 h-4 rounded-full border border-gray-200 cursor-pointer flex-shrink-0 ${index === 0 ? 'border-black border-2' : ''}`; dot.style.backgroundColor = color;
-                dot.onclick = () => { Array.from(palette.children).forEach(d => {d.classList.remove('border-black', 'border-2'); d.classList.add('border-gray-200');}); dot.classList.add('border-black', 'border-2'); dot.classList.remove('border-gray-200'); setTextColor(color); };
+            PREMIUM_COLORS.forEach((color, i) => {
+                const dot = document.createElement('div'); dot.className = `color-dot ${i === 0 ? 'active' : ''}`; dot.style.backgroundColor = color;
+                dot.onclick = () => { document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active')); dot.classList.add('active'); setTextColor(color); };
                 palette.appendChild(dot);
             });
-            
-            fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 8, cornerStyle: 'circle' });
+            fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 9 });
             const placeholder = new fabric.Rect({ id: 'placeholder', left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, fill: '#f9fafb', stroke: '#e5e7eb', strokeDashArray: [3, 3], selectable: false, evented: false });
             canvas.add(placeholder);
             canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection);
             canvas.on('selection:cleared', () => document.getElementById('objectTools').classList.add('hidden'));
         }
 
+        // --- 選取判定 (文字 vs 照片) ---
         function onSelection() {
             document.getElementById('objectTools').classList.remove('hidden');
             const activeObj = canvas.getActiveObject();
@@ -230,160 +182,101 @@
                 document.getElementById('beautyTools').classList.add('hidden');
             } else if (activeObj && activeObj.frameId === 'userImage') {
                 document.getElementById('textTools').classList.add('hidden');
-                document.getElementById('beautyTools').classList.remove('hidden');
+                document.getElementById('beautyTools').classList.remove('hidden'); // 顯示美顏拉桿
             } else {
                 document.getElementById('textTools').classList.add('hidden');
                 document.getElementById('beautyTools').classList.add('hidden');
             }
         }
 
-        function toggleLayout() {
-            isPolaroidLayout = !isPolaroidLayout;
-            document.getElementById('layoutText').innerText = isPolaroidLayout ? "拍立得框" : "全滿版";
-            const placeholder = canvas.getObjects().find(o => o.id === 'placeholder');
-            if (placeholder) placeholder.set('opacity', isPolaroidLayout ? 1 : 0);
-            if (userImageObject) { userImageObject.set('clipPath', isPolaroidLayout ? new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }) : null); }
-            canvas.requestRenderAll();
-        }
-
-        // 照片匯入
+        // --- 載入照片 ---
         document.getElementById('imageInput').onchange = (e) => {
             const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (f) => {
                 fabric.Image.fromURL(f.target.result, (img) => {
-                    userImageObject = img; 
+                    userImageObject = img; userImageObject.currentFilter = 'Original';
                     const scale = Math.max(P_WIDTH / img.width, P_HEIGHT / img.height);
                     img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center', left: C_W / 2, top: P_TOP + (P_HEIGHT / 2), frameId: 'userImage' });
-                    if (isPolaroidLayout) img.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
+                    img.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
                     canvas.add(img); canvas.sendToBack(img); canvas.bringForward(img); canvas.setActiveObject(img);
-                    document.getElementById('compareBtn').classList.remove('hidden'); // 顯示對比按鈕
                 });
             }; reader.readAsDataURL(file); e.target.value = '';
         };
 
-        // --- 👁️ 對比原圖功能 (長按隱藏濾鏡) ---
-        const compareBtn = document.getElementById('compareBtn');
-        let tempFilters = [];
-        const startCompare = (e) => {
-            e.preventDefault();
-            if(!userImageObject) return;
-            tempFilters = userImageObject.filters; // 記住目前的濾鏡
-            userImageObject.filters = []; // 清空
-            userImageObject.applyFilters(); canvas.requestRenderAll();
-        };
-        const stopCompare = (e) => {
-            e.preventDefault();
-            if(!userImageObject) return;
-            userImageObject.filters = tempFilters; // 恢復
-            userImageObject.applyFilters(); canvas.requestRenderAll();
-        };
-        compareBtn.addEventListener('mousedown', startCompare); compareBtn.addEventListener('mouseup', stopCompare); compareBtn.addEventListener('mouseleave', stopCompare);
-        compareBtn.addEventListener('touchstart', startCompare, {passive: false}); compareBtn.addEventListener('touchend', stopCompare);
-
-        // --- 🎚️ 手動美顏滑桿 + 退回上一版的簡單濾鏡 ---
-        document.getElementById('beautySlider').addEventListener('input', function(e) {
-            currentBeautyLevel = parseFloat(e.target.value);
-            applyCompositeFilters(); // 重新合成濾鏡與美顏
-        });
+        // --- 💣 手動修圖與合成算法 ---
+        document.getElementById('brightSlider').addEventListener('input', applyCompositeFilters);
+        document.getElementById('smoothSlider').addEventListener('input', applyCompositeFilters);
 
         function applyFilter(filterName, btn) {
             if (!userImageObject) return;
             document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             userImageObject.currentFilter = filterName;
-            applyCompositeFilters(); 
+            applyCompositeFilters();
         }
 
         function applyCompositeFilters() {
-            if (!userImageObject) return;
-            userImageObject.filters = []; 
+            if (!userImageObject || isComparing) return; // 如果正在對比原圖，不執行濾鏡
+            userImageObject.filters = [];
+            
+            // 1. 手動美白 (Brightness)
+            const brightVal = parseFloat(document.getElementById('brightSlider').value);
+            if(brightVal > 0) userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: brightVal }));
 
-            // 1. 執行簡單的濾鏡 (你喜歡的上一版版本)
+            // 2. 手動柔膚 (Blur) - 替代原本爛爛的 Convolve
+            const smoothVal = parseFloat(document.getElementById('smoothSlider').value);
+            if(smoothVal > 0) userImageObject.filters.push(new fabric.Image.filters.Blur({ blur: smoothVal }));
+
+            // 3. 風格濾鏡
             const mode = userImageObject.currentFilter || 'Original';
             switch (mode) {
-                case 'Original': break; 
-                case 'KPop': 
-                    userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 }));
-                    userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 }));
-                    userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffe4e1', mode: 'tint', alpha: 0.25 }));
-                    break;
-                case 'Cool':
-                    userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 }));
-                    userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#e0f7fa', mode: 'tint', alpha: 0.2 }));
-                    break;
-                case 'Film':
-                    userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 }));
-                    userImageObject.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.1 }));
-                    userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#8b4513', mode: 'tint', alpha: 0.15 }));
-                    break;
-                case 'Vintage': userImageObject.filters.push(new fabric.Image.filters.Sepia()); userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: -0.1 })); break;
-                case 'Mono': userImageObject.filters.push(new fabric.Image.filters.Grayscale()); break;
+                case 'KPop': userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffb6c1', mode: 'screen', alpha: 0.15 })); break;
+                case 'BoyBand': userImageObject.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.2 })); userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#607d8b', mode: 'multiply', alpha: 0.15 })); break;
+                case 'Film': userImageObject.filters.push(new fabric.Image.filters.Sepia()); userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#1a1a1a', mode: 'overlay', alpha: 0.15 })); break;
             }
-
-            // 2. 疊加手動美顏滑桿 (提亮 + 輕微模糊實現平滑)
-            if (currentBeautyLevel > 0) {
-                // 強度 0~1，對應提亮 0~0.15，模糊 0~0.2
-                userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.15 * currentBeautyLevel }));
-                // 用微量 Blur 來代替複雜的 Convolve，效能更好且能平滑膚質
-                userImageObject.filters.push(new fabric.Image.filters.Blur({ blur: 0.2 * currentBeautyLevel }));
-            }
-
-            userImageObject.applyFilters();
-            canvas.requestRenderAll();
+            userImageObject.applyFilters(); canvas.requestRenderAll();
         }
 
-        // 文字、貼紙、排列
+        // --- 💣 長按對比原圖邏輯 ---
+        const compareBtn = document.getElementById('compareBtn');
+        const startCompare = (e) => { 
+            e.preventDefault(); if(!userImageObject) return; 
+            isComparing = true; 
+            userImageObject.filters = []; // 拔掉所有濾鏡
+            userImageObject.applyFilters(); canvas.requestRenderAll(); 
+        };
+        const stopCompare = (e) => { 
+            e.preventDefault(); if(!userImageObject) return; 
+            isComparing = false; 
+            applyCompositeFilters(); // 恢復濾鏡
+        };
+        compareBtn.addEventListener('mousedown', startCompare); compareBtn.addEventListener('mouseup', stopCompare); compareBtn.addEventListener('mouseleave', stopCompare);
+        compareBtn.addEventListener('touchstart', startCompare); compareBtn.addEventListener('touchend', stopCompare);
+
+        // --- 其他排版與上傳 ---
+        function toggleLayout() {
+            isPolaroidLayout = !isPolaroidLayout; document.getElementById('layoutText').innerText = isPolaroidLayout ? "目前: 白框" : "目前: 滿版";
+            const placeholder = canvas.getObjects().find(o => o.id === 'placeholder'); if (placeholder) placeholder.set('opacity', isPolaroidLayout ? 1 : 0);
+            if (userImageObject) userImageObject.set('clipPath', isPolaroidLayout ? new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }) : null);
+            canvas.requestRenderAll();
+        }
         function addText() { const text = new fabric.IText('輸入...', { left: C_W / 2, top: C_H - 50, fontFamily: 'Noto Sans TC', fontSize: 24, fill: '#000000', originX: 'center', originY: 'center' }); canvas.add(text); canvas.bringToFront(text); canvas.setActiveObject(text); }
         function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); } }
         document.getElementById('fontFamily').addEventListener('change', async function(e) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { await document.fonts.load(`16px "${e.target.value}"`); obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); } });
-        function openLibrary() { document.getElementById('libraryModal').classList.remove('hidden'); }
-        function addSticker(url) { document.getElementById('libraryModal').classList.add('hidden'); fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2 }); canvas.add(img); canvas.bringToFront(img); canvas.setActiveObject(img); }); }
         function bringFront() { const obj = canvas.getActiveObject(); if(obj) { canvas.bringToFront(obj); canvas.requestRenderAll(); } }
         function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); if(userImageObject) canvas.bringForward(userImageObject); canvas.requestRenderAll(); } }
-        function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { if(obj === userImageObject) {userImageObject = null; document.getElementById('compareBtn').classList.add('hidden');} canvas.remove(obj); canvas.discardActiveObject(); } }
-        function clearCanvas() { if(confirm("確定重置？")) { canvas.clear(); canvas.setBackgroundColor('#ffffff'); initCanvas(); userImageObject = null; currentBeautyLevel = 0; document.getElementById('beautySlider').value = 0; document.getElementById('compareBtn').classList.add('hidden'); isPolaroidLayout = true; document.getElementById('layoutText').innerText="拍立得框"; } }
+        function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { if(obj === userImageObject) userImageObject = null; canvas.remove(obj); canvas.discardActiveObject(); document.getElementById('objectTools').classList.add('hidden'); } }
 
-        // --- 批次連續上傳流程 ---
         async function uploadDesign() {
-            if (isPreviewMode) { alert("預覽中，請去蝦皮下單！"); return; }
             if (canvas.getObjects().length <= 1) { alert("請先加入設計！"); return; }
-
-            const submitBtn = document.getElementById('submitBtn'); const statusMsg = document.getElementById('statusMsg');
-            submitBtn.disabled = true; submitBtn.innerText = "上傳中...";
-            
+            const btn = document.getElementById('submitBtn'), msg = document.getElementById('statusMsg');
+            btn.disabled = true; btn.innerText = "打包高清檔案中..."; msg.innerText = "處理中...";
             canvas.discardActiveObject(); canvas.requestRenderAll();
-            const base64Image = canvas.toDataURL({ format: 'png', multiplier: 3 });
-
+            const base64Image = canvas.toDataURL({ format: 'png', multiplier: 4 });
             try {
-                await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim() || "無", imageB64: base64Image }), mode: 'no-cors' });
-                
-                // 上傳成功，進入「批次成功畫面」
-                uploadedPhotosCount++;
-                document.getElementById('step2-container').classList.add('hidden');
-                document.getElementById('success-container').classList.remove('hidden');
-                document.getElementById('displayOrderID').innerText = document.getElementById('orderID').value.trim() || "未填寫編號";
-                document.getElementById('uploadCount').innerText = uploadedPhotosCount;
-                
-                submitBtn.disabled = false; submitBtn.innerText = "確認並上傳印製";
-            } catch (error) { 
-                statusMsg.innerText = "上傳失敗。"; submitBtn.disabled = false; submitBtn.innerText = "確認並上傳印製"; 
-            }
-        }
-
-        // 繼續設計下一張
-        function startNextPhoto() {
-            document.getElementById('success-container').classList.add('hidden');
-            document.getElementById('step2-container').classList.remove('hidden');
-            // 清空畫布，準備下一張
-            canvas.clear(); canvas.setBackgroundColor('#ffffff'); initCanvas(); 
-            userImageObject = null; currentBeautyLevel = 0; document.getElementById('beautySlider').value = 0;
-            document.getElementById('compareBtn').classList.add('hidden');
-            document.getElementById('step2-container').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // 結束訂單
-        function finishOrder() {
-            alert(`太棒了！您已為此訂單完成 ${uploadedPhotosCount} 張設計，請截圖本畫面回報給客服喔！`);
+                await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim(), imageB64: base64Image }), mode: 'no-cors' });
+                msg.innerText = "✓ 成功！"; btn.innerText = "完成";
+            } catch (error) { msg.innerText = "失敗"; btn.disabled = false; }
         }
     </script>
 </body>
