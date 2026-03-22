@@ -14,13 +14,12 @@
         .fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .canvas-container { margin: 0 auto; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 4px; background-color: white; }
+        .canvas-container { margin: 0 auto; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 4px; background-color: white; transition: all 0.3s; }
         .color-dot { width: 22px; height: 22px; cursor: pointer; border-radius: 50%; border: 1px solid #e5e7eb; transition: all 0.2s; }
         .color-dot:hover { transform: scale(1.15); box-shadow: 0 0 5px rgba(0,0,0,0.1); }
         .color-dot.active { border: 2px solid #000; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
         
-        /* 濾鏡滑動區與樣式 */
-        .filter-scroll::-webkit-scrollbar { display: none; } /* 隱藏捲動條但可滑動 */
+        .filter-scroll::-webkit-scrollbar { display: none; } 
         .filter-item { flex: 0 0 65px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.2s; background-color: white; padding: 4px; }
         .filter-item.active { border-color: #000; background-color: #f8f9fa; }
         
@@ -31,10 +30,8 @@
 <body class="text-gray-900 antialiased relative py-10">
 
     <div style="visibility: hidden; position: absolute; top: -9999px;">
-        <span style="font-family: 'Noto Serif TC';">預載</span>
-        <span style="font-family: 'Ma Shan Zheng';">預載</span>
-        <span style="font-family: 'Zhi Mang Xing';">預載</span>
-        <span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span>
+        <span style="font-family: 'Noto Serif TC';">預載</span><span style="font-family: 'Ma Shan Zheng';">預載</span>
+        <span style="font-family: 'Zhi Mang Xing';">預載</span><span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span>
         <span style="font-family: 'ZCOOL KuaiLe';">預載</span>
     </div>
 
@@ -46,8 +43,7 @@
 
         <div id="step1-container" class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100 transition-all">
             <h2 class="text-base font-medium mb-6 flex items-center tracking-wider text-gray-700">
-                <span class="w-6 h-6 shrink-0 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">1</span>
-                填寫訂單資訊
+                <span class="w-6 h-6 shrink-0 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">1</span>填寫訂單資訊
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
@@ -61,9 +57,13 @@
             </button>
         </div>
 
-        <div id="step2-container" class="bg-white rounded-2xl shadow-sm border border-gray-100 hidden fade-in overflow-hidden">
+        <div id="step2-container" class="bg-white rounded-2xl shadow-sm border border-gray-100 hidden fade-in overflow-hidden relative">
             
             <div class="bg-gray-100/50 py-10 relative flex justify-center border-b border-gray-50">
+                <button id="layoutToggleBtn" onclick="toggleLayout()" class="absolute top-4 right-4 z-20 bg-white shadow-md border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium tracking-wide text-gray-600 hover:text-black transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-expand"></i> <span id="layoutText">目前: 拍立得白框</span>
+                </button>
+
                 <canvas id="editorCanvas"></canvas>
             </div>
 
@@ -83,7 +83,7 @@
                         <option value="Zhi Mang Xing">藝術狂草</option>
                         <option value="ZCOOL QingKe HuangYou">麥克筆體</option>
                         <option value="ZCOOL KuaiLe">可愛圓體</option>
-                        <option value="Caveat">純英文手寫</option>
+                        <option value="Caveat">英文手寫(限英文)</option>
                     </select>
                     <div class="flex-1 max-w-sm border border-gray-100 p-2 rounded-xl bg-gray-50/50">
                         <div class="grid grid-cols-8 gap-1.5 justify-items-center" id="colorPalette"></div>
@@ -106,15 +106,15 @@
                         </button>
                         <button onclick="applyFilter('KPop', this)" class="filter-item text-center snap-center">
                             <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 hue-rotate-15 contrast-125 saturate-150">
-                            <span class="text-[10px] font-medium text-pink-500">K-Pop粉</span>
+                            <span class="text-[10px] font-medium text-pink-500">女團粉</span>
+                        </button>
+                        <button onclick="applyFilter('BoyBand', this)" class="filter-item text-center snap-center">
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 contrast-125 saturate-50 hue-rotate-180">
+                            <span class="text-[10px] font-medium text-blue-700">男團風</span>
                         </button>
                         <button onclick="applyFilter('Cool', this)" class="filter-item text-center snap-center">
                             <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 contrast-125 hue-rotate-180 brightness-110">
-                            <span class="text-[10px] font-medium text-blue-500">冷白皮</span>
-                        </button>
-                        <button onclick="applyFilter('Fresh', this)" class="filter-item text-center snap-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 saturate-150">
-                            <span class="text-[10px] font-light">清新</span>
+                            <span class="text-[10px] font-medium text-blue-400">冷白皮</span>
                         </button>
                         <button onclick="applyFilter('Film', this)" class="filter-item text-center snap-center">
                             <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 sepia-[.3] contrast-125">
@@ -169,7 +169,7 @@
             <div class="space-y-3">
                 <button onclick="alert('前往蝦皮')" class="w-full bg-black text-white py-3 rounded-xl font-light tracking-widest text-sm">前往蝦皮下單</button>
                 <button onclick="enterPreview()" class="w-full bg-white text-gray-500 border border-gray-200 py-3 rounded-xl font-light tracking-widest text-sm">我只想先預覽效果</button>
-                <button onclick="document.getElementById('orderModal').classList.add('hidden')" class="text-xs text-gray-400 mt-2">返回修改</button>
+                <button onclick="document.getElementById('orderModal').classList.add('hidden')" class="text-xs text-gray-400 mt-2 hover:text-gray-600">返回修改</button>
             </div>
         </div>
     </div>
@@ -192,17 +192,21 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
         let isPreviewMode = false;
         let canvas;
+        
+        // 畫布基礎尺寸 50x76mm (2x3")
         const C_W = 300; const C_H = 456;  
         const P_LEFT = 18; const P_TOP = 18; const P_WIDTH = 264; const P_HEIGHT = 338; 
+        
+        let isPolaroidLayout = true; // 追蹤目前是拍立得還是滿版
+
         const PREMIUM_COLORS = ['#000000', '#595959', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#fce4ec', '#fff0f5', '#1976d2', '#64b5f6', '#bbdefb', '#e6f7ff'];
 
-        // 步驟一
+        // --- 步驟一邏輯 ---
         document.getElementById('nextStepBtn').onclick = () => {
             const userNameInput = document.getElementById('userName');
             const orderIDInput = document.getElementById('orderID');
-            const nameError = document.getElementById('nameError');
-            if (!userNameInput.value.trim()) { nameError.classList.remove('hidden'); userNameInput.classList.add('border-red-400'); return; }
-            nameError.classList.add('hidden'); userNameInput.classList.remove('border-red-400');
+            if (!userNameInput.value.trim()) { document.getElementById('nameError').classList.remove('hidden'); userNameInput.classList.add('border-red-400'); return; }
+            document.getElementById('nameError').classList.add('hidden'); userNameInput.classList.remove('border-red-400');
             if (!orderIDInput.value.trim()) { document.getElementById('orderModal').classList.remove('hidden'); } 
             else { isPreviewMode = false; unlockStep2(); }
         };
@@ -213,11 +217,6 @@
             document.getElementById('step1-container').classList.add('opacity-50', 'pointer-events-none');
             document.getElementById('step2-container').classList.remove('hidden');
             document.getElementById('submitBtn').classList.remove('hidden');
-            if (isPreviewMode) {
-                document.getElementById('modeBadge').classList.remove('hidden');
-                document.getElementById('submitBtn').innerText = "預覽完成，請前往蝦皮下單";
-                document.getElementById('submitBtn').classList.replace('bg-black', 'bg-gray-400');
-            }
             setTimeout(() => { if (!canvas) initCanvas(); document.getElementById('step2-container').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
         }
 
@@ -230,13 +229,16 @@
                 palette.appendChild(dot);
             });
             fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 9, cornerStyle: 'circle' });
-            const placeholder = new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, fill: '#f9fafb', stroke: '#e5e7eb', strokeDashArray: [3, 3], selectable: false, evented: false });
+            
+            // 底層假白框提示
+            const placeholder = new fabric.Rect({ id: 'placeholder', left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, fill: '#f9fafb', stroke: '#e5e7eb', strokeDashArray: [3, 3], selectable: false, evented: false });
             canvas.add(placeholder);
+
             canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection);
             canvas.on('selection:cleared', () => document.getElementById('objectTools').classList.add('hidden'));
         }
 
-        function onSelection(e) {
+        function onSelection() {
             document.getElementById('objectTools').classList.remove('hidden');
             const activeObj = canvas.getActiveObject();
             if (activeObj && activeObj.type === 'i-text') {
@@ -245,14 +247,47 @@
             } else { document.getElementById('textTools').classList.add('hidden'); }
         }
 
+        // 🚀 一鍵切換排版功能 (拍立得框 vs 滿版)
+        function toggleLayout() {
+            isPolaroidLayout = !isPolaroidLayout;
+            const btnText = document.getElementById('layoutText');
+            btnText.innerText = isPolaroidLayout ? "目前: 拍立得白框" : "目前: 全滿版";
+
+            // 處理底框顯示/隱藏
+            const placeholder = canvas.getObjects().find(o => o.id === 'placeholder');
+            if (placeholder) placeholder.set('opacity', isPolaroidLayout ? 1 : 0);
+
+            // 處理照片遮罩
+            const imgObj = canvas.getObjects().find(o => o.frameId === 'userImage');
+            if (imgObj) {
+                if (isPolaroidLayout) {
+                    // 加回遮罩
+                    imgObj.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
+                } else {
+                    // 移除遮罩，讓照片可以全螢幕拖拉
+                    imgObj.set('clipPath', null);
+                }
+            }
+            canvas.requestRenderAll();
+        }
+
+        // 照片匯入
         document.getElementById('imageInput').onchange = (e) => {
             const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (f) => {
                 fabric.Image.fromURL(f.target.result, (img) => {
-                    const scale = Math.max(P_WIDTH / img.width, P_HEIGHT / img.height);
-                    img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center', left: C_W / 2, top: P_TOP + (P_HEIGHT / 2), frameId: 'userImage' });
-                    img.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
+                    // 根據目前的排版模式決定初始大小
+                    const targetW = isPolaroidLayout ? P_WIDTH : C_W;
+                    const targetH = isPolaroidLayout ? P_HEIGHT : C_H;
+                    const scale = Math.max(targetW / img.width, targetH / img.height);
+                    
+                    img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center', left: C_W / 2, top: isPolaroidLayout ? P_TOP + (P_HEIGHT / 2) : C_H / 2, frameId: 'userImage' });
+                    
+                    if (isPolaroidLayout) {
+                        img.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
+                    }
+                    
                     canvas.add(img); canvas.sendToBack(img); canvas.bringForward(img); canvas.setActiveObject(img);
                 });
             }; reader.readAsDataURL(file); e.target.value = '';
@@ -264,26 +299,18 @@
         }
 
         function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); } }
-        
-        // 💣 非同步強制重新渲染字體
         document.getElementById('fontFamily').addEventListener('change', async function(e) { 
             const obj = canvas.getActiveObject(); 
             if (obj && obj.type === 'i-text') { 
-                const newFont = e.target.value;
-                // 強制等瀏覽器抓到字體
-                await document.fonts.load(`16px "${newFont}"`);
-                obj.set('fontFamily', newFont); 
-                canvas.requestRenderAll(); 
+                await document.fonts.load(`16px "${e.target.value}"`);
+                obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); 
             } 
         });
 
         function openLibrary() { document.getElementById('libraryModal').classList.remove('hidden'); }
-        function addSticker(url) {
-            document.getElementById('libraryModal').classList.add('hidden');
-            fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2 }); canvas.add(img); canvas.bringToFront(img); canvas.setActiveObject(img); });
-        }
+        function addSticker(url) { document.getElementById('libraryModal').classList.add('hidden'); fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2 }); canvas.add(img); canvas.bringToFront(img); canvas.setActiveObject(img); }); }
 
-        // 超強濾鏡
+        // 🚀 修復與升級濾鏡
         function applyFilter(filterName, btn) {
             document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             const imgObj = canvas.getObjects().find(obj => obj.frameId === 'userImage');
@@ -292,20 +319,24 @@
             imgObj.filters = [];
             switch (filterName) {
                 case 'Original': break; 
-                case 'KPop': 
+                case 'KPop': // 女團粉
                     imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 }));
                     imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 }));
                     imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffe4e1', mode: 'tint', alpha: 0.25 }));
                     break;
-                case 'Cool':
+                case 'BoyBand': // 男團風 (高對比、降飽和、微冷調)
+                    imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.15 }));
+                    imgObj.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.15 }));
+                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#607d8b', mode: 'tint', alpha: 0.2 }));
+                    break;
+                case 'Cool': // 冷白皮
                     imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 }));
                     imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#e0f7fa', mode: 'tint', alpha: 0.2 }));
                     break;
-                case 'Film':
-                    imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.15 }));
-                    imgObj.filters.push(new fabric.Image.filters.Noise({ noise: 20 }));
-                    imgObj.filters.push(new fabric.Image.filters.Sepia());
-                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#000000', mode: 'overlay', alpha: 0.1 }));
+                case 'Film': // 底片感 (修復黑畫面，改為經典底片色)
+                    imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 }));
+                    imgObj.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.1 }));
+                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#8b4513', mode: 'tint', alpha: 0.15 }));
                     break;
                 case 'Vintage': imgObj.filters.push(new fabric.Image.filters.Sepia()); imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: -0.1 })); break;
                 case 'Mono': imgObj.filters.push(new fabric.Image.filters.Grayscale()); break;
@@ -321,7 +352,7 @@
         function clearCanvas() { if(confirm("確定要清空設計？")) { canvas.clear(); canvas.setBackgroundColor('#ffffff'); initCanvas(); } }
 
         async function uploadDesign() {
-            if (isPreviewMode) { alert("您目前處於預覽模式，系統不會儲存照片。\n請至蝦皮賣場下單取得訂單編號後，重新整理網頁填寫上傳！"); return; }
+            if (isPreviewMode) { alert("您目前處於預覽模式，系統不會儲存照片。"); return; }
             if (canvas.getObjects().length <= 1) { alert("請先加入照片或設計文字！"); return; }
 
             const submitBtn = document.getElementById('submitBtn'); const statusMsg = document.getElementById('statusMsg');
