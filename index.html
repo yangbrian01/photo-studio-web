@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>PRO PHOTO STUDIO | 高級美感工作室</title>
+    <title>PRO PHOTO STUDIO | 終極設計工作室</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,12 +15,13 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .canvas-container { margin: 0 auto; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border-radius: 4px; background-color: white; transition: all 0.3s; }
+        
         .color-dot { width: 22px; height: 22px; cursor: pointer; border-radius: 50%; border: 1px solid #e5e7eb; transition: all 0.2s; }
         .color-dot:hover { transform: scale(1.15); box-shadow: 0 0 5px rgba(0,0,0,0.1); }
         .color-dot.active { border: 2px solid #000; box-shadow: 0 0 5px rgba(0,0,0,0.2); }
         
         .filter-scroll::-webkit-scrollbar { display: none; } 
-        .filter-item { flex: 0 0 65px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.2s; background-color: white; padding: 4px; }
+        .filter-item { flex: 0 0 70px; border-radius: 8px; border: 1px solid #e5e7eb; cursor: pointer; transition: all 0.2s; background-color: white; padding: 4px; }
         .filter-item.active { border-color: #000; background-color: #f8f9fa; }
         
         .slide-up { animation: slideUp 0.3s ease-out forwards; }
@@ -36,14 +37,15 @@
     </div>
 
     <div class="max-w-3xl mx-auto px-6">
-        <header class="text-center mb-10">
+        <header class="text-center mb-10 overflow-x-auto">
             <h1 class="text-3xl md:text-4xl font-light tracking-[0.3em] uppercase mb-2 text-gray-800">Pro Studio</h1>
-            <p class="text-gray-400 text-xs tracking-widest font-light">Xiaomi Pro 2x3" 高級客製化</p>
+            <p class="text-gray-400 text-xs tracking-widest font-light overflow-x-auto">Xiaomi Pro 2x3" 高級完全體</p>
         </header>
 
-        <div id="step1-container" class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100 transition-all">
+        <div id="step1-container" class="bg-white rounded-2xl shadow-sm p-8 mb-6 border border-gray-100 transition-all overflow-x-auto">
             <h2 class="text-base font-medium mb-6 flex items-center tracking-wider text-gray-700">
-                <span class="w-6 h-6 shrink-0 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal">1</span>填寫訂單資訊
+                <span class="w-6 h-6 shrink-0 bg-black text-white rounded-full text-xs flex items-center justify-center mr-3 font-normal overflow-x-auto">1</span>
+                填寫訂單資訊
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
@@ -59,20 +61,22 @@
 
         <div id="step2-container" class="bg-white rounded-2xl shadow-sm border border-gray-100 hidden fade-in overflow-hidden relative">
             
-            <div class="bg-gray-100/50 py-10 relative flex justify-center border-b border-gray-50">
-                <button id="layoutToggleBtn" onclick="toggleLayout()" class="absolute top-4 right-4 z-20 bg-white shadow-md border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium tracking-wide text-gray-600 hover:text-black transition flex items-center gap-1.5">
+            <div class="bg-gray-100/50 py-10 relative flex justify-center border-b border-gray-50 overflow-x-auto">
+                <button id="layoutToggleBtn" onclick="toggleLayout()" class="absolute top-4 right-4 z-20 bg-white shadow-md border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium tracking-wide text-gray-600 hover:text-black transition flex items-center gap-1.5 overflow-x-auto overflow-x-auto overflow-x-auto overflow-x-auto">
                     <i class="fa-solid fa-expand"></i> <span id="layoutText">目前: 拍立得白框</span>
                 </button>
-
                 <canvas id="editorCanvas"></canvas>
             </div>
 
             <div id="objectTools" class="px-6 py-4 bg-white hidden flex justify-between gap-6 transition border-b border-gray-50 relative z-10">
-                <div class="flex gap-4 items-center">
-                    <div class="flex gap-1.5 border border-gray-100 p-1 rounded-lg bg-gray-50/50">
-                        <button onclick="bringFront()" class="w-9 h-9 text-gray-500 hover:text-black hover:bg-white rounded-md flex flex-col items-center justify-center gap-0.5"><i class="fa-solid fa-layer-group"></i><span class="text-[9px]">上層</span></button>
-                        <button onclick="sendBack()" class="w-9 h-9 text-gray-500 hover:text-black hover:bg-white rounded-md flex flex-col items-center justify-center gap-0.5"><i class="fa-solid fa-layer-group fa-flip-vertical"></i><span class="text-[9px]">下層</span></button>
+                <div class="flex gap-3 items-center">
+                    <div class="flex gap-1 border border-gray-100 p-1 rounded-lg bg-gray-50/50 overflow-x-auto overflow-x-auto overflow-x-auto overflow-x-auto overflow-x-auto">
+                        <button onclick="bringFront()" title="上移一層" class="w-9 h-9 text-gray-500 hover:text-black hover:bg-white rounded-md flex flex-col items-center justify-center gap-0.5"><i class="fa-solid fa-layer-group"></i><span class="text-[9px]">上層</span></button>
+                        <button onclick="sendBack()" title="下移一層" class="w-9 h-9 text-gray-500 hover:text-black hover:bg-white rounded-md flex flex-col items-center justify-center gap-0.5"><i class="fa-solid fa-layer-group fa-flip-vertical"></i><span class="text-[9px]">下層</span></button>
                     </div>
+                    <button id="beautyBtn" onclick="toggleBeauty()" class="w-20 h-9 rounded-lg border border-gray-100 bg-gray-50 text-gray-600 hover:text-black flex items-center justify-center gap-1.5 transition text-xs font-light tracking-wide overflow-x-auto">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> <span>美顏 OFF</span>
+                    </button>
                 </div>
 
                 <div id="textTools" class="hidden flex-1 flex gap-5 items-center justify-center">
@@ -85,7 +89,7 @@
                         <option value="ZCOOL KuaiLe">可愛圓體</option>
                         <option value="Caveat">英文手寫(限英文)</option>
                     </select>
-                    <div class="flex-1 max-w-sm border border-gray-100 p-2 rounded-xl bg-gray-50/50">
+                    <div class="flex-1 max-w-sm border border-gray-100 p-2 rounded-xl bg-gray-50/50 overflow-x-auto">
                         <div class="grid grid-cols-8 gap-1.5 justify-items-center" id="colorPalette"></div>
                     </div>
                 </div>
@@ -98,35 +102,28 @@
             <div class="px-6 py-5 bg-white space-y-5">
                 
                 <div class="p-4 border border-gray-100 rounded-xl bg-gray-50/50">
-                    <label class="text-[11px] text-gray-400 font-medium mb-3 block tracking-widest text-center">風格濾鏡 (可左右滑動)</label>
-                    <div class="flex overflow-x-auto gap-3 filter-scroll pb-2 max-w-lg mx-auto snap-x">
+                    <label class="text-[11px] text-gray-400 font-medium mb-3 block tracking-widest text-center overflow-x-auto">風格濾鏡 (所見即所得，可左右滑動)</label>
+                    <div class="flex overflow-x-auto gap-3.5 filter-scroll pb-2 max-w-lg mx-auto snap-x">
                         <button onclick="applyFilter('Original', this)" class="filter-item active text-center snap-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 grayscale-0">
-                            <span class="text-[10px] font-light">原圖</span>
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 grayscale-0"><span class="text-[10px] font-light">原圖</span>
                         </button>
                         <button onclick="applyFilter('KPop', this)" class="filter-item text-center snap-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 hue-rotate-15 contrast-125 saturate-150">
-                            <span class="text-[10px] font-medium text-pink-500">女團粉</span>
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: brightness(1.05) contrast(1.1) saturate(1.5) hue-rotate(15deg);"><span class="text-[10px] font-medium text-pink-500">KPop女團</span>
                         </button>
                         <button onclick="applyFilter('BoyBand', this)" class="filter-item text-center snap-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 contrast-125 saturate-50 hue-rotate-180">
-                            <span class="text-[10px] font-medium text-blue-700">男團風</span>
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: contrast(1.15) saturate(0.5) hue-rotate(180deg);"><span class="text-[10px] font-medium text-blue-700">冷冽男團</span>
                         </button>
                         <button onclick="applyFilter('Cool', this)" class="filter-item text-center snap-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 contrast-125 hue-rotate-180 brightness-110">
-                            <span class="text-[10px] font-medium text-blue-400">冷白皮</span>
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: contrast(1.25) hue-rotate(180deg) brightness(1.1);"><span class="text-[10px] font-light">冷白皮</span>
                         </button>
                         <button onclick="applyFilter('Film', this)" class="filter-item text-center snap-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 sepia-[.3] contrast-125">
-                            <span class="text-[10px] font-light">底片感</span>
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: sepia(0.3) contrast(1.2) saturate(0.9);"><span class="text-[10px] font-light">底片感</span>
                         </button>
                         <button onclick="applyFilter('Vintage', this)" class="filter-item text-center snap-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 sepia">
-                            <span class="text-[10px] font-light">復古黃</span>
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 grayscale-0" style="filter: sepia(1);"><span class="text-[10px] font-light">即可拍</span>
                         </button>
                         <button onclick="applyFilter('Mono', this)" class="filter-item text-center snap-center">
-                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-8 object-cover rounded mb-1 grayscale">
-                            <span class="text-[10px] font-light">黑白</span>
+                            <img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: grayscale(1);"><span class="text-[10px] font-light">Mono黑白</span>
                         </button>
                     </div>
                 </div>
@@ -155,7 +152,7 @@
 
         <div class="max-w-xs mx-auto mt-6">
             <button id="submitBtn" onclick="uploadDesign()" class="w-full bg-black text-white py-4 rounded-xl font-light tracking-[0.2em] hover:bg-gray-800 transition duration-300 text-sm hidden fade-in shadow-xl">
-                確認並上傳設計
+                確認並上傳設計成品
             </button>
             <p id="statusMsg" class="mt-4 text-center text-sm font-light tracking-wide"></p>
         </div>
@@ -169,7 +166,7 @@
             <div class="space-y-3">
                 <button onclick="alert('前往蝦皮')" class="w-full bg-black text-white py-3 rounded-xl font-light tracking-widest text-sm">前往蝦皮下單</button>
                 <button onclick="enterPreview()" class="w-full bg-white text-gray-500 border border-gray-200 py-3 rounded-xl font-light tracking-widest text-sm">我只想先預覽效果</button>
-                <button onclick="document.getElementById('orderModal').classList.add('hidden')" class="text-xs text-gray-400 mt-2 hover:text-gray-600">返回修改</button>
+                <button onclick="document.getElementById('orderModal').classList.add('hidden')" class="text-xs text-gray-400 mt-2">返回修改</button>
             </div>
         </div>
     </div>
@@ -178,7 +175,7 @@
         <div class="bg-white w-full max-w-md h-[40vh] rounded-t-3xl shadow-2xl flex flex-col slide-up">
             <div class="p-4 flex justify-between items-center border-b border-gray-100">
                 <h3 class="font-medium tracking-wide ml-4 text-gray-800">可愛貼紙庫</h3>
-                <button onclick="document.getElementById('libraryModal').classList.add('hidden')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="document.getElementById('libraryModal').classList.add('hidden')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-6 grid grid-cols-4 gap-4 content-start bg-gray-50">
                 <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer">
@@ -192,16 +189,16 @@
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
         let isPreviewMode = false;
         let canvas;
-        
-        // 畫布基礎尺寸 50x76mm (2x3")
         const C_W = 300; const C_H = 456;  
         const P_LEFT = 18; const P_TOP = 18; const P_WIDTH = 264; const P_HEIGHT = 338; 
         
-        let isPolaroidLayout = true; // 追蹤目前是拍立得還是滿版
+        let isPolaroidLayout = true; 
+        let isBeautyOn = false; // 追蹤美顏狀態
+        let userImageObject; // 儲存使用者上傳的照片物件
 
         const PREMIUM_COLORS = ['#000000', '#595959', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#fce4ec', '#fff0f5', '#1976d2', '#64b5f6', '#bbdefb', '#e6f7ff'];
 
-        // --- 步驟一邏輯 ---
+        // --- 步驟一 ---
         document.getElementById('nextStepBtn').onclick = () => {
             const userNameInput = document.getElementById('userName');
             const orderIDInput = document.getElementById('orderID');
@@ -210,7 +207,6 @@
             if (!orderIDInput.value.trim()) { document.getElementById('orderModal').classList.remove('hidden'); } 
             else { isPreviewMode = false; unlockStep2(); }
         };
-
         function enterPreview() { document.getElementById('orderModal').classList.add('hidden'); isPreviewMode = true; unlockStep2(); }
 
         function unlockStep2() {
@@ -220,6 +216,7 @@
             setTimeout(() => { if (!canvas) initCanvas(); document.getElementById('step2-container').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
         }
 
+        // --- 畫布系統 ---
         function initCanvas() {
             canvas = new fabric.Canvas('editorCanvas', { width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true });
             const palette = document.getElementById('colorPalette');
@@ -229,11 +226,8 @@
                 palette.appendChild(dot);
             });
             fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 9, cornerStyle: 'circle' });
-            
-            // 底層假白框提示
             const placeholder = new fabric.Rect({ id: 'placeholder', left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, fill: '#f9fafb', stroke: '#e5e7eb', strokeDashArray: [3, 3], selectable: false, evented: false });
             canvas.add(placeholder);
-
             canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection);
             canvas.on('selection:cleared', () => document.getElementById('objectTools').classList.add('hidden'));
         }
@@ -247,127 +241,145 @@
             } else { document.getElementById('textTools').classList.add('hidden'); }
         }
 
-        // 🚀 一鍵切換排版功能 (拍立得框 vs 滿版)
         function toggleLayout() {
             isPolaroidLayout = !isPolaroidLayout;
             const btnText = document.getElementById('layoutText');
             btnText.innerText = isPolaroidLayout ? "目前: 拍立得白框" : "目前: 全滿版";
-
-            // 處理底框顯示/隱藏
             const placeholder = canvas.getObjects().find(o => o.id === 'placeholder');
             if (placeholder) placeholder.set('opacity', isPolaroidLayout ? 1 : 0);
-
-            // 處理照片遮罩
-            const imgObj = canvas.getObjects().find(o => o.frameId === 'userImage');
-            if (imgObj) {
+            if (userImageObject) {
                 if (isPolaroidLayout) {
-                    // 加回遮罩
-                    imgObj.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
-                } else {
-                    // 移除遮罩，讓照片可以全螢幕拖拉
-                    imgObj.set('clipPath', null);
-                }
+                    userImageObject.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
+                } else { userImageObject.set('clipPath', null); }
             }
             canvas.requestRenderAll();
         }
 
-        // 照片匯入
         document.getElementById('imageInput').onchange = (e) => {
             const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (f) => {
                 fabric.Image.fromURL(f.target.result, (img) => {
-                    // 根據目前的排版模式決定初始大小
-                    const targetW = isPolaroidLayout ? P_WIDTH : C_W;
-                    const targetH = isPolaroidLayout ? P_HEIGHT : C_H;
-                    const scale = Math.max(targetW / img.width, targetH / img.height);
-                    
-                    img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center', left: C_W / 2, top: isPolaroidLayout ? P_TOP + (P_HEIGHT / 2) : C_H / 2, frameId: 'userImage' });
-                    
-                    if (isPolaroidLayout) {
-                        img.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
-                    }
-                    
+                    userImageObject = img; // 儲存物件
+                    const scale = Math.max(P_WIDTH / img.width, P_HEIGHT / img.height);
+                    img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center', left: C_W / 2, top: P_TOP + (P_HEIGHT / 2) });
+                    img.set('clipPath', new fabric.Rect({ left: P_LEFT, top: P_TOP, width: P_WIDTH, height: P_HEIGHT, absolutePositioned: true }));
                     canvas.add(img); canvas.sendToBack(img); canvas.bringForward(img); canvas.setActiveObject(img);
                 });
             }; reader.readAsDataURL(file); e.target.value = '';
         };
 
-        function addText() {
-            const text = new fabric.IText('輸入文字...', { left: C_W / 2, top: C_H - 50, fontFamily: 'Noto Sans TC', fontSize: 24, fill: '#000000', originX: 'center', originY: 'center' });
-            canvas.add(text); canvas.bringToFront(text); canvas.setActiveObject(text);
+        // --- 💣 修復與做好做滿修圖算法 ---
+
+        // 1. 一鍵美顏 (智慧磨皮算法)
+        function toggleBeauty() {
+            if (!userImageObject) { alert("請先載入照片喔！"); return; }
+            isBeautyOn = !isBeautyOn;
+            const btn = document.getElementById('beautyBtn');
+            btn.innerText = isBeautyOn ? "美顏 ON ✨" : "美顏 OFF";
+            btn.classList.toggle('text-pink-500', isBeautyOn);
+            btn.classList.toggle('border-pink-300', isBeautyOn);
+            btn.classList.toggle('bg-pink-50', isBeautyOn);
+
+            // 執行算法
+            applyCompositeFilters();
         }
 
-        function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); } }
-        document.getElementById('fontFamily').addEventListener('change', async function(e) { 
-            const obj = canvas.getActiveObject(); 
-            if (obj && obj.type === 'i-text') { 
-                await document.fonts.load(`16px "${e.target.value}"`);
-                obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); 
-            } 
-        });
+        // 2. 所見即所得高級調色算法
+        function applyFilter(filterName, btn) {
+            if (!userImageObject) { alert("請先載入照片喔！"); return; }
+            document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
+            userImageObject.currentFilter = filterName; // 儲存目前濾鏡模式
+            applyCompositeFilters(); // 執行合成
+        }
 
+        // 3. 核心：合成算法 (濾鏡 + 美顏 + 遮罩)
+        function applyCompositeFilters() {
+            if (!userImageObject) return;
+            userImageObject.filters = []; // 清空
+
+            const mode = userImageObject.currentFilter || 'Original';
+
+            // 先套用美顏 (作為底層質感優化)
+            if (isBeautyOn) {
+                // 自動膚色優化 (提亮、降對比)
+                userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.08 }));
+                userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: -0.1 }));
+                // 💣 智慧磨皮算法：平滑捲積矩陣 (Convolve)
+                // 捲積能填補小瑕疵 (痘痘、皺紋)，同時 Blend 色彩
+                userImageObject.filters.push(new fabric.Image.filters.Convolve({
+                    matrix: [
+                        1/16, 2/16, 1/16,
+                        2/16, 4/16, 2/16,
+                        1/16, 2/16, 1/16
+                    ]
+                }));
+            }
+
+            // 再疊加高級調色濾鏡
+            switch (mode) {
+                case 'Original': break; 
+                case 'KPop': 
+                    userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.1 }));
+                    userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.12 }));
+                    userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffb6c1', mode: 'screen', alpha: 0.25 })); // 粉嫩
+                    break;
+                case 'BoyBand':
+                    userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.2 }));
+                    userImageObject.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.2 }));
+                    userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#607d8b', mode: 'multiply', alpha: 0.15 })); // 冷調
+                    break;
+                case 'Cool':
+                    userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.15 }));
+                    userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 }));
+                    userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#e0f7fa', mode: 'screen', alpha: 0.2 })); // 冷白
+                    break;
+                case 'Film': // 💣 修復黑畫面Bug，改為高清底片感
+                    userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.18 }));
+                    userImageObject.filters.push(new fabric.Image.filters.Saturation({ saturation: 0.2 }));
+                    userImageObject.filters.push(new fabric.Image.filters.Sepia());
+                    userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#1a1a1a', mode: 'overlay', alpha: 0.15 })); // 黑霧感
+                    break;
+                case 'Vintage': userImageObject.filters.push(new fabric.Image.filters.Sepia()); userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: -0.1 })); break;
+                case 'Mono': userImageObject.filters.push(new fabric.Image.filters.Grayscale()); break;
+                case 'Faded': userImageObject.filters.push(new fabric.Image.filters.Contrast({ contrast: -0.18 })); userImageObject.filters.push(new fabric.Image.filters.BlendColor({ color: '#f0ffff', mode: 'screen', alpha: 0.2 })); break;
+                case 'Fresh': userImageObject.filters.push(new fabric.Image.filters.Saturation({ saturation: 0.18 })); userImageObject.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); break;
+            }
+
+            userImageObject.applyFilters();
+            canvas.requestRenderAll();
+        }
+
+        // 文字、貼紙
+        function addText() {
+            const text = new fabric.IText('輸入...', { left: C_W / 2, top: C_H - 50, fontFamily: 'Noto Sans TC', fontSize: 24, fill: '#000000', originX: 'center', originY: 'center' });
+            canvas.add(text); canvas.bringToFront(text); canvas.setActiveObject(text);
+        }
+        function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); } }
+        document.getElementById('fontFamily').addEventListener('change', async function(e) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { await document.fonts.load(`16px "${e.target.value}"`); obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); } });
         function openLibrary() { document.getElementById('libraryModal').classList.remove('hidden'); }
         function addSticker(url) { document.getElementById('libraryModal').classList.add('hidden'); fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2 }); canvas.add(img); canvas.bringToFront(img); canvas.setActiveObject(img); }); }
 
-        // 🚀 修復與升級濾鏡
-        function applyFilter(filterName, btn) {
-            document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-            const imgObj = canvas.getObjects().find(obj => obj.frameId === 'userImage');
-            if (!imgObj) return;
-
-            imgObj.filters = [];
-            switch (filterName) {
-                case 'Original': break; 
-                case 'KPop': // 女團粉
-                    imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 }));
-                    imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 }));
-                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#ffe4e1', mode: 'tint', alpha: 0.25 }));
-                    break;
-                case 'BoyBand': // 男團風 (高對比、降飽和、微冷調)
-                    imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.15 }));
-                    imgObj.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.15 }));
-                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#607d8b', mode: 'tint', alpha: 0.2 }));
-                    break;
-                case 'Cool': // 冷白皮
-                    imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 }));
-                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#e0f7fa', mode: 'tint', alpha: 0.2 }));
-                    break;
-                case 'Film': // 底片感 (修復黑畫面，改為經典底片色)
-                    imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0.1 }));
-                    imgObj.filters.push(new fabric.Image.filters.Saturation({ saturation: -0.1 }));
-                    imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#8b4513', mode: 'tint', alpha: 0.15 }));
-                    break;
-                case 'Vintage': imgObj.filters.push(new fabric.Image.filters.Sepia()); imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: -0.1 })); break;
-                case 'Mono': imgObj.filters.push(new fabric.Image.filters.Grayscale()); break;
-                case 'Faded': imgObj.filters.push(new fabric.Image.filters.Contrast({ contrast: -0.15 })); imgObj.filters.push(new fabric.Image.filters.BlendColor({ color: '#e0ffff', mode: 'screen', alpha: 0.2 })); break;
-                case 'Fresh': imgObj.filters.push(new fabric.Image.filters.Saturation({ saturation: 0.15 })); imgObj.filters.push(new fabric.Image.filters.Brightness({ brightness: 0.05 })); break;
-            }
-            imgObj.applyFilters(); canvas.requestRenderAll();
-        }
-
+        // 排列
         function bringFront() { const obj = canvas.getActiveObject(); if(obj) { canvas.bringToFront(obj); canvas.requestRenderAll(); } }
-        function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); canvas.bringForward(obj); canvas.requestRenderAll(); } }
-        function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { canvas.remove(obj); canvas.discardActiveObject(); } }
-        function clearCanvas() { if(confirm("確定要清空設計？")) { canvas.clear(); canvas.setBackgroundColor('#ffffff'); initCanvas(); } }
+        function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); if(userImageObject) canvas.bringForward(userImageObject); canvas.requestRenderAll(); } }
+        function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { if(obj === userImageObject) userImageObject = null; canvas.remove(obj); canvas.discardActiveObject(); } }
+        function clearCanvas() { if(confirm("確定重置？")) { canvas.clear(); canvas.setBackgroundColor('#ffffff'); initCanvas(); userImageObject = null; isBeautyOn = false; isPolaroidLayout = true; } }
 
+        // 上傳 ( multipliers: 4 超高清)
         async function uploadDesign() {
-            if (isPreviewMode) { alert("您目前處於預覽模式，系統不會儲存照片。"); return; }
-            if (canvas.getObjects().length <= 1) { alert("請先加入照片或設計文字！"); return; }
-
+            if (isPreviewMode) { alert("預覽中，請去蝦皮下單！"); return; }
+            if (canvas.getObjects().length <= 1) { alert("請先加入設計！"); return; }
             const submitBtn = document.getElementById('submitBtn'); const statusMsg = document.getElementById('statusMsg');
-            submitBtn.disabled = true; submitBtn.innerText = "正在打包設計成品...";
-            statusMsg.innerText = "正在封裝高清圖檔..."; statusMsg.className = "mt-4 text-center text-sm tracking-wide text-blue-500";
-
+            submitBtn.disabled = true; submitBtn.innerText = "打包高清檔案中...";
+            statusMsg.innerText = "合併美顏與調色中..."; statusMsg.className = "mt-4 text-center text-sm tracking-wide text-blue-500 overflow-x-auto";
             canvas.discardActiveObject(); canvas.requestRenderAll();
-            const base64Image = canvas.toDataURL({ format: 'png', multiplier: 3 });
-
+            // 💣 超高清 4 倍輸出 (1200x1824)
+            const base64Image = canvas.toDataURL({ format: 'png', multiplier: 4 });
             try {
                 await fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim() || "無", imageB64: base64Image }), mode: 'no-cors' });
-                statusMsg.innerText = "✓ 成功！您的設計已送達工作室。"; statusMsg.className = "mt-4 text-center text-sm font-medium tracking-wide text-green-600"; submitBtn.innerText = "上傳完成";
-            } catch (error) {
-                statusMsg.innerText = "上傳失敗，請檢查網路。"; statusMsg.className = "mt-4 text-center text-sm tracking-wide text-red-500"; submitBtn.innerText = "確認並上傳設計"; submitBtn.disabled = false;
-            }
+                statusMsg.innerText = "✓ 設計已送達！"; statusMsg.className = "mt-4 text-center text-sm font-medium tracking-wide text-green-600 overflow-x-auto"; submitBtn.innerText = "完成";
+            } catch (error) { statusMsg.innerText = "上傳失敗。"; statusMsg.innerText = "上傳失敗"; submitBtn.disabled = false; }
         }
     </script>
 </body>
