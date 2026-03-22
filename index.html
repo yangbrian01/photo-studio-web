@@ -11,11 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;700&family=Ma+Shan+Zheng&family=Zhi+Mang+Xing&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=Caveat:wght@600&display=swap');
-        
         body { font-family: 'Roboto', 'Noto Sans TC', sans-serif; background-color: #f8f9fa; overscroll-behavior: none; }
         .fade-in { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         .canvas-container { margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 4px; background-color: white; }
         .color-dot { flex: 0 0 32px; width: 32px; height: 32px; cursor: pointer; border-radius: 50%; border: 2px solid #e5e7eb; transition: transform 0.2s; }
         .color-dot.active { border: 2px solid #000; box-shadow: 0 0 8px rgba(0,0,0,0.3); transform: scale(1.1); }
@@ -58,7 +56,6 @@
         </div>
 
         <div id="step2-container" class="bg-white rounded-2xl shadow-sm border border-gray-100 hidden fade-in overflow-hidden relative">
-            
             <div class="bg-gray-900 text-white px-5 py-3 flex justify-between items-center text-sm font-light tracking-wider">
                 <span><i class="fa-solid fa-camera mr-2"></i>設計進度</span>
                 <span id="progressText" class="font-medium text-blue-400">第 1 / ? 張</span>
@@ -89,7 +86,6 @@
             </div>
 
             <div class="px-5 py-5 bg-white space-y-5">
-                
                 <div class="p-4 border border-gray-100 rounded-xl bg-gray-50/50">
                     <label class="text-[11px] text-gray-400 font-medium mb-3 block text-center tracking-widest">風格濾鏡 (照片專屬)</label>
                     <div class="flex overflow-x-auto gap-3.5 filter-scroll pb-2 snap-x">
@@ -128,7 +124,7 @@
         </div>
 
         <div id="success-container" class="bg-white rounded-2xl shadow-lg border border-gray-100 hidden fade-in overflow-hidden relative pb-8">
-            <div class="bg-green-500 text-white text-center py-10">
+            <div class="bg-green-500 text-white text-center py-10" id="successHeader">
                 <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
                     <i class="fa-solid fa-check text-3xl"></i>
                 </div>
@@ -182,9 +178,9 @@
                 <button onclick="document.getElementById('libraryModal').classList.add('hidden')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-6 grid grid-cols-4 gap-4 content-start bg-gray-50">
-                <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
-                <img onclick="addSticker('https://i.imgur.com/L1MhM2P.png')" src="https://i.imgur.com/L1MhM2P.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
-                <img onclick="addSticker('https://i.imgur.com/R3O2b9S.png')" src="https://i.imgur.com/R3O2b9S.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
+                <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer hover:-translate-y-1 transition shadow-sm">
+                <img onclick="addSticker('https://i.imgur.com/L1MhM2P.png')" src="https://i.imgur.com/L1MhM2P.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer hover:-translate-y-1 transition shadow-sm">
+                <img onclick="addSticker('https://i.imgur.com/R3O2b9S.png')" src="https://i.imgur.com/R3O2b9S.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer hover:-translate-y-1 transition shadow-sm">
             </div>
         </div>
     </div>
@@ -196,12 +192,12 @@
         
         let isPolaroidLayout = true; 
         let isPreviewMode = false;
-        let expectedPhotos = 1; // 預設 1 張，抓到 GAS 會改
-        let photoCart = []; // 購物車陣列
+        let expectedPhotos = 1; 
+        let photoCart = []; 
 
         const PREMIUM_COLORS = ['#000000', '#595959', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#fce4ec', '#1976d2', '#64b5f6', '#bbdefb'];
 
-        // --- 1. 訂單驗證 (向 GAS 發出查詢) ---
+        // --- 1. 訂單驗證 ---
         async function verifyAndNext() {
             const userName = document.getElementById('userName').value.trim();
             const orderID = document.getElementById('orderID').value.trim();
@@ -210,7 +206,6 @@
 
             if (!userName) { document.getElementById('nameError').classList.remove('hidden'); return; }
             document.getElementById('nameError').classList.add('hidden');
-
             if (!orderID) { document.getElementById('orderModal').classList.remove('hidden'); return; }
 
             msg.classList.add('hidden');
@@ -230,9 +225,8 @@
                     btn.innerText = "下一步：編輯照片"; btn.disabled = false;
                 }
             } catch (error) {
-                // 如果 GAS 還沒設定好，先假裝驗證通過，讓你測試前端
                 console.log("GAS連線失敗，啟動測試模式");
-                expectedPhotos = 3; // 測試模式預設 3 張
+                expectedPhotos = 3; 
                 isPreviewMode = false;
                 unlockStep2();
             }
@@ -250,18 +244,17 @@
         function updateProgressUI() {
             const current = photoCart.length + 1;
             document.getElementById('progressText').innerText = `第 ${current} / ${expectedPhotos} 張`;
-            
             const saveBtn = document.getElementById('saveNextBtn');
             if (current === expectedPhotos) {
-                saveBtn.innerText = "確認並上傳所有設計";
-                saveBtn.classList.replace('bg-black', 'bg-blue-600');
+                saveBtn.innerText = isPreviewMode ? "預覽完成，前往蝦皮下單" : "確認並上傳所有設計";
+                saveBtn.classList.replace('bg-black', isPreviewMode ? 'bg-gray-500' : 'bg-blue-600');
             } else {
                 saveBtn.innerText = `存檔並設計下一張 (第 ${current+1} 張)`;
                 saveBtn.classList.replace('bg-blue-600', 'bg-black');
             }
         }
 
-        // --- 2. 畫布系統 (完美無 Bug 演算法) ---
+        // --- 2. 畫布系統 ---
         function initCanvas() {
             canvas = new fabric.Canvas('editorCanvas', { width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true });
             
@@ -274,14 +267,12 @@
 
             fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 12 });
             
-            // 🎨 實體白框疊加法 (不用 ClipPath，濾鏡永不當機)
             overlayFrameGroup = new fabric.Group([
                 new fabric.Rect({ left: 0, top: 0, width: C_W, height: P_TOP, fill: '#f8f9fa' }), 
                 new fabric.Rect({ left: 0, top: P_TOP + P_HEIGHT, width: C_W, height: C_H - (P_TOP + P_HEIGHT), fill: '#f8f9fa' }), 
                 new fabric.Rect({ left: 0, top: P_TOP, width: P_LEFT, height: P_HEIGHT, fill: '#f8f9fa' }), 
                 new fabric.Rect({ left: P_LEFT + P_WIDTH, top: P_TOP, width: P_LEFT, height: P_HEIGHT, fill: '#f8f9fa' }) 
             ], { left: 0, top: 0, selectable: false, evented: false, id: 'overlayFrame' });
-            
             canvas.add(overlayFrameGroup);
 
             canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection);
@@ -296,8 +287,7 @@
                 document.getElementById('textTools').classList.add('flex');
                 document.getElementById('fontFamily').value = activeObj.fontFamily;
             } else { 
-                document.getElementById('textTools').classList.add('hidden'); 
-                document.getElementById('textTools').classList.remove('flex');
+                document.getElementById('textTools').classList.add('hidden'); document.getElementById('textTools').classList.remove('flex');
             }
         }
 
@@ -308,23 +298,14 @@
             canvas.requestRenderAll();
         }
 
-        // 照片匯入 (左上原點算法，防縮小Bug)
         document.getElementById('imageInput').onchange = (e) => {
             const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = (f) => {
                 fabric.Image.fromURL(f.target.result, (img) => {
                     if (userImageObject) canvas.remove(userImageObject); 
-                    
                     const scale = Math.max(P_WIDTH / img.width, P_HEIGHT / img.height);
-                    // 💡 修復Bug核心：使用 originX 'left' 和 'top' 來定位，濾鏡算圖才不會走鐘
-                    img.set({ 
-                        scaleX: scale, scaleY: scale, 
-                        originX: 'left', originY: 'top', 
-                        left: (C_W - (img.width * scale)) / 2, 
-                        top: (isPolaroidLayout ? P_TOP + (P_HEIGHT - (img.height * scale)) / 2 : (C_H - (img.height * scale)) / 2), 
-                        frameId: 'userImage' 
-                    });
+                    img.set({ scaleX: scale, scaleY: scale, originX: 'left', originY: 'top', left: (C_W - (img.width * scale)) / 2, top: (isPolaroidLayout ? P_TOP + (P_HEIGHT - (img.height * scale)) / 2 : (C_H - (img.height * scale)) / 2), frameId: 'userImage' });
                     
                     userImageObject = img;
                     canvas.add(img); canvas.sendToBack(img); canvas.bringToFront(overlayFrameGroup); canvas.setActiveObject(img);
@@ -338,11 +319,9 @@
         function openLibrary() { document.getElementById('libraryModal').classList.remove('hidden'); }
         function addSticker(url) { document.getElementById('libraryModal').classList.add('hidden'); fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2 }); canvas.add(img); canvas.bringToFront(img); canvas.setActiveObject(img); }); }
 
-        // 🎨 濾鏡：純粹、穩定
         function applyFilter(filterName, btn) {
             document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); btn.classList.add('active');
             if (!userImageObject) return;
-
             userImageObject.filters = [];
             switch (filterName) {
                 case 'Original': break; 
@@ -360,50 +339,50 @@
         function bringFront() { const obj = canvas.getActiveObject(); if(obj) { canvas.bringToFront(obj); canvas.requestRenderAll(); } }
         function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); if(userImageObject && obj !== userImageObject) canvas.bringForward(userImageObject); canvas.bringForward(overlayFrameGroup); canvas.requestRenderAll(); } }
         function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { if(obj === userImageObject) userImageObject = null; canvas.remove(obj); canvas.discardActiveObject(); document.getElementById('objectTools').classList.add('hidden'); } }
-        function clearCanvas() { if(confirm("確定重置當前畫布？")) { 
-            const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame');
-            objects.forEach(o => canvas.remove(o)); userImageObject = null;
-            document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); document.querySelector('.filter-item').classList.add('active');
-        } }
+        function clearCanvas() { if(confirm("確定重置當前畫布？")) { const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame'); objects.forEach(o => canvas.remove(o)); userImageObject = null; document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); document.querySelector('.filter-item').classList.add('active'); } }
 
         // --- 3. 購物車與超高質感成功明細 ---
         async function saveAndNext() {
-            // ✅ 修正：只要有照片就可以存，不強制需要文字
             if (!userImageObject) { alert("請至少載入一張照片喔！"); return; }
             
             canvas.discardActiveObject(); canvas.requestRenderAll();
             photoCart.push(canvas.toDataURL({ format: 'png', multiplier: 3 }));
             
             if (photoCart.length === expectedPhotos) {
-                // 上傳結算
+                // 🛑 修復：如果是預覽模式，直接跳到預覽結束畫面，絕對不上傳！
+                if (isPreviewMode) {
+                    document.getElementById('step2-container').classList.add('hidden');
+                    document.getElementById('success-container').classList.remove('hidden');
+                    
+                    // 替換預覽文字
+                    document.querySelector('#successHeader h2').innerText = "預覽體驗完成";
+                    document.querySelector('#successHeader p').innerText = "請前往蝦皮下單獲取正式編號";
+                    document.getElementById('successHeader').classList.replace('bg-green-500', 'bg-gray-800');
+                    document.getElementById('statusMsg').classList.add('hidden'); // 隱藏下方殘留文字
+
+                    renderGallery();
+                    return; // 這裡 Return 掉，就不會執行下面的 fetch
+                }
+
+                // 🚀 正式上傳
                 const btn = document.getElementById('saveNextBtn'); const msg = document.getElementById('statusMsg');
                 btn.disabled = true; btn.innerText = "打包上傳中..."; msg.innerText = "正在傳送至工作室...";
 
                 try {
                     await fetch(SCRIPT_URL, { 
                         method: "POST", 
-                        body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim() || "無", images: photoCart }), 
+                        body: JSON.stringify({ userName: document.getElementById('userName').value.trim(), orderID: document.getElementById('orderID').value.trim(), images: photoCart }), 
                         mode: 'no-cors' 
                     });
                     
-                    // 🏆 切換到高級明細畫面
                     document.getElementById('step2-container').classList.add('hidden');
                     document.getElementById('success-container').classList.remove('hidden');
                     
-                    // 填入明細資料
-                    document.getElementById('resName').innerText = document.getElementById('userName').value.trim();
-                    document.getElementById('resOrderID').innerText = document.getElementById('orderID').value.trim() || "預覽單號";
-                    document.getElementById('resCount').innerText = `${expectedPhotos} 張`;
+                    // 🛑 修復：徹底清空並隱藏底下的「正在傳送...」殘留文字
+                    msg.innerText = "";
+                    msg.classList.add('hidden');
                     
-                    // 畫廊展示
-                    const gallery = document.getElementById('galleryContainer');
-                    photoCart.forEach((imgBase64, index) => {
-                        const div = document.createElement('div');
-                        div.className = "bg-gray-50 rounded-xl p-2 border border-gray-100 shadow-sm";
-                        div.innerHTML = `<img src="${imgBase64}" class="w-full h-auto rounded shadow-sm"><p class="text-center text-[10px] text-gray-400 mt-2 font-light">第 ${index+1} 張</p>`;
-                        gallery.appendChild(div);
-                    });
-
+                    renderGallery();
                 } catch (error) { 
                     msg.innerText = "上傳失敗，請檢查網路。"; btn.disabled = false; btn.innerText = "重新送出"; 
                 }
@@ -411,6 +390,21 @@
                 clearCanvas(); updateProgressUI();
                 alert(`第 ${photoCart.length} 張已暫存！請繼續設計下一張。`);
             }
+        }
+
+        // 渲染畫廊明細
+        function renderGallery() {
+            document.getElementById('resName').innerText = document.getElementById('userName').value.trim() || "顧客";
+            document.getElementById('resOrderID').innerText = document.getElementById('orderID').value.trim() || "預覽單號";
+            document.getElementById('resCount').innerText = `${expectedPhotos} 張`;
+            
+            const gallery = document.getElementById('galleryContainer');
+            photoCart.forEach((imgBase64, index) => {
+                const div = document.createElement('div');
+                div.className = "bg-gray-50 rounded-xl p-2 border border-gray-100 shadow-sm";
+                div.innerHTML = `<img src="${imgBase64}" class="w-full h-auto rounded shadow-sm"><p class="text-center text-[10px] text-gray-400 mt-2 font-light">第 ${index+1} 張</p>`;
+                gallery.appendChild(div);
+            });
         }
     </script>
 </body>
