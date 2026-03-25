@@ -170,10 +170,10 @@
             
             <div class="px-5 py-4 bg-gray-50 border-t border-gray-200 flex gap-3">
                 <button id="saveNextBtn" onclick="saveAndNext()" class="w-1/2 bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md">
-                    存檔單張
+                    存單張
                 </button>
                 <button id="batchBtn" onclick="batchDuplicate()" class="w-1/2 bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-copy"></i> 洗相片
+                    <i class="fa-solid fa-copy"></i> 自動洗滿
                 </button>
             </div>
         </div>
@@ -195,6 +195,8 @@
                 <div id="galleryContainer" class="grid grid-cols-2 gap-4"></div>
             </div>
         </div>
+
+        <p id="statusMsg" class="mt-4 text-center text-sm font-light tracking-wide text-blue-500"></p>
     </div>
 
     <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center hidden fade-in backdrop-blur-sm">
@@ -220,6 +222,7 @@
                 <button onclick="convertPreviewToReal()" class="w-full bg-black text-white py-3 rounded-xl font-light tracking-widest text-sm shadow-md">驗證並保留設計</button>
                 <button onclick="location.reload()" class="w-full bg-white text-gray-500 border border-gray-200 py-3 rounded-xl font-light tracking-widest text-sm">不保留，回首頁</button>
             </div>
+            <p id="previewVerifyMsg" class="mt-3 text-center text-xs text-red-500 hidden tracking-wide"></p>
         </div>
     </div>
 
@@ -324,42 +327,23 @@
             updateProgressUI(); setTimeout(() => { if (!canvas) initCanvas(); }, 50);
         }
 
-        // 🚀 終極防呆：到最後一張時，洗照片按鈕反白不可按
+        // 🚀 BUG 修復：按鈕文字與邏輯精準化
         function updateProgressUI() {
             const current = photoCart.length + 1;
             document.getElementById('progressText').innerText = isPreviewMode ? "體驗模式" : `第 ${current} / ${expectedPhotos} 張`;
-            const saveBtn = document.getElementById('saveNextBtn'); 
-            const batchBtn = document.getElementById('batchBtn');
-
-            // 先重置所有 class，避免衝突
-            saveBtn.className = "w-full bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md";
-            batchBtn.className = "w-1/2 bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md flex justify-center items-center gap-2";
+            const saveBtn = document.getElementById('saveNextBtn'); const batchBtn = document.getElementById('batchBtn');
 
             if (isPreviewMode) {
-                saveBtn.innerText = "預覽完成，前往綁定單號"; 
-                saveBtn.className = "w-full bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md";
-                batchBtn.classList.add('hidden');
-            } else if (current > expectedPhotos) {
-                saveBtn.innerText = "確認並上傳所有設計"; 
-                saveBtn.className = "w-full bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md";
-                batchBtn.classList.add('hidden');
+                saveBtn.innerText = "預覽完成，前往綁定單號"; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
             } else if (current === expectedPhotos) {
-                // 🛑 最後一張了，洗照片按鈕反白！
-                saveBtn.innerText = `存檔單張 (第 ${current} 張)`;
-                saveBtn.className = "w-1/2 bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md";
-                
-                batchBtn.classList.remove('hidden');
-                batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 無法批量`;
-                batchBtn.className = "w-1/2 bg-gray-200 text-gray-400 py-3.5 rounded-xl font-light tracking-widest transition text-sm shadow-sm flex justify-center items-center gap-2 cursor-not-allowed";
-                batchBtn.disabled = true;
+                // 如果是最後一張
+                saveBtn.innerText = `完成並上傳 (第 ${current} 張)`; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
+            } else if (current > expectedPhotos) {
+                // 已經滿了
+                saveBtn.innerText = "上傳中..."; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
             } else {
-                saveBtn.innerText = `存檔單張 (第 ${current} 張)`; 
-                saveBtn.className = "w-1/2 bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md";
-                
-                batchBtn.classList.remove('hidden');
-                batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 洗相片(剩 ${expectedPhotos - current + 1} 張)`;
-                batchBtn.className = "w-1/2 bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md flex justify-center items-center gap-2 cursor-pointer";
-                batchBtn.disabled = false;
+                saveBtn.innerText = `存單張 (第 ${current} 張)`; saveBtn.classList.replace('bg-blue-600', 'bg-black'); saveBtn.classList.remove('w-full'); saveBtn.classList.add('w-1/2'); batchBtn.classList.remove('hidden'); 
+                batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 自動洗滿 (剩 ${expectedPhotos - current} 張)`;
             }
         }
 
@@ -608,31 +592,27 @@
             if (photoCart.length >= expectedPhotos) { await executeUpload(); } 
             else {
                 const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame' && o.id !== 'safeZone'); objects.forEach(o => canvas.remove(o)); 
-                updateProgressUI(); alert(`第 ${photoCart.length} 張已暫存！請繼續設計。`);
+                updateProgressUI(); document.getElementById('statusMsg').innerText = `第 ${photoCart.length} 張已暫存！請繼續設計。`;
             }
         }
 
+        // 🚀 BUG 修復：一鍵洗滿直接上傳
         function batchDuplicate() {
             if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("請先設計好要洗的照片！"); return; }
-            const remaining = expectedPhotos - photoCart.length; 
-            // 🛑 如果只剩 1 張或更少，直接阻擋執行，因為沒有額度可以「批量」了
-            if (remaining <= 1) return; 
+            const remaining = expectedPhotos - photoCart.length; if (remaining <= 0) return;
             
-            showLoading("正在為您洗照片中...");
+            showLoading("正在自動洗滿剩餘相片...");
             
             setTimeout(() => {
                 const base64 = exportCanvas();
                 for (let i = 0; i < remaining; i++) { photoCart.push(base64); }
-                updateProgressUI();
-                hideLoading();
-                alert(`✓ 已為您自動複製剩餘的 ${remaining} 張！請點擊藍色按鈕上傳。`);
+                executeUpload(); // 直接上傳！
             }, 100);
         }
 
         async function convertPreviewToReal() {
             const newOrderID = document.getElementById('previewOrderID').value.trim();
             if (!newOrderID) { alert("請輸入訂單編號"); return; }
-            
             showLoading("驗證單號中...");
 
             try {
