@@ -78,8 +78,20 @@
                 <button onclick="switchLayout('fourCutMulti')" id="btn-fourCutMulti" class="layout-btn px-4 py-1.5 rounded-full text-xs font-medium border border-gray-200 text-gray-500 transition">四格 (多圖)</button>
             </div>
 
-            <div class="bg-gray-100/50 py-8 relative flex justify-center border-b border-gray-50">
-                <canvas id="editorCanvas"></canvas>
+            <div class="bg-gray-100/50 py-8 relative flex flex-col items-center border-b border-gray-50">
+                
+                <div class="mb-4">
+                    <span class="text-[10px] text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100 shadow-sm flex items-center gap-1.5 tracking-widest font-light">
+                        <i class="fa-solid fa-triangle-exclamation"></i> 貼心提醒：請將重要文字與人臉放在紅色虛線內
+                    </span>
+                </div>
+
+                <div class="relative">
+                    <button onclick="toggleLayout()" class="absolute -top-3 -right-3 z-20 bg-white shadow-md border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium tracking-wide text-gray-600 hover:text-black transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-expand"></i> <span id="layoutText">目前: 白框</span>
+                    </button>
+                    <canvas id="editorCanvas"></canvas>
+                </div>
             </div>
 
             <div id="objectTools" class="px-5 py-4 bg-white hidden flex-col gap-4 transition border-b border-gray-50 relative z-10">
@@ -99,13 +111,13 @@
                         <optgroup label="造型中文字">
                             <option value="Ma Shan Zheng">毛筆行書 (瀟灑)</option>
                             <option value="Zhi Mang Xing">藝術狂草 (霸氣)</option>
-                            <option value="ZCOOL QingKe HuangYou">麥克筆體 (應援)</option>
+                            <option value="ZCOOL QingKe HuangYou">麥克筆體 (應援必備)</option>
                             <option value="ZCOOL KuaiLe">可愛圓體 (Q版)</option>
                         </optgroup>
-                        <optgroup label="質感英文字體 (限英文)">
+                        <optgroup label="高級英文字體 (僅限英文)">
                             <option value="Dancing Script">連筆簽名 (流暢)</option>
                             <option value="Caveat">英文手寫 (清新)</option>
-                            <option value="Playfair Display">雜誌標題 (VOGUE)</option>
+                            <option value="Playfair Display">雜誌標題 (VOGUE風)</option>
                             <option value="Permanent Marker">美式塗鴉 (街頭)</option>
                             <option value="Righteous">幾何潮流 (科技)</option>
                             <option value="Special Elite">復古打字機 (電影)</option>
@@ -127,7 +139,6 @@
                         <button onclick="applyFilter('Film', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 sepia-[.3] contrast-125"><span class="text-[10px] font-light">底片感</span></button>
                         <button onclick="applyFilter('Vintage', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: sepia(1);"><span class="text-[10px] font-light">即可拍</span></button>
                         <button onclick="applyFilter('Fresh', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: saturate(1.5);"><span class="text-[10px] font-light">清新</span></button>
-                        <button onclick="applyFilter('Mono', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: grayscale(1);"><span class="text-[10px] font-light">黑白</span></button>
                     </div>
                 </div>
 
@@ -185,6 +196,7 @@
                 <div id="galleryContainer" class="grid grid-cols-2 gap-4"></div>
             </div>
         </div>
+
         <p id="statusMsg" class="mt-4 text-center text-sm font-light tracking-wide text-blue-500"></p>
     </div>
 
@@ -236,22 +248,31 @@
                 <button onclick="closeModal('frameModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-6 grid grid-cols-3 gap-4 content-start bg-gray-50">
-                <div onclick="addFrame('https://i.imgur.com/KzXG5Rj.png')" class="cursor-pointer flex flex-col items-center hover:-translate-y-1 transition"><img src="https://i.imgur.com/KzXG5Rj.png" class="w-full h-auto border border-gray-200 rounded-lg shadow-sm bg-white p-1"><span class="text-[10px] text-gray-500 mt-2 font-light">彩虹相框</span></div>
-                <div onclick="addFrame('https://i.imgur.com/vH7T7bM.png')" class="cursor-pointer flex flex-col items-center hover:-translate-y-1 transition"><img src="https://i.imgur.com/vH7T7bM.png" class="w-full h-auto border border-gray-200 rounded-lg shadow-sm bg-white p-1"><span class="text-[10px] text-gray-500 mt-2 font-light">經典拍立得</span></div>
-                <div onclick="removeFrame()" class="cursor-pointer flex flex-col items-center justify-center h-[120px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-100 hover:bg-gray-200 transition"><i class="fa-solid fa-ban text-gray-400 mb-1"></i><span class="text-[10px] text-gray-500 font-light">移除相框</span></div>
+                <div onclick="addFrame('https://i.imgur.com/KzXG5Rj.png')" class="cursor-pointer flex flex-col items-center hover:-translate-y-1 transition">
+                    <img src="https://i.imgur.com/KzXG5Rj.png" class="w-full h-auto border border-gray-200 rounded-lg shadow-sm bg-white p-1">
+                    <span class="text-[10px] text-gray-500 mt-2 font-light">彩虹相框</span>
+                </div>
+                <div onclick="addFrame('https://i.imgur.com/vH7T7bM.png')" class="cursor-pointer flex flex-col items-center hover:-translate-y-1 transition">
+                    <img src="https://i.imgur.com/vH7T7bM.png" class="w-full h-auto border border-gray-200 rounded-lg shadow-sm bg-white p-1">
+                    <span class="text-[10px] text-gray-500 mt-2 font-light">經典拍立得</span>
+                </div>
+                <div onclick="removeFrame()" class="cursor-pointer flex flex-col items-center justify-center h-[120px] border-2 border-dashed border-gray-300 rounded-lg bg-gray-100 hover:bg-gray-200 transition">
+                    <i class="fa-solid fa-ban text-gray-400 mb-1"></i>
+                    <span class="text-[10px] text-gray-500 font-light">移除相框</span>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
-        let canvas, overlayFrameGroup;
+        let canvas, overlayFrameGroup, safeZoneRect;
+        let guideLines = []; // 存放粉紅對齊線
         const C_W = 300, C_H = 456, P_LEFT = 18, P_TOP = 18, P_WIDTH = 264, P_HEIGHT = 338; 
         
         let currentLayout = 'polaroid';
         let isPreviewMode = false;
         let expectedPhotos = 1; let photoCart = []; 
-        let guideLines = []; // 🚀 存放磁吸輔助線
 
         const layouts = {
             'polaroid': [{ left: 18, top: 18, width: 264, height: 338 }],
@@ -304,7 +325,8 @@
         function unlockStep2() {
             document.getElementById('step1-container').classList.add('hidden');
             document.getElementById('step2-container').classList.remove('hidden');
-            updateProgressUI(); setTimeout(() => { if (!canvas) initCanvas(); }, 50);
+            updateProgressUI();
+            setTimeout(() => { if (!canvas) initCanvas(); }, 50);
         }
 
         function updateProgressUI() {
@@ -321,7 +343,6 @@
             }
         }
 
-        // --- 2. 畫布系統 ---
         function initCanvas() {
             fabric.filterBackend = new fabric.Canvas2dFilterBackend();
             canvas = new fabric.Canvas('editorCanvas', { width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true });
@@ -336,82 +357,71 @@
             fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 12 });
             canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection); canvas.on('selection:cleared', () => document.getElementById('objectTools').classList.add('hidden'));
             
+            // 🚀 建立安全出血虛線 (往內縮 12px)
+            safeZoneRect = new fabric.Rect({
+                left: 12, top: 12, width: C_W - 24, height: C_H - 24,
+                fill: 'transparent', stroke: 'rgba(239, 68, 68, 0.6)', strokeWidth: 1.5, strokeDashArray: [6, 6],
+                selectable: false, evented: false, id: 'safeZone'
+            });
+            canvas.add(safeZoneRect);
+
             drawOverlay(); 
-            initSnapping(); // 🚀 啟動智慧對齊引擎
+            initSnapping(); // 啟動磁吸對齊引擎
         }
 
-        // 🚀 Canva 級別的「智慧對齊線 (Smart Snapping)」核心引擎
+        // 🚀 Canva 級別的「智慧對齊線」引擎
         function clearGuidelines() {
-            guideLines.forEach(line => canvas.remove(line));
-            guideLines = [];
+            guideLines.forEach(line => canvas.remove(line)); guideLines = [];
         }
 
         function initSnapping() {
-            const snapZone = 12; // 磁吸感應範圍
-            const snapColor = '#ec4899'; // 專屬的高級粉紅輔助線
+            const snapZone = 12; // 磁吸範圍
+            const snapColor = '#ec4899'; // 粉紅色輔助線
 
             canvas.on('object:moving', function(e) {
                 clearGuidelines();
                 const obj = e.target;
-                if (!obj || obj.id === 'overlayFrame') return;
+                if (!obj || obj.id === 'overlayFrame' || obj.id === 'safeZone') return;
 
                 const objCenter = obj.getCenterPoint();
-                let snapX = null;
-                let snapY = null;
+                let snapX = null, snapY = null;
 
-                // 1. 蒐集磁吸目標 (畫布正中心)
+                // 畫布正中心
                 let targetLinesX = [canvas.width / 2];
                 let targetLinesY = [canvas.height / 2];
 
-                // 如果畫布上有照片(四格模式)，把每一張照片的中心點也加入對齊目標！
+                // 加上所有照片的中心點
                 canvas.getObjects().filter(o => o.isUserImage).forEach(img => {
                     const imgCenter = img.getCenterPoint();
-                    targetLinesX.push(imgCenter.x);
-                    targetLinesY.push(imgCenter.y);
+                    targetLinesX.push(imgCenter.x); targetLinesY.push(imgCenter.y);
                 });
 
-                // 陣列去重複，優化效能
-                targetLinesX = [...new Set(targetLinesX)];
-                targetLinesY = [...new Set(targetLinesY)];
-
-                // 2. 判斷 X 軸吸附
                 for (let x of targetLinesX) {
                     if (Math.abs(objCenter.x - x) < snapZone) {
                         snapX = x;
-                        // 畫出一條粉紅虛線
                         let line = new fabric.Line([x, 0, x, canvas.height], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 });
-                        guideLines.push(line); canvas.add(line);
-                        break; 
+                        guideLines.push(line); canvas.add(line); break; 
                     }
                 }
-
-                // 3. 判斷 Y 軸吸附
                 for (let y of targetLinesY) {
                     if (Math.abs(objCenter.y - y) < snapZone) {
                         snapY = y;
                         let line = new fabric.Line([0, y, canvas.width, y], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 });
-                        guideLines.push(line); canvas.add(line);
-                        break;
+                        guideLines.push(line); canvas.add(line); break;
                     }
                 }
 
-                // 4. 執行磁吸強制位移
                 if (snapX !== null || snapY !== null) {
-                    obj.setPositionByOrigin(
-                        new fabric.Point(snapX !== null ? snapX : objCenter.x, snapY !== null ? snapY : objCenter.y), 
-                        'center', 'center'
-                    );
-                    obj.setCoords(); // 更新點擊外框
+                    obj.setPositionByOrigin(new fabric.Point(snapX !== null ? snapX : objCenter.x, snapY !== null ? snapY : objCenter.y), 'center', 'center');
+                    obj.setCoords(); 
                 }
 
-                // 把輔助線拉到最上面顯示
                 guideLines.forEach(l => canvas.bringToFront(l));
                 if (overlayFrameGroup) canvas.bringToFront(overlayFrameGroup); 
+                if (safeZoneRect) canvas.bringToFront(safeZoneRect);
             });
 
-            // 手指放開時，清除輔助線
-            canvas.on('mouse:up', clearGuidelines);
-            canvas.on('object:modified', clearGuidelines);
+            canvas.on('mouse:up', clearGuidelines); canvas.on('object:modified', clearGuidelines);
         }
 
         function drawOverlay() {
@@ -458,6 +468,8 @@
             if (overlayFrameGroup) canvas.bringToFront(overlayFrameGroup);
             canvas.getObjects().filter(o => o.isSticker).forEach(o => canvas.bringToFront(o));
             canvas.getObjects().filter(o => o.type === 'i-text').forEach(o => canvas.bringToFront(o));
+            // 永遠把紅虛線放最上層
+            if (safeZoneRect) canvas.bringToFront(safeZoneRect);
             canvas.requestRenderAll();
         }
 
@@ -567,18 +579,31 @@
         function bringFront() { const obj = canvas.getActiveObject(); if(obj) { canvas.bringToFront(obj); sortLayers(); } }
         function sendBack() { const obj = canvas.getActiveObject(); if(obj) { canvas.sendToBack(obj); sortLayers(); } }
         function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { canvas.remove(obj); canvas.discardActiveObject(); document.getElementById('objectTools').classList.add('hidden'); } }
-        function clearCanvas() { if(confirm("確定重置當前版面？")) { const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame'); objects.forEach(o => canvas.remove(o)); document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); document.querySelector('.filter-item').classList.add('active'); } }
+        function clearCanvas() { if(confirm("確定重置當前版面？")) { const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame' && o.id !== 'safeZone'); objects.forEach(o => canvas.remove(o)); document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); document.querySelector('.filter-item').classList.add('active'); } }
+
+        // 🚀 隱形輸出黑科技：匯出時瞬間關閉安全線與對齊線
+        function exportCanvas() {
+            if (safeZoneRect) safeZoneRect.set('opacity', 0);
+            guideLines.forEach(l => l.set('opacity', 0));
+            canvas.discardActiveObject();
+            canvas.requestRenderAll();
+            
+            const base64 = canvas.toDataURL({ format: 'png', multiplier: 3 });
+            
+            if (safeZoneRect) safeZoneRect.set('opacity', 1);
+            canvas.requestRenderAll();
+            return base64;
+        }
 
         async function saveAndNext() {
             if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("請先加入照片或設計喔！"); return; }
             if (isPreviewMode) { openModal('previewDoneModal'); return; }
             
-            canvas.discardActiveObject(); canvas.requestRenderAll();
-            photoCart.push(canvas.toDataURL({ format: 'png', multiplier: 3 }));
+            photoCart.push(exportCanvas());
             
             if (photoCart.length >= expectedPhotos) { await executeUpload(); } 
             else {
-                const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame'); objects.forEach(o => canvas.remove(o)); 
+                const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame' && o.id !== 'safeZone'); objects.forEach(o => canvas.remove(o)); 
                 updateProgressUI(); document.getElementById('statusMsg').innerText = `第 ${photoCart.length} 張已暫存！請繼續設計。`;
             }
         }
@@ -586,7 +611,8 @@
         function batchDuplicate() {
             if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("請先設計好要洗的照片！"); return; }
             const remaining = expectedPhotos - photoCart.length; if (remaining <= 0) return;
-            canvas.discardActiveObject(); canvas.requestRenderAll(); const base64 = canvas.toDataURL({ format: 'png', multiplier: 3 });
+            
+            const base64 = exportCanvas();
             for (let i = 0; i < remaining; i++) { photoCart.push(base64); }
             updateProgressUI();
             document.getElementById('statusMsg').innerText = `✓ 已為您自動複製剩餘的 ${remaining} 張！請點擊藍色按鈕上傳。`;
