@@ -37,12 +37,7 @@
     </div>
 
     <div style="visibility: hidden; position: absolute; top: -9999px;">
-        <span style="font-family: 'Noto Serif TC';">預載</span><span style="font-family: 'Ma Shan Zheng';">預載</span>
-        <span style="font-family: 'Zhi Mang Xing';">預載</span><span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span>
-        <span style="font-family: 'ZCOOL KuaiLe';">預載</span><span style="font-family: 'Special Elite';">預載</span>
-        <span style="font-family: 'Permanent Marker';">預載</span><span style="font-family: 'Playfair Display';">預載</span>
-        <span style="font-family: 'Dancing Script';">預載</span><span style="font-family: 'Pacifico';">預載</span>
-        <span style="font-family: 'Press Start 2P';">預載</span><span style="font-family: 'Righteous';">預載</span>
+        <span style="font-family: 'Noto Serif TC';">預載</span><span style="font-family: 'Ma Shan Zheng';">預載</span><span style="font-family: 'Zhi Mang Xing';">預載</span><span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span><span style="font-family: 'ZCOOL KuaiLe';">預載</span><span style="font-family: 'Special Elite';">預載</span><span style="font-family: 'Permanent Marker';">預載</span><span style="font-family: 'Playfair Display';">預載</span><span style="font-family: 'Dancing Script';">預載</span><span style="font-family: 'Pacifico';">預載</span><span style="font-family: 'Press Start 2P';">預載</span><span style="font-family: 'Righteous';">預載</span>
     </div>
 
     <div class="max-w-3xl mx-auto px-5">
@@ -103,25 +98,9 @@
                 </div>
                 <div id="textTools" class="hidden flex-col gap-3 border-t border-gray-100 pt-3">
                     <select id="fontFamily" class="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:border-black font-light bg-gray-50">
-                        <optgroup label="經典中文">
-                            <option value="Noto Sans TC">黑體 (清晰易讀)</option>
-                            <option value="Noto Serif TC">宋體 (高級文青)</option>
-                        </optgroup>
-                        <optgroup label="造型中文字">
-                            <option value="Ma Shan Zheng">毛筆行書 (瀟灑)</option>
-                            <option value="Zhi Mang Xing">藝術狂草 (霸氣)</option>
-                            <option value="ZCOOL QingKe HuangYou">麥克筆體 (應援必備)</option>
-                            <option value="ZCOOL KuaiLe">可愛圓體 (Q版)</option>
-                        </optgroup>
-                        <optgroup label="高級英文字體 (僅限英文)">
-                            <option value="Dancing Script">連筆簽名 (流暢)</option>
-                            <option value="Caveat">英文手寫 (清新)</option>
-                            <option value="Playfair Display">雜誌標題 (VOGUE風)</option>
-                            <option value="Permanent Marker">美式塗鴉 (街頭)</option>
-                            <option value="Righteous">幾何潮流 (科技)</option>
-                            <option value="Special Elite">復古打字機 (電影)</option>
-                            <option value="Press Start 2P">像素遊戲 (8-bit)</option>
-                        </optgroup>
+                        <optgroup label="經典中文"><option value="Noto Sans TC">黑體 (清晰易讀)</option><option value="Noto Serif TC">宋體 (高級文青)</option></optgroup>
+                        <optgroup label="造型中文字"><option value="Ma Shan Zheng">毛筆行書 (瀟灑)</option><option value="Zhi Mang Xing">藝術狂草 (霸氣)</option><option value="ZCOOL QingKe HuangYou">麥克筆體 (應援必備)</option><option value="ZCOOL KuaiLe">可愛圓體 (Q版)</option></optgroup>
+                        <optgroup label="高級英文字體 (僅限英文)"><option value="Dancing Script">連筆簽名 (流暢)</option><option value="Caveat">英文手寫 (清新)</option><option value="Playfair Display">雜誌標題 (VOGUE風)</option><option value="Permanent Marker">美式塗鴉 (街頭)</option><option value="Righteous">幾何潮流 (科技)</option><option value="Special Elite">復古打字機 (電影)</option><option value="Press Start 2P">像素遊戲 (8-bit)</option></optgroup>
                     </select>
                     <div class="flex overflow-x-auto gap-3 py-2 color-scroll snap-x" id="colorPalette"></div>
                 </div>
@@ -254,7 +233,7 @@
                 </div>
 
             <div class="flex-1 overflow-y-auto p-4 bg-gray-50">
-                <div id="stickerGrid" class="grid grid-cols-5 gap-3 content-start">
+                <div id="stickerGrid" class="grid grid-cols-4 gap-3 content-start">
                     </div>
             </div>
         </div>
@@ -298,35 +277,26 @@
 
         const PREMIUM_COLORS = ['#000000', '#595959', '#ffffff', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#1976d2', '#64b5f6', '#ffd700'];
 
-        // 🚀 貼紙資料庫 
+        // 🚀 頂級無版權貼紙庫 (採用 Base64 內嵌高解析 SVG 向量圖)
         const STICKER_DB = {
-            "🦉 獨家貓頭鷹貓": [
+            "🦉 專屬原創": [
+                // 這裡請換成你自己的原創透明底 PNG 網址！
                 "https://i.imgur.com/B9O6zF6.png",
                 "https://i.imgur.com/L1MhM2P.png",
                 "https://i.imgur.com/R3O2b9S.png"
             ],
-            "✨ 韓系應援": [
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/2728.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f496.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f380.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f451.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f48e.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f31f.png"  
+            "✨ 韓系閃星": [
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAgMEM1MCA0MCA2MCA1MCAxMDAgNTBDNjAgNTAgNTAgNjAgNTAgMTAwQzUwIDYwIDQwIDUwIDAgNTBDNDAgNTAgNTAgNDAgNTAgMFoiIGZpbGw9IiNmZmZmZmYiIGZpbHRlcj0iZHJvcC1zaGFkb3coMHB4IDBweCAycHggcmdiYSgwLDAsMCwwLjQpKSIvPjwvc3ZnPg==", // 發光白星
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAgMEM1MCA0MCA2MCA1MCAxMDAgNTBDNjAgNTAgNTAgNjAgNTAgMTAwQzUwIDYwIDQwIDUwIDAgNTBDNDAgNTAgNTAgNDAgNTAgMFoiIGZpbGw9IiMyMjIyMjIiLz48L3N2Zz4=", // 質感黑星
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAgMEM1MCA0MCA2MCA1MCAxMDAgNTBDNjAgNTAgNTAgNjAgNTAgMTAwQzUwIDYwIDQwIDUwIDAgNTBDNDAgNTAgNTAgNDAgNTAgMFoiIGZpbGw9IiNmZmQ3MDAiLz48L3N2Zz4=" // 復古金星
             ],
-            "💖 可愛裝飾": [
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/2764.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f495.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f338.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f353.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f36d.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f352.png"  
+            "🤍 簡約線條": [
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiI+PHBhdGggZD0iTTUwIDg1QzUwIDg1IDE1IDU1IDE1IDMwQzE1IDE1IDMwIDUgNDUgMTVDNTAgMTggNTAgMTggNTAgMThDNTAgMTggNTAgMTggNTUgMTVDNzAgNSA4NSAxNSA4NSAzMEM4NSA1NSA1MCA4NSA1MCA4NVoiIGZpbHRlcj0iZHJvcC1zaGFkb3coMHB4IDBweCAxcHggcmdiYSgwLDAsMCwwLjQpKSIvPjwvc3ZnPg==", // 白框愛心
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSJub25lIiBzdHJva2U9IiMyMjIyMjIiIHN0cm9rZS13aWR0aD0iNiI+PHBhdGggZD0iTTUwIDg1QzUwIDg1IDE1IDU1IDE1IDMwQzE1IDE1IDMwIDUgNDUgMTVDNTAgMTggNTAgMTggNTAgMThDNTAgMTggNTAgMTggNTUgMTVDNzAgNSA4NSAxNSA4NSAzMEM4NSA1NSA1MCA4NSA1MCA4NVoiLz48L3N2Zz4=" // 黑框愛心
             ],
-            "😂 經典表情": [
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f97a.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f92d.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f60d.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f60e.png", 
-                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f63e.png"  
+            "📌 質感紙膠帶": [
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNjAiPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iNjAiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC43KSIvPjwvc3ZnPg==", // 半透明白膠帶
+                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNjAiPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iNjAiIGZpbGw9InJnYmEoMjAsMjAsMjAsMC44KSIvPjwvc3ZnPg=="  // 半透明黑膠帶
             ]
         };
 
@@ -544,7 +514,7 @@
         function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); } }
         document.getElementById('fontFamily').addEventListener('change', async function(e) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { await document.fonts.load(`16px "${e.target.value}"`); obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); } });
 
-        // 🚀 動態貼紙庫初始化
+        // 🚀 動態貼紙庫引擎
         function initStickerLibrary() {
             const bar = document.getElementById('stickerCategoryBar'); bar.innerHTML = '';
             let isFirst = true;
@@ -561,14 +531,25 @@
             const buttons = document.getElementById('stickerCategoryBar').children;
             for(let btn of buttons) { btn.className = "layout-btn px-4 py-1.5 rounded-full text-xs font-medium transition border border-gray-200 text-gray-600 bg-white hover:bg-gray-50"; }
             activeBtn.className = "layout-btn px-4 py-1.5 rounded-full text-xs font-medium transition border border-black bg-black text-white";
+            
             const grid = document.getElementById('stickerGrid'); grid.innerHTML = '';
-            STICKER_DB[category].forEach(url => { grid.innerHTML += `<img onclick="addSticker('${url}')" src="${url}" class="w-full aspect-square object-contain bg-white border border-gray-200 rounded-xl p-2 cursor-pointer hover:-translate-y-1 hover:shadow-md transition shadow-sm">`; });
+            STICKER_DB[category].forEach(url => { 
+                grid.innerHTML += `<img onclick="addSticker('${url}')" src="${url}" class="w-full aspect-square object-contain bg-white border border-gray-200 rounded-xl p-2 cursor-pointer hover:-translate-y-1 hover:shadow-md transition shadow-sm">`; 
+            });
         }
         function openLibrary() { 
             if (document.getElementById('stickerCategoryBar').children.length === 0) { initStickerLibrary(); }
             openModal('libraryModal'); 
         }
-        function addSticker(url) { closeModal('libraryModal'); fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2, isSticker: true }); canvas.add(img); canvas.setActiveObject(img); sortLayers(); }); }
+        function addSticker(url) { 
+            closeModal('libraryModal'); 
+            fabric.Image.fromURL(url, (img) => { 
+                // 依據原始比例縮小
+                const scale = 80 / Math.max(img.width, img.height);
+                img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2, isSticker: true }); 
+                canvas.add(img); canvas.setActiveObject(img); sortLayers(); 
+            }); 
+        }
 
         function addFrame(url) {
             closeModal('frameModal'); removeFrame();
@@ -605,10 +586,12 @@
         }
 
         function exportCanvas() {
-            if (safeZoneRect) safeZoneRect.set('opacity', 0); guideLines.forEach(l => l.set('opacity', 0));
+            if (safeZoneRect) safeZoneRect.set('opacity', 0);
+            guideLines.forEach(l => l.set('opacity', 0));
             canvas.discardActiveObject(); canvas.requestRenderAll();
             const base64 = canvas.toDataURL({ format: 'png', multiplier: 3 });
-            if (safeZoneRect) safeZoneRect.set('opacity', 1); canvas.requestRenderAll();
+            if (safeZoneRect) safeZoneRect.set('opacity', 1);
+            canvas.requestRenderAll();
             return base64;
         }
 
