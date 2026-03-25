@@ -67,7 +67,7 @@
             
             <div class="bg-gray-900 text-white px-5 py-3 flex justify-between items-center text-sm font-light tracking-wider">
                 <span><i class="fa-solid fa-camera mr-2"></i>進度 <span id="progressText" class="text-blue-400 font-medium ml-1">1 / ?</span></span>
-                <button onclick="openGallery()" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5"><i class="fa-solid fa-images"></i> 設計總覽</button>
+                <button onclick="openGalleryCheck()" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5"><i class="fa-solid fa-images"></i> 設計總覽</button>
             </div>
 
             <div class="bg-white border-b border-gray-100 p-3 flex justify-start md:justify-center gap-2 overflow-x-auto filter-scroll">
@@ -142,7 +142,7 @@
                     <button onclick="openModal('libraryModal')" class="flex flex-col items-center gap-1.5 text-gray-600 hover:text-black transition">
                         <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-lg shadow-sm"><i class="fa-regular fa-face-smile"></i></div><span class="text-[11px] font-light">加貼紙</span>
                     </button>
-                    <button onclick="clearCanvas()" class="flex flex-col items-center gap-1.5 text-red-400 hover:text-red-500 transition">
+                    <button onclick="clearCanvas(false)" class="flex flex-col items-center gap-1.5 text-red-400 hover:text-red-500 transition">
                         <div class="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-lg shadow-sm"><i class="fa-solid fa-rotate-left"></i></div><span class="text-[11px] font-light">重置版面</span>
                     </button>
                 </div>
@@ -150,7 +150,7 @@
             
             <div class="px-5 py-4 bg-gray-50 border-t border-gray-200 flex gap-3">
                 <button id="saveNextBtn" onclick="saveAndNext()" class="w-1/2 bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md">
-                    存檔單張
+                    存單張
                 </button>
                 <button id="batchBtn" onclick="batchDuplicate()" class="w-1/2 bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md flex justify-center items-center gap-2">
                     <i class="fa-solid fa-copy"></i> 自動洗滿
@@ -260,9 +260,9 @@
         let isPreviewMode = false;
         let expectedPhotos = 1; 
         
-        // 🚀 photoCart 現在存放物件 { base64: ..., json: ..., layout: ... } 以支援時光機還原
+        // 🚀 時光機購物車
         let photoCart = []; 
-        let editingIndex = -1; // 記錄目前正在修改哪一張照片
+        let editingIndex = -1; // 記錄目前正在修改哪一張
 
         const layouts = {
             'polaroid': [{ left: 18, top: 18, width: 264, height: 338 }],
@@ -327,7 +327,7 @@
             updateProgressUI(); setTimeout(() => { if (!canvas) initCanvas(); }, 50);
         }
 
-        // 🚀 核心 UI 更新邏輯 (依據編輯狀態動態變化)
+        // 🚀 核心 UI 狀態機
         function updateProgressUI() {
             const current = photoCart.length + 1;
             const saveBtn = document.getElementById('saveNextBtn'); 
@@ -341,16 +341,24 @@
                 document.getElementById('progressText').innerText = `修改 第 ${editingIndex + 1} 張`;
                 saveBtn.innerText = `💾 儲存修改`; saveBtn.classList.replace('bg-black', 'bg-green-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
             } else if (current > expectedPhotos) {
-                // 已滿，提示開啟總覽
+                // 已滿
                 document.getElementById('progressText').innerText = `設計已滿 (${expectedPhotos}/${expectedPhotos})`;
                 saveBtn.innerText = "查看設計總覽並上傳"; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
             } else {
                 // 正常推進
                 document.getElementById('progressText').innerText = `第 ${current} / ${expectedPhotos} 張`;
-                saveBtn.innerText = `存單張 (第 ${current} 張)`; saveBtn.classList.replace('bg-blue-600', 'bg-black'); saveBtn.classList.replace('bg-green-600', 'bg-black'); saveBtn.classList.remove('w-full'); saveBtn.classList.add('w-1/2'); batchBtn.classList.remove('hidden'); 
+                saveBtn.innerText = `存單張 (第 ${current} 張)`; 
+                saveBtn.classList.replace('bg-blue-600', 'bg-black'); saveBtn.classList.replace('bg-green-600', 'bg-black'); 
+                saveBtn.classList.remove('w-full'); saveBtn.classList.add('w-1/2'); 
                 
-                const remain = expectedPhotos - current + 1;
-                batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 自動洗滿 (洗 ${remain} 張)`;
+                // 🚀 修正數學邏輯：剩餘空位 = 總張數 - 已經存的張數 - 目前這 1 張
+                const blanks = expectedPhotos - photoCart.length - 1;
+                if (blanks > 0) {
+                    batchBtn.classList.remove('hidden'); 
+                    batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 自動洗滿 (剩 ${blanks} 個空位)`;
+                } else {
+                    batchBtn.classList.add('hidden'); 
+                }
             }
         }
 
@@ -521,21 +529,12 @@
 
             switch(type) {
                 case 'normal': break;
-                case 'signature': 
-                    textStr = 'With Love'; opts.fontFamily = 'Dancing Script'; opts.fontSize = 28; opts.left = C_W - 40; opts.top = C_H - 30; opts.originX = 'right'; opts.fill = '#1976d2'; break;
-                case 'subtitle': 
-                    textStr = '「我也很喜歡這張照片。」'; opts.fontFamily = 'Noto Sans TC'; opts.fontSize = 16; opts.fill = '#ffd700'; opts.top = 340; 
-                    opts.shadow = new fabric.Shadow({ color: 'rgba(0,0,0,0.8)', blur: 2, offsetX: 1, offsetY: 1 }); break;
-                case 'neon':
-                    textStr = 'TWICE'; opts.fontFamily = 'Righteous'; opts.fontSize = 40; opts.fill = '#ffffff'; opts.top = C_H / 2;
-                    opts.shadow = new fabric.Shadow({ color: '#ff00ff', blur: 15, offsetX: 0, offsetY: 0 }); break;
-                case 'magazine':
-                    textStr = 'VOGUE'; opts.fontFamily = 'Playfair Display'; opts.fontSize = 48; opts.fill = '#ffffff'; opts.top = 60;
-                    opts.shadow = new fabric.Shadow({ color: 'rgba(0,0,0,0.3)', blur: 4, offsetX: 0, offsetY: 2 }); break;
-                case 'typewriter': 
-                    textStr = '1998.05.21'; opts.fontFamily = 'Special Elite'; opts.fill = '#ffffff'; opts.textBackgroundColor = '#000000'; opts.fontSize = 16; break;
-                case 'japanese': 
-                    textStr = '日\n系\n排\n版'; opts.fontFamily = 'Noto Serif TC'; opts.textAlign = 'center'; opts.fontSize = 18; opts.top = C_H / 2; opts.left = C_W - 30; break;
+                case 'signature': textStr = 'With Love'; opts.fontFamily = 'Dancing Script'; opts.fontSize = 28; opts.left = C_W - 40; opts.top = C_H - 30; opts.originX = 'right'; opts.fill = '#1976d2'; break;
+                case 'subtitle': textStr = '「我也很喜歡這張照片。」'; opts.fontFamily = 'Noto Sans TC'; opts.fontSize = 16; opts.fill = '#ffd700'; opts.top = 340; opts.shadow = new fabric.Shadow({ color: 'rgba(0,0,0,0.8)', blur: 2, offsetX: 1, offsetY: 1 }); break;
+                case 'neon': textStr = 'TWICE'; opts.fontFamily = 'Righteous'; opts.fontSize = 40; opts.fill = '#ffffff'; opts.top = C_H / 2; opts.shadow = new fabric.Shadow({ color: '#ff00ff', blur: 15, offsetX: 0, offsetY: 0 }); break;
+                case 'magazine': textStr = 'VOGUE'; opts.fontFamily = 'Playfair Display'; opts.fontSize = 48; opts.fill = '#ffffff'; opts.top = 60; opts.shadow = new fabric.Shadow({ color: 'rgba(0,0,0,0.3)', blur: 4, offsetX: 0, offsetY: 2 }); break;
+                case 'typewriter': textStr = '1998.05.21'; opts.fontFamily = 'Special Elite'; opts.fill = '#ffffff'; opts.textBackgroundColor = '#000000'; opts.fontSize = 16; break;
+                case 'japanese': textStr = '日\n系\n排\n版'; opts.fontFamily = 'Noto Serif TC'; opts.textAlign = 'center'; opts.fontSize = 18; opts.top = C_H / 2; opts.left = C_W - 30; break;
             }
             const text = new fabric.IText(textStr, opts); canvas.add(text); canvas.setActiveObject(text); sortLayers();
         }
@@ -592,16 +591,35 @@
             return base64;
         }
 
-        // 🚀 購物車核心：存檔與時光機邏輯
-        async function saveAndNext() {
-            if (photoCart.length >= expectedPhotos && editingIndex === -1 && !isPreviewMode) { openGallery(); return; }
+        // 🚀 智慧防呆：按下總覽前的攔截檢查
+        function openGalleryCheck() {
+            if (photoCart.length >= expectedPhotos && editingIndex === -1) { openGallery(); return; }
+
+            const hasDesign = canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length > 0;
+            if (hasDesign) {
+                if (editingIndex === -1) {
+                    if (confirm("畫布上有尚未存檔的設計！\n\n點【確定】幫您存檔並開啟總覽\n點【取消】放棄目前畫布，直接看總覽")) {
+                        saveAndNext(true); return;
+                    }
+                } else {
+                    if (confirm("您正在修改這張照片！\n\n點【確定】儲存修改並開啟總覽\n點【取消】放棄修改，直接開啟總覽")) {
+                        saveAndNext(true); return;
+                    } else {
+                        editingIndex = -1; clearCanvas(true);
+                    }
+                }
+            }
+            openGallery();
+        }
+
+        // 🚀 存檔並加入時光機 (支援單純存檔 or 存檔後打開總覽)
+        async function saveAndNext(forceOpenGallery = false) {
             if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("請先加入照片或設計喔！"); return; }
             if (isPreviewMode) { openModal('previewDoneModal'); return; }
             
             showLoading("儲存設計中...");
             
             setTimeout(() => {
-                // 儲存 base64 與 JSON 時光機資料
                 const currentData = { 
                     base64: exportCanvas(), 
                     json: canvas.toJSON(['isUserImage', 'isFrame', 'isSticker', 'slotIndex']),
@@ -609,17 +627,17 @@
                 };
 
                 if (editingIndex >= 0) {
+                    // 更新舊的
                     photoCart[editingIndex] = currentData;
-                    editingIndex = -1; // 儲存完畢，重置狀態
-                    hideLoading();
-                    openGallery(); // 修改完直接回到總覽
+                    editingIndex = -1; hideLoading(); openGallery(); 
                 } else {
+                    // 加入新的
                     photoCart.push(currentData);
-                    hideLoading();
-                    updateProgressUI();
+                    hideLoading(); updateProgressUI();
                     
                     if (photoCart.length < expectedPhotos) {
-                        clearCanvas(true); // 清空畫布準備下一張
+                        clearCanvas(true); 
+                        if (forceOpenGallery) openGallery();
                     } else {
                         openGallery(); // 滿了自動打開總覽
                     }
@@ -627,31 +645,35 @@
             }, 100);
         }
 
-        // 🚀 洗相片：不自動上傳，只填滿並打開總覽
+        // 🚀 自動洗滿：不自動上傳，只填滿並打開總覽
         function batchDuplicate() {
             if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("請先設計好要洗的照片！"); return; }
-            const remaining = expectedPhotos - photoCart.length; if (remaining <= 0) return;
+            const blanks = expectedPhotos - photoCart.length - 1; 
+            if (blanks < 0) return;
             
-            showLoading("正在自動洗滿剩餘相片...");
+            showLoading("正在自動洗滿剩餘空位...");
             
             setTimeout(() => {
                 const base64 = exportCanvas();
                 const json = canvas.toJSON(['isUserImage', 'isFrame', 'isSticker', 'slotIndex']);
                 const layout = currentLayout;
+                const currentData = { base64, json, layout };
 
-                for (let i = 0; i < remaining; i++) { 
-                    photoCart.push({ base64, json, layout }); 
-                }
-                updateProgressUI();
-                hideLoading();
+                // 1. 先把畫布上的存進去
+                if (editingIndex >= 0) { photoCart[editingIndex] = currentData; editingIndex = -1; } 
+                else { photoCart.push(currentData); }
+
+                // 2. 複製剩下的空位
+                for (let i = 0; i < blanks; i++) { photoCart.push({ base64, json, layout }); }
+                
+                clearCanvas(true); updateProgressUI(); hideLoading();
                 openGallery(); // 洗完直接打開總覽讓客人看成果
             }, 100);
         }
 
-        // 🚀 設計總覽 UI 控制
+        // 🚀 設計總覽 UI
         function openGallery() {
-            const grid = document.getElementById('galleryGrid');
-            grid.innerHTML = '';
+            const grid = document.getElementById('galleryGrid'); grid.innerHTML = '';
             document.getElementById('galleryCount').innerText = `${photoCart.length} / ${expectedPhotos}`;
             
             photoCart.forEach((item, index) => {
@@ -668,29 +690,19 @@
                 </div>`;
             });
             
-            // 只有全部設計完才能按「確認並上傳」
             if (photoCart.length >= expectedPhotos && !isPreviewMode) {
                 document.getElementById('gallerySubmitBtn').classList.remove('hidden');
-            } else {
-                document.getElementById('gallerySubmitBtn').classList.add('hidden');
-            }
-            
+            } else { document.getElementById('gallerySubmitBtn').classList.add('hidden'); }
             openModal('galleryModal');
         }
 
+        // 🚀 時光機：刪除與還原
         function deleteSavedPhoto(index) {
             if(confirm('確定要刪除這張設計嗎？')) {
                 photoCart.splice(index, 1);
-                
-                // 修正編輯狀態：如果你刪了正在編輯的那張，就重置畫布
-                if (editingIndex === index) {
-                    editingIndex = -1; clearCanvas(true);
-                } else if (editingIndex > index) {
-                    editingIndex--; // 索引順移
-                }
-
-                openGallery(); // 重新渲染總覽
-                updateProgressUI();
+                if (editingIndex === index) { editingIndex = -1; clearCanvas(true); } 
+                else if (editingIndex > index) { editingIndex--; }
+                openGallery(); updateProgressUI();
             }
         }
 
@@ -699,15 +711,10 @@
             const data = photoCart[index];
             showLoading("載入設計中...");
             
-            switchLayout(data.layout); // 切換到當時的版型
-            
-            // 時光機還原！
+            switchLayout(data.layout);
             canvas.loadFromJSON(data.json, function() {
-                drawOverlay(); // 重繪遮罩與安全線
-                sortLayers();
-                closeModal('galleryModal');
-                hideLoading();
-                updateProgressUI(); // 按鈕變成「儲存修改」
+                drawOverlay(); sortLayers();
+                closeModal('galleryModal'); hideLoading(); updateProgressUI(); 
             });
         }
 
@@ -726,10 +733,7 @@
         }
 
         async function executeUpload() {
-            closeModal('galleryModal'); // 關閉總覽視窗
-            showLoading("打包上傳至工作室...");
-
-            // 🚀 取出所有物件裡的 base64 圖檔
+            closeModal('galleryModal'); showLoading("打包上傳至工作室...");
             const imagesToUpload = photoCart.map(item => item.base64);
 
             try {
@@ -739,7 +743,6 @@
                 document.getElementById('resName').innerText = document.getElementById('userName').value.trim();
                 document.getElementById('resOrderID').innerText = document.getElementById('orderID').value.trim();
                 document.getElementById('resCount').innerText = `${expectedPhotos} 張`;
-                
                 const gallery = document.getElementById('galleryContainer'); gallery.innerHTML = ''; 
                 imagesToUpload.forEach((imgBase64, index) => {
                     gallery.innerHTML += `<div class="bg-gray-50 rounded-xl p-2 border border-gray-100 shadow-sm flex flex-col items-center justify-center min-h-[150px]"><img src="${imgBase64}" class="w-full h-auto rounded shadow-sm object-cover"><p class="text-center text-[10px] text-gray-400 mt-2 font-light">第 ${index+1} 張</p></div>`;
