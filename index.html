@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-load-image/5.16.0/load-image.all.min.js"></script>
     <style>
-        /* 🚀 15款神級字體庫全載入 */
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Dancing+Script:wght@600&family=Ma+Shan+Zheng&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,600;1,600&family=Press+Start+2P&family=Righteous&family=Special+Elite&family=ZCOOL+KuaiLe&family=ZCOOL+QingKe+HuangYou&family=Zhi+Mang+Xing&display=swap');
         
         body { font-family: 'Roboto', 'Noto Sans TC', sans-serif; background-color: #f8f9fa; overscroll-behavior: none; }
@@ -27,7 +26,6 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .layout-btn { flex: 0 0 auto; }
         
-        /* 模板按鈕美化 */
         .preset-btn { flex: 0 0 auto; padding: 8px 16px; border-radius: 8px; font-size: 12px; display: flex; align-items: center; gap: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s; border: 1px solid #e5e7eb; background: white; }
         .preset-btn:active { transform: scale(0.95); }
     </style>
@@ -98,16 +96,16 @@
                             <option value="Noto Sans TC">黑體 (清晰易讀)</option>
                             <option value="Noto Serif TC">宋體 (高級文青)</option>
                         </optgroup>
-                        <optgroup label="手寫/造型中文字">
+                        <optgroup label="造型中文字">
                             <option value="Ma Shan Zheng">毛筆行書 (瀟灑)</option>
                             <option value="Zhi Mang Xing">藝術狂草 (霸氣)</option>
-                            <option value="ZCOOL QingKe HuangYou">麥克筆體 (應援必備)</option>
+                            <option value="ZCOOL QingKe HuangYou">麥克筆體 (應援)</option>
                             <option value="ZCOOL KuaiLe">可愛圓體 (Q版)</option>
                         </optgroup>
-                        <optgroup label="高級英文字體 (僅限英文)">
+                        <optgroup label="質感英文字體 (限英文)">
                             <option value="Dancing Script">連筆簽名 (流暢)</option>
                             <option value="Caveat">英文手寫 (清新)</option>
-                            <option value="Playfair Display">雜誌標題 (VOGUE風)</option>
+                            <option value="Playfair Display">雜誌標題 (VOGUE)</option>
                             <option value="Permanent Marker">美式塗鴉 (街頭)</option>
                             <option value="Righteous">幾何潮流 (科技)</option>
                             <option value="Special Elite">復古打字機 (電影)</option>
@@ -219,7 +217,10 @@
 
     <div id="libraryModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end justify-center hidden backdrop-blur-sm">
         <div class="bg-white w-full max-w-md h-[40vh] rounded-t-3xl shadow-2xl flex flex-col slide-up">
-            <div class="p-4 flex justify-between items-center border-b border-gray-100"><h3 class="font-medium tracking-wide ml-4">可愛貼紙庫</h3><button onclick="closeModal('libraryModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="p-4 flex justify-between items-center border-b border-gray-100">
+                <h3 class="font-medium tracking-wide ml-4 text-gray-800">可愛貼紙庫</h3>
+                <button onclick="closeModal('libraryModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             <div class="flex-1 overflow-y-auto p-6 grid grid-cols-4 gap-4 content-start bg-gray-50">
                 <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
                 <img onclick="addSticker('https://i.imgur.com/L1MhM2P.png')" src="https://i.imgur.com/L1MhM2P.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
@@ -230,7 +231,10 @@
 
     <div id="frameModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end justify-center hidden backdrop-blur-sm">
         <div class="bg-white w-full max-w-md h-[40vh] rounded-t-3xl shadow-2xl flex flex-col slide-up">
-            <div class="p-4 flex justify-between items-center border-b border-gray-100"><h3 class="font-medium tracking-wide ml-4 text-gray-800">質感相框底圖</h3><button onclick="closeModal('frameModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="p-4 flex justify-between items-center border-b border-gray-100">
+                <h3 class="font-medium tracking-wide ml-4 text-gray-800">質感相框底圖</h3>
+                <button onclick="closeModal('frameModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             <div class="flex-1 overflow-y-auto p-6 grid grid-cols-3 gap-4 content-start bg-gray-50">
                 <div onclick="addFrame('https://i.imgur.com/KzXG5Rj.png')" class="cursor-pointer flex flex-col items-center hover:-translate-y-1 transition"><img src="https://i.imgur.com/KzXG5Rj.png" class="w-full h-auto border border-gray-200 rounded-lg shadow-sm bg-white p-1"><span class="text-[10px] text-gray-500 mt-2 font-light">彩虹相框</span></div>
                 <div onclick="addFrame('https://i.imgur.com/vH7T7bM.png')" class="cursor-pointer flex flex-col items-center hover:-translate-y-1 transition"><img src="https://i.imgur.com/vH7T7bM.png" class="w-full h-auto border border-gray-200 rounded-lg shadow-sm bg-white p-1"><span class="text-[10px] text-gray-500 mt-2 font-light">經典拍立得</span></div>
@@ -247,6 +251,7 @@
         let currentLayout = 'polaroid';
         let isPreviewMode = false;
         let expectedPhotos = 1; let photoCart = []; 
+        let guideLines = []; // 🚀 存放磁吸輔助線
 
         const layouts = {
             'polaroid': [{ left: 18, top: 18, width: 264, height: 338 }],
@@ -316,6 +321,7 @@
             }
         }
 
+        // --- 2. 畫布系統 ---
         function initCanvas() {
             fabric.filterBackend = new fabric.Canvas2dFilterBackend();
             canvas = new fabric.Canvas('editorCanvas', { width: C_W, height: C_H, backgroundColor: '#ffffff', preserveObjectStacking: true });
@@ -331,11 +337,87 @@
             canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection); canvas.on('selection:cleared', () => document.getElementById('objectTools').classList.add('hidden'));
             
             drawOverlay(); 
+            initSnapping(); // 🚀 啟動智慧對齊引擎
+        }
+
+        // 🚀 Canva 級別的「智慧對齊線 (Smart Snapping)」核心引擎
+        function clearGuidelines() {
+            guideLines.forEach(line => canvas.remove(line));
+            guideLines = [];
+        }
+
+        function initSnapping() {
+            const snapZone = 12; // 磁吸感應範圍
+            const snapColor = '#ec4899'; // 專屬的高級粉紅輔助線
+
+            canvas.on('object:moving', function(e) {
+                clearGuidelines();
+                const obj = e.target;
+                if (!obj || obj.id === 'overlayFrame') return;
+
+                const objCenter = obj.getCenterPoint();
+                let snapX = null;
+                let snapY = null;
+
+                // 1. 蒐集磁吸目標 (畫布正中心)
+                let targetLinesX = [canvas.width / 2];
+                let targetLinesY = [canvas.height / 2];
+
+                // 如果畫布上有照片(四格模式)，把每一張照片的中心點也加入對齊目標！
+                canvas.getObjects().filter(o => o.isUserImage).forEach(img => {
+                    const imgCenter = img.getCenterPoint();
+                    targetLinesX.push(imgCenter.x);
+                    targetLinesY.push(imgCenter.y);
+                });
+
+                // 陣列去重複，優化效能
+                targetLinesX = [...new Set(targetLinesX)];
+                targetLinesY = [...new Set(targetLinesY)];
+
+                // 2. 判斷 X 軸吸附
+                for (let x of targetLinesX) {
+                    if (Math.abs(objCenter.x - x) < snapZone) {
+                        snapX = x;
+                        // 畫出一條粉紅虛線
+                        let line = new fabric.Line([x, 0, x, canvas.height], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 });
+                        guideLines.push(line); canvas.add(line);
+                        break; 
+                    }
+                }
+
+                // 3. 判斷 Y 軸吸附
+                for (let y of targetLinesY) {
+                    if (Math.abs(objCenter.y - y) < snapZone) {
+                        snapY = y;
+                        let line = new fabric.Line([0, y, canvas.width, y], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 });
+                        guideLines.push(line); canvas.add(line);
+                        break;
+                    }
+                }
+
+                // 4. 執行磁吸強制位移
+                if (snapX !== null || snapY !== null) {
+                    obj.setPositionByOrigin(
+                        new fabric.Point(snapX !== null ? snapX : objCenter.x, snapY !== null ? snapY : objCenter.y), 
+                        'center', 'center'
+                    );
+                    obj.setCoords(); // 更新點擊外框
+                }
+
+                // 把輔助線拉到最上面顯示
+                guideLines.forEach(l => canvas.bringToFront(l));
+                if (overlayFrameGroup) canvas.bringToFront(overlayFrameGroup); 
+            });
+
+            // 手指放開時，清除輔助線
+            canvas.on('mouse:up', clearGuidelines);
+            canvas.on('object:modified', clearGuidelines);
         }
 
         function drawOverlay() {
             if (overlayFrameGroup) canvas.remove(overlayFrameGroup);
             let rects = [];
+            
             if (currentLayout === 'polaroid') {
                 rects.push(new fabric.Rect({ left: 0, top: 0, width: C_W, height: 18, fill: '#f8f9fa' })); 
                 rects.push(new fabric.Rect({ left: 0, top: 356, width: C_W, height: 100, fill: '#f8f9fa' })); 
@@ -349,8 +431,11 @@
                 rects.push(new fabric.Rect({ left: 145, top: 30, width: 10, height: 350, fill: '#f8f9fa' })); 
                 rects.push(new fabric.Rect({ left: 18, top: 200, width: 264, height: 10, fill: '#f8f9fa' })); 
             }
-            if (rects.length > 0) { overlayFrameGroup = new fabric.Group(rects, { left: 0, top: 0, selectable: false, evented: false, id: 'overlayFrame' }); canvas.add(overlayFrameGroup); } 
-            else { overlayFrameGroup = null; }
+
+            if (rects.length > 0) {
+                overlayFrameGroup = new fabric.Group(rects, { left: 0, top: 0, selectable: false, evented: false, id: 'overlayFrame' });
+                canvas.add(overlayFrameGroup);
+            } else { overlayFrameGroup = null; }
             
             canvas.getObjects().filter(o => o.isUserImage).forEach(img => {
                 if (currentLayout !== 'full') {
@@ -388,13 +473,15 @@
         document.getElementById('imageInput').onchange = (e) => {
             const files = Array.from(e.target.files); if (!files.length) return;
             const slots = layouts[currentLayout];
-            let fileIndex = 0;
             
+            let fileIndex = 0;
             function processNext() {
                 if (fileIndex >= files.length) return;
+                
                 const usedSlots = canvas.getObjects().filter(o => o.isUserImage).map(o => o.slotIndex);
                 let freeSlot = -1;
                 for(let i=0; i<slots.length; i++) { if(!usedSlots.includes(i)) { freeSlot = i; break; } }
+                
                 if (freeSlot === -1) { alert("此版型的照片格已滿！請先刪除不要的照片。"); return; }
 
                 loadImage(files[fileIndex], function (imgCanvas) {
@@ -402,8 +489,11 @@
                     fabric.Image.fromURL(imgCanvas.toDataURL('image/jpeg'), (img) => {
                         const slot = slots[freeSlot];
                         const scale = Math.max(slot.width / img.width, slot.height / img.height);
+                        
                         let clipPath = null;
-                        if(currentLayout !== 'full') clipPath = new fabric.Rect({ left: slot.left, top: slot.top, width: slot.width, height: slot.height, absolutePositioned: true });
+                        if(currentLayout !== 'full') {
+                            clipPath = new fabric.Rect({ left: slot.left, top: slot.top, width: slot.width, height: slot.height, absolutePositioned: true });
+                        }
 
                         img.set({ 
                             scaleX: scale, scaleY: scale, originX: 'left', originY: 'top',
@@ -418,7 +508,6 @@
             processNext(); e.target.value = '';
         };
 
-        // 🚀 核心：強大的 7 種文字預設模組
         function addPresetText(type) {
             let opts = { left: C_W / 2, top: C_H - 45, originX: 'center', originY: 'center', fontSize: 24, fill: '#000000', fontFamily: 'Noto Sans TC' };
             let textStr = '輸入文字...';
