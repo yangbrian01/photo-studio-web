@@ -37,7 +37,12 @@
     </div>
 
     <div style="visibility: hidden; position: absolute; top: -9999px;">
-        <span style="font-family: 'Noto Serif TC';">預載</span><span style="font-family: 'Ma Shan Zheng';">預載</span><span style="font-family: 'Zhi Mang Xing';">預載</span><span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span><span style="font-family: 'ZCOOL KuaiLe';">預載</span><span style="font-family: 'Special Elite';">預載</span><span style="font-family: 'Permanent Marker';">預載</span><span style="font-family: 'Playfair Display';">預載</span><span style="font-family: 'Dancing Script';">預載</span><span style="font-family: 'Pacifico';">預載</span><span style="font-family: 'Press Start 2P';">預載</span><span style="font-family: 'Righteous';">預載</span>
+        <span style="font-family: 'Noto Serif TC';">預載</span><span style="font-family: 'Ma Shan Zheng';">預載</span>
+        <span style="font-family: 'Zhi Mang Xing';">預載</span><span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span>
+        <span style="font-family: 'ZCOOL KuaiLe';">預載</span><span style="font-family: 'Special Elite';">預載</span>
+        <span style="font-family: 'Permanent Marker';">預載</span><span style="font-family: 'Playfair Display';">預載</span>
+        <span style="font-family: 'Dancing Script';">預載</span><span style="font-family: 'Pacifico';">預載</span>
+        <span style="font-family: 'Press Start 2P';">預載</span><span style="font-family: 'Righteous';">預載</span>
     </div>
 
     <div class="max-w-3xl mx-auto px-5">
@@ -98,9 +103,25 @@
                 </div>
                 <div id="textTools" class="hidden flex-col gap-3 border-t border-gray-100 pt-3">
                     <select id="fontFamily" class="w-full text-sm px-3 py-2 border border-gray-200 rounded-lg focus:border-black font-light bg-gray-50">
-                        <optgroup label="經典中文"><option value="Noto Sans TC">黑體 (清晰易讀)</option><option value="Noto Serif TC">宋體 (高級文青)</option></optgroup>
-                        <optgroup label="造型中文字"><option value="Ma Shan Zheng">毛筆行書 (瀟灑)</option><option value="Zhi Mang Xing">藝術狂草 (霸氣)</option><option value="ZCOOL QingKe HuangYou">麥克筆體 (應援必備)</option><option value="ZCOOL KuaiLe">可愛圓體 (Q版)</option></optgroup>
-                        <optgroup label="高級英文字體 (僅限英文)"><option value="Dancing Script">連筆簽名 (流暢)</option><option value="Caveat">英文手寫 (清新)</option><option value="Playfair Display">雜誌標題 (VOGUE風)</option><option value="Permanent Marker">美式塗鴉 (街頭)</option><option value="Righteous">幾何潮流 (科技)</option><option value="Special Elite">復古打字機 (電影)</option><option value="Press Start 2P">像素遊戲 (8-bit)</option></optgroup>
+                        <optgroup label="經典中文">
+                            <option value="Noto Sans TC">黑體 (清晰易讀)</option>
+                            <option value="Noto Serif TC">宋體 (高級文青)</option>
+                        </optgroup>
+                        <optgroup label="造型中文字">
+                            <option value="Ma Shan Zheng">毛筆行書 (瀟灑)</option>
+                            <option value="Zhi Mang Xing">藝術狂草 (霸氣)</option>
+                            <option value="ZCOOL QingKe HuangYou">麥克筆體 (應援必備)</option>
+                            <option value="ZCOOL KuaiLe">可愛圓體 (Q版)</option>
+                        </optgroup>
+                        <optgroup label="高級英文字體 (僅限英文)">
+                            <option value="Dancing Script">連筆簽名 (流暢)</option>
+                            <option value="Caveat">英文手寫 (清新)</option>
+                            <option value="Playfair Display">雜誌標題 (VOGUE風)</option>
+                            <option value="Permanent Marker">美式塗鴉 (街頭)</option>
+                            <option value="Righteous">幾何潮流 (科技)</option>
+                            <option value="Special Elite">復古打字機 (電影)</option>
+                            <option value="Press Start 2P">像素遊戲 (8-bit)</option>
+                        </optgroup>
                     </select>
                     <div class="flex overflow-x-auto gap-3 py-2 color-scroll snap-x" id="colorPalette"></div>
                 </div>
@@ -139,7 +160,7 @@
                     <button onclick="openModal('frameModal')" class="flex flex-col items-center gap-1.5 text-gray-600 hover:text-black transition">
                         <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-lg shadow-sm"><i class="fa-regular fa-object-group"></i></div><span class="text-[11px] font-light">加相框</span>
                     </button>
-                    <button onclick="openModal('libraryModal')" class="flex flex-col items-center gap-1.5 text-gray-600 hover:text-black transition">
+                    <button onclick="openLibrary()" class="flex flex-col items-center gap-1.5 text-gray-600 hover:text-black transition">
                         <div class="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-lg shadow-sm"><i class="fa-regular fa-face-smile"></i></div><span class="text-[11px] font-light">加貼紙</span>
                     </button>
                     <button onclick="clearCanvas(false)" class="flex flex-col items-center gap-1.5 text-red-400 hover:text-red-500 transition">
@@ -223,15 +244,18 @@
     </div>
 
     <div id="libraryModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end justify-center hidden backdrop-blur-sm">
-        <div class="bg-white w-full max-w-md h-[40vh] rounded-t-3xl shadow-2xl flex flex-col slide-up">
+        <div class="bg-white w-full max-w-md h-[50vh] rounded-t-3xl shadow-2xl flex flex-col slide-up">
             <div class="p-4 flex justify-between items-center border-b border-gray-100">
-                <h3 class="font-medium tracking-wide ml-4 text-gray-800">可愛貼紙庫</h3>
-                <button onclick="closeModal('libraryModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-xmark"></i></button>
+                <h3 class="font-medium tracking-wide ml-2 text-gray-800"><i class="fa-solid fa-store text-pink-400 mr-2"></i>素材商店</h3>
+                <button onclick="closeModal('libraryModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="flex-1 overflow-y-auto p-6 grid grid-cols-4 gap-4 content-start bg-gray-50">
-                <img onclick="addSticker('https://i.imgur.com/B9O6zF6.png')" src="https://i.imgur.com/B9O6zF6.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
-                <img onclick="addSticker('https://i.imgur.com/L1MhM2P.png')" src="https://i.imgur.com/L1MhM2P.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
-                <img onclick="addSticker('https://i.imgur.com/R3O2b9S.png')" src="https://i.imgur.com/R3O2b9S.png" class="w-full bg-white border border-gray-200 rounded-xl p-3 cursor-pointer shadow-sm">
+            
+            <div class="flex overflow-x-auto gap-2 p-3 border-b border-gray-50 filter-scroll" id="stickerCategoryBar">
+                </div>
+
+            <div class="flex-1 overflow-y-auto p-4 bg-gray-50">
+                <div id="stickerGrid" class="grid grid-cols-5 gap-3 content-start">
+                    </div>
             </div>
         </div>
     </div>
@@ -259,10 +283,8 @@
         let currentLayout = 'polaroid';
         let isPreviewMode = false;
         let expectedPhotos = 1; 
-        
-        // 🚀 時光機購物車
         let photoCart = []; 
-        let editingIndex = -1; // 記錄目前正在修改哪一張
+        let editingIndex = -1;
 
         const layouts = {
             'polaroid': [{ left: 18, top: 18, width: 264, height: 338 }],
@@ -276,35 +298,54 @@
 
         const PREMIUM_COLORS = ['#000000', '#595959', '#ffffff', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#1976d2', '#64b5f6', '#ffd700'];
 
-        function showLoading(text) {
-            document.getElementById('loadingText').innerText = text;
-            document.getElementById('loadingOverlay').classList.remove('hidden');
-            document.getElementById('loadingOverlay').classList.add('flex');
-        }
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
-            document.getElementById('loadingOverlay').classList.remove('flex');
-        }
+        // 🚀 貼紙資料庫 
+        const STICKER_DB = {
+            "🦉 獨家貓頭鷹貓": [
+                "https://i.imgur.com/B9O6zF6.png",
+                "https://i.imgur.com/L1MhM2P.png",
+                "https://i.imgur.com/R3O2b9S.png"
+            ],
+            "✨ 韓系應援": [
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/2728.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f496.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f380.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f451.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f48e.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f31f.png"  
+            ],
+            "💖 可愛裝飾": [
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/2764.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f495.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f338.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f353.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f36d.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f352.png"  
+            ],
+            "😂 經典表情": [
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f97a.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f92d.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f60d.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f60e.png", 
+                "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/1f63e.png"  
+            ]
+        };
 
+        function showLoading(text) { document.getElementById('loadingText').innerText = text; document.getElementById('loadingOverlay').classList.remove('hidden'); document.getElementById('loadingOverlay').classList.add('flex'); }
+        function hideLoading() { document.getElementById('loadingOverlay').classList.add('hidden'); document.getElementById('loadingOverlay').classList.remove('flex'); }
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         async function verifyAndNext() {
-            const userName = document.getElementById('userName').value.trim();
-            const orderID = document.getElementById('orderID').value.trim();
-            if (!userName) { document.getElementById('nameError').classList.remove('hidden'); return; }
-            document.getElementById('nameError').classList.add('hidden');
+            const userName = document.getElementById('userName').value.trim(); const orderID = document.getElementById('orderID').value.trim();
+            if (!userName) { document.getElementById('nameError').classList.remove('hidden'); return; } document.getElementById('nameError').classList.add('hidden');
             if (!orderID) { openModal('orderModal'); return; }
 
             showLoading("連線至系統驗證中...");
-
             try {
                 const response = await fetch(`${SCRIPT_URL}?orderID=${orderID}`); const data = await response.json();
-                if (data.status === 'success') {
-                    expectedPhotos = parseInt(data.count); isPreviewMode = false; unlockStep2();
-                } else if (data.status === 'completed') {
-                    document.getElementById('step1-container').classList.add('hidden');
-                    document.getElementById('success-container').classList.remove('hidden');
+                if (data.status === 'success') { expectedPhotos = parseInt(data.count); isPreviewMode = false; unlockStep2(); } 
+                else if (data.status === 'completed') {
+                    document.getElementById('step1-container').classList.add('hidden'); document.getElementById('success-container').classList.remove('hidden');
                     document.getElementById('resName').innerText = userName; document.getElementById('resOrderID').innerText = orderID; document.getElementById('resCount').innerText = `${parseInt(data.count)} 張`;
                     const gallery = document.getElementById('galleryContainer'); gallery.innerHTML = '';
                     if(data.images && data.images.length > 0){
@@ -322,43 +363,30 @@
         function enterPreview() { closeModal('orderModal'); isPreviewMode = true; expectedPhotos = 1; unlockStep2(); }
 
         function unlockStep2() {
-            document.getElementById('step1-container').classList.add('hidden');
-            document.getElementById('step2-container').classList.remove('hidden');
+            document.getElementById('step1-container').classList.add('hidden'); document.getElementById('step2-container').classList.remove('hidden');
             updateProgressUI(); setTimeout(() => { if (!canvas) initCanvas(); }, 50);
         }
 
-        // 🚀 核心 UI 狀態機
         function updateProgressUI() {
             const current = photoCart.length + 1;
-            const saveBtn = document.getElementById('saveNextBtn'); 
-            const batchBtn = document.getElementById('batchBtn');
+            const saveBtn = document.getElementById('saveNextBtn'); const batchBtn = document.getElementById('batchBtn');
 
             if (isPreviewMode) {
                 document.getElementById('progressText').innerText = "體驗模式";
                 saveBtn.innerText = "預覽完成，前往綁定單號"; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
             } else if (editingIndex >= 0) {
-                // 正在修改特定相片
                 document.getElementById('progressText').innerText = `修改 第 ${editingIndex + 1} 張`;
                 saveBtn.innerText = `💾 儲存修改`; saveBtn.classList.replace('bg-black', 'bg-green-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
             } else if (current > expectedPhotos) {
-                // 已滿
                 document.getElementById('progressText').innerText = `設計已滿 (${expectedPhotos}/${expectedPhotos})`;
                 saveBtn.innerText = "查看設計總覽並上傳"; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
             } else {
-                // 正常推進
                 document.getElementById('progressText').innerText = `第 ${current} / ${expectedPhotos} 張`;
-                saveBtn.innerText = `存單張 (第 ${current} 張)`; 
-                saveBtn.classList.replace('bg-blue-600', 'bg-black'); saveBtn.classList.replace('bg-green-600', 'bg-black'); 
-                saveBtn.classList.remove('w-full'); saveBtn.classList.add('w-1/2'); 
+                saveBtn.innerText = `存單張 (第 ${current} 張)`; saveBtn.classList.replace('bg-blue-600', 'bg-black'); saveBtn.classList.replace('bg-green-600', 'bg-black'); saveBtn.classList.remove('w-full'); saveBtn.classList.add('w-1/2'); 
                 
-                // 🚀 修正數學邏輯：剩餘空位 = 總張數 - 已經存的張數 - 目前這 1 張
                 const blanks = expectedPhotos - photoCart.length - 1;
-                if (blanks > 0) {
-                    batchBtn.classList.remove('hidden'); 
-                    batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 自動洗滿 (剩 ${blanks} 個空位)`;
-                } else {
-                    batchBtn.classList.add('hidden'); 
-                }
+                if (blanks > 0) { batchBtn.classList.remove('hidden'); batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 自動洗滿 (剩 ${blanks} 個空位)`; } 
+                else { batchBtn.classList.add('hidden'); }
             }
         }
 
@@ -374,11 +402,7 @@
             });
 
             fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 12 });
-            
-            safeZoneRect = new fabric.Rect({
-                left: 12, top: 12, width: C_W - 24, height: C_H - 24,
-                fill: 'transparent', stroke: 'rgba(239, 68, 68, 0.6)', strokeWidth: 1.5, strokeDashArray: [6, 6], selectable: false, evented: false, id: 'safeZone'
-            });
+            safeZoneRect = new fabric.Rect({ left: 12, top: 12, width: C_W - 24, height: C_H - 24, fill: 'transparent', stroke: 'rgba(239, 68, 68, 0.6)', strokeWidth: 1.5, strokeDashArray: [6, 6], selectable: false, evented: false, id: 'safeZone' });
             canvas.add(safeZoneRect);
 
             drawOverlay(); initSnapping(); 
@@ -390,11 +414,9 @@
         function initSnapping() {
             const snapZone = 12; const snapColor = '#ec4899';
             canvas.on('object:moving', function(e) {
-                clearGuidelines();
-                const obj = e.target; if (!obj || obj.id === 'overlayFrame' || obj.id === 'safeZone') return;
+                clearGuidelines(); const obj = e.target; if (!obj || obj.id === 'overlayFrame' || obj.id === 'safeZone') return;
 
-                const objCenter = obj.getCenterPoint();
-                let snapX = null, snapY = null;
+                const objCenter = obj.getCenterPoint(); let snapX = null, snapY = null;
                 let targetLinesX = [canvas.width / 2]; let targetLinesY = [canvas.height / 2];
 
                 canvas.getObjects().filter(o => o.isUserImage).forEach(img => {
@@ -402,24 +424,13 @@
                 });
 
                 for (let x of [...new Set(targetLinesX)]) {
-                    if (Math.abs(objCenter.x - x) < snapZone) {
-                        snapX = x;
-                        let line = new fabric.Line([x, 0, x, canvas.height], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 });
-                        guideLines.push(line); canvas.add(line); break; 
-                    }
+                    if (Math.abs(objCenter.x - x) < snapZone) { snapX = x; let line = new fabric.Line([x, 0, x, canvas.height], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 }); guideLines.push(line); canvas.add(line); break; }
                 }
                 for (let y of [...new Set(targetLinesY)]) {
-                    if (Math.abs(objCenter.y - y) < snapZone) {
-                        snapY = y;
-                        let line = new fabric.Line([0, y, canvas.width, y], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 });
-                        guideLines.push(line); canvas.add(line); break;
-                    }
+                    if (Math.abs(objCenter.y - y) < snapZone) { snapY = y; let line = new fabric.Line([0, y, canvas.width, y], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 }); guideLines.push(line); canvas.add(line); break; }
                 }
 
-                if (snapX !== null || snapY !== null) {
-                    obj.setPositionByOrigin(new fabric.Point(snapX !== null ? snapX : objCenter.x, snapY !== null ? snapY : objCenter.y), 'center', 'center');
-                    obj.setCoords(); 
-                }
+                if (snapX !== null || snapY !== null) { obj.setPositionByOrigin(new fabric.Point(snapX !== null ? snapX : objCenter.x, snapY !== null ? snapY : objCenter.y), 'center', 'center'); obj.setCoords(); }
                 sortLayers(); 
             });
 
@@ -444,10 +455,8 @@
                 rects.push(new fabric.Rect({ left: 18, top: 200, width: 264, height: 10, fill: '#f8f9fa' })); 
             }
 
-            if (rects.length > 0) {
-                overlayFrameGroup = new fabric.Group(rects, { left: 0, top: 0, selectable: false, evented: false, id: 'overlayFrame' });
-                canvas.add(overlayFrameGroup);
-            } else { overlayFrameGroup = null; }
+            if (rects.length > 0) { overlayFrameGroup = new fabric.Group(rects, { left: 0, top: 0, selectable: false, evented: false, id: 'overlayFrame' }); canvas.add(overlayFrameGroup); } 
+            else { overlayFrameGroup = null; }
             
             canvas.getObjects().filter(o => o.isUserImage).forEach(img => {
                 if (currentLayout !== 'full') {
@@ -488,15 +497,12 @@
             const slots = layouts[currentLayout];
             
             showLoading("高畫質相片載入中...");
-
             let fileIndex = 0;
             function processNext() {
                 if (fileIndex >= files.length) { hideLoading(); return; }
-                
                 const usedSlots = canvas.getObjects().filter(o => o.isUserImage).map(o => o.slotIndex);
                 let freeSlot = -1;
                 for(let i=0; i<slots.length; i++) { if(!usedSlots.includes(i)) { freeSlot = i; break; } }
-                
                 if (freeSlot === -1) { alert("此版型的照片格已滿！請先刪除不要的照片。"); hideLoading(); return; }
 
                 loadImage(files[fileIndex], function (imgCanvas) {
@@ -504,11 +510,8 @@
                     fabric.Image.fromURL(imgCanvas.toDataURL('image/jpeg'), (img) => {
                         const slot = slots[freeSlot];
                         const scale = Math.max(slot.width / img.width, slot.height / img.height);
-                        
                         let clipPath = null;
-                        if(currentLayout !== 'full') {
-                            clipPath = new fabric.Rect({ left: slot.left, top: slot.top, width: slot.width, height: slot.height, absolutePositioned: true });
-                        }
+                        if(currentLayout !== 'full') { clipPath = new fabric.Rect({ left: slot.left, top: slot.top, width: slot.width, height: slot.height, absolutePositioned: true }); }
 
                         img.set({ 
                             scaleX: scale, scaleY: scale, originX: 'left', originY: 'top',
@@ -526,7 +529,6 @@
         function addPresetText(type) {
             let opts = { left: C_W / 2, top: C_H - 45, originX: 'center', originY: 'center', fontSize: 24, fill: '#000000', fontFamily: 'Noto Sans TC' };
             let textStr = '輸入文字...';
-
             switch(type) {
                 case 'normal': break;
                 case 'signature': textStr = 'With Love'; opts.fontFamily = 'Dancing Script'; opts.fontSize = 28; opts.left = C_W - 40; opts.top = C_H - 30; opts.originX = 'right'; opts.fill = '#1976d2'; break;
@@ -541,15 +543,36 @@
 
         function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); } }
         document.getElementById('fontFamily').addEventListener('change', async function(e) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { await document.fonts.load(`16px "${e.target.value}"`); obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); } });
-        function openLibrary() { openModal('libraryModal'); }
+
+        // 🚀 動態貼紙庫初始化
+        function initStickerLibrary() {
+            const bar = document.getElementById('stickerCategoryBar'); bar.innerHTML = '';
+            let isFirst = true;
+            for (const category in STICKER_DB) {
+                const btn = document.createElement('button');
+                btn.className = `layout-btn px-4 py-1.5 rounded-full text-xs font-medium transition border ${isFirst ? 'border-black bg-black text-white' : 'border-gray-200 text-gray-600 bg-white hover:bg-gray-50'}`;
+                btn.innerText = category;
+                btn.onclick = () => renderStickers(category, btn);
+                bar.appendChild(btn);
+                if (isFirst) { renderStickers(category, btn); isFirst = false; }
+            }
+        }
+        function renderStickers(category, activeBtn) {
+            const buttons = document.getElementById('stickerCategoryBar').children;
+            for(let btn of buttons) { btn.className = "layout-btn px-4 py-1.5 rounded-full text-xs font-medium transition border border-gray-200 text-gray-600 bg-white hover:bg-gray-50"; }
+            activeBtn.className = "layout-btn px-4 py-1.5 rounded-full text-xs font-medium transition border border-black bg-black text-white";
+            const grid = document.getElementById('stickerGrid'); grid.innerHTML = '';
+            STICKER_DB[category].forEach(url => { grid.innerHTML += `<img onclick="addSticker('${url}')" src="${url}" class="w-full aspect-square object-contain bg-white border border-gray-200 rounded-xl p-2 cursor-pointer hover:-translate-y-1 hover:shadow-md transition shadow-sm">`; });
+        }
+        function openLibrary() { 
+            if (document.getElementById('stickerCategoryBar').children.length === 0) { initStickerLibrary(); }
+            openModal('libraryModal'); 
+        }
         function addSticker(url) { closeModal('libraryModal'); fabric.Image.fromURL(url, (img) => { img.set({ scaleX: 0.25, scaleY: 0.25, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2, isSticker: true }); canvas.add(img); canvas.setActiveObject(img); sortLayers(); }); }
 
         function addFrame(url) {
             closeModal('frameModal'); removeFrame();
-            fabric.Image.fromURL(url, (img) => { 
-                img.set({ scaleX: C_W/img.width, scaleY: C_H/img.height, left: 0, top: 0, selectable: false, evented: false, isFrame: true }); 
-                canvas.add(img); switchLayout('full'); sortLayers(); 
-            });
+            fabric.Image.fromURL(url, (img) => { img.set({ scaleX: C_W/img.width, scaleY: C_H/img.height, left: 0, top: 0, selectable: false, evented: false, isFrame: true }); canvas.add(img); switchLayout('full'); sortLayers(); });
         }
         function removeFrame() { const frames = canvas.getObjects().filter(o => o.isFrame); frames.forEach(f => canvas.remove(f)); canvas.requestRenderAll(); }
 
@@ -582,96 +605,61 @@
         }
 
         function exportCanvas() {
-            if (safeZoneRect) safeZoneRect.set('opacity', 0);
-            guideLines.forEach(l => l.set('opacity', 0));
+            if (safeZoneRect) safeZoneRect.set('opacity', 0); guideLines.forEach(l => l.set('opacity', 0));
             canvas.discardActiveObject(); canvas.requestRenderAll();
             const base64 = canvas.toDataURL({ format: 'png', multiplier: 3 });
-            if (safeZoneRect) safeZoneRect.set('opacity', 1);
-            canvas.requestRenderAll();
+            if (safeZoneRect) safeZoneRect.set('opacity', 1); canvas.requestRenderAll();
             return base64;
         }
 
-        // 🚀 智慧防呆：按下總覽前的攔截檢查
         function openGalleryCheck() {
             if (photoCart.length >= expectedPhotos && editingIndex === -1) { openGallery(); return; }
-
             const hasDesign = canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length > 0;
             if (hasDesign) {
                 if (editingIndex === -1) {
-                    if (confirm("畫布上有尚未存檔的設計！\n\n點【確定】幫您存檔並開啟總覽\n點【取消】放棄目前畫布，直接看總覽")) {
-                        saveAndNext(true); return;
-                    }
+                    if (confirm("畫布上有尚未存檔的設計！\n\n點【確定】幫您存檔並開啟總覽\n點【取消】放棄目前畫布，直接看總覽")) { saveAndNext(true); return; }
                 } else {
-                    if (confirm("您正在修改這張照片！\n\n點【確定】儲存修改並開啟總覽\n點【取消】放棄修改，直接開啟總覽")) {
-                        saveAndNext(true); return;
-                    } else {
-                        editingIndex = -1; clearCanvas(true);
-                    }
+                    if (confirm("您正在修改這張照片！\n\n點【確定】儲存修改並開啟總覽\n點【取消】放棄修改，直接開啟總覽")) { saveAndNext(true); return; } 
+                    else { editingIndex = -1; clearCanvas(true); }
                 }
             }
             openGallery();
         }
 
-        // 🚀 存檔並加入時光機 (支援單純存檔 or 存檔後打開總覽)
         async function saveAndNext(forceOpenGallery = false) {
             if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("請先加入照片或設計喔！"); return; }
             if (isPreviewMode) { openModal('previewDoneModal'); return; }
             
             showLoading("儲存設計中...");
-            
             setTimeout(() => {
-                const currentData = { 
-                    base64: exportCanvas(), 
-                    json: canvas.toJSON(['isUserImage', 'isFrame', 'isSticker', 'slotIndex']),
-                    layout: currentLayout
-                };
-
+                const currentData = { base64: exportCanvas(), json: canvas.toJSON(['isUserImage', 'isFrame', 'isSticker', 'slotIndex']), layout: currentLayout };
                 if (editingIndex >= 0) {
-                    // 更新舊的
-                    photoCart[editingIndex] = currentData;
-                    editingIndex = -1; hideLoading(); openGallery(); 
+                    photoCart[editingIndex] = currentData; editingIndex = -1; hideLoading(); openGallery(); 
                 } else {
-                    // 加入新的
-                    photoCart.push(currentData);
-                    hideLoading(); updateProgressUI();
-                    
-                    if (photoCart.length < expectedPhotos) {
-                        clearCanvas(true); 
-                        if (forceOpenGallery) openGallery();
-                    } else {
-                        openGallery(); // 滿了自動打開總覽
-                    }
+                    photoCart.push(currentData); hideLoading(); updateProgressUI();
+                    if (photoCart.length < expectedPhotos) { clearCanvas(true); if (forceOpenGallery) openGallery(); } 
+                    else { openGallery(); }
                 }
             }, 100);
         }
 
-        // 🚀 自動洗滿：不自動上傳，只填滿並打開總覽
         function batchDuplicate() {
             if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("請先設計好要洗的照片！"); return; }
-            const blanks = expectedPhotos - photoCart.length - 1; 
-            if (blanks < 0) return;
+            const blanks = expectedPhotos - photoCart.length - 1; if (blanks < 0) return;
             
             showLoading("正在自動洗滿剩餘空位...");
-            
             setTimeout(() => {
-                const base64 = exportCanvas();
-                const json = canvas.toJSON(['isUserImage', 'isFrame', 'isSticker', 'slotIndex']);
-                const layout = currentLayout;
+                const base64 = exportCanvas(); const json = canvas.toJSON(['isUserImage', 'isFrame', 'isSticker', 'slotIndex']); const layout = currentLayout;
                 const currentData = { base64, json, layout };
 
-                // 1. 先把畫布上的存進去
                 if (editingIndex >= 0) { photoCart[editingIndex] = currentData; editingIndex = -1; } 
                 else { photoCart.push(currentData); }
 
-                // 2. 複製剩下的空位
                 for (let i = 0; i < blanks; i++) { photoCart.push({ base64, json, layout }); }
-                
-                clearCanvas(true); updateProgressUI(); hideLoading();
-                openGallery(); // 洗完直接打開總覽讓客人看成果
+                clearCanvas(true); updateProgressUI(); hideLoading(); openGallery(); 
             }, 100);
         }
 
-        // 🚀 設計總覽 UI
         function openGallery() {
             const grid = document.getElementById('galleryGrid'); grid.innerHTML = '';
             document.getElementById('galleryCount').innerText = `${photoCart.length} / ${expectedPhotos}`;
@@ -690,13 +678,11 @@
                 </div>`;
             });
             
-            if (photoCart.length >= expectedPhotos && !isPreviewMode) {
-                document.getElementById('gallerySubmitBtn').classList.remove('hidden');
-            } else { document.getElementById('gallerySubmitBtn').classList.add('hidden'); }
+            if (photoCart.length >= expectedPhotos && !isPreviewMode) { document.getElementById('gallerySubmitBtn').classList.remove('hidden'); } 
+            else { document.getElementById('gallerySubmitBtn').classList.add('hidden'); }
             openModal('galleryModal');
         }
 
-        // 🚀 時光機：刪除與還原
         function deleteSavedPhoto(index) {
             if(confirm('確定要刪除這張設計嗎？')) {
                 photoCart.splice(index, 1);
@@ -707,14 +693,10 @@
         }
 
         function editSavedPhoto(index) {
-            editingIndex = index;
-            const data = photoCart[index];
-            showLoading("載入設計中...");
-            
+            editingIndex = index; const data = photoCart[index]; showLoading("載入設計中...");
             switchLayout(data.layout);
             canvas.loadFromJSON(data.json, function() {
-                drawOverlay(); sortLayers();
-                closeModal('galleryModal'); hideLoading(); updateProgressUI(); 
+                drawOverlay(); sortLayers(); closeModal('galleryModal'); hideLoading(); updateProgressUI(); 
             });
         }
 
