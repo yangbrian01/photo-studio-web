@@ -79,13 +79,11 @@
             </div>
 
             <div class="bg-gray-100/50 py-8 relative flex flex-col items-center border-b border-gray-50">
-                
                 <div class="mb-4">
                     <span class="text-[10px] text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100 shadow-sm flex items-center gap-1.5 tracking-widest font-light">
                         <i class="fa-solid fa-triangle-exclamation"></i> 貼心提醒：請將重要文字與人臉放在紅色虛線內
                     </span>
                 </div>
-
                 <div class="relative">
                     <button onclick="toggleLayout()" class="absolute -top-3 -right-3 z-20 bg-white shadow-md border border-gray-100 px-3 py-1.5 rounded-full text-[10px] font-medium tracking-wide text-gray-600 hover:text-black transition flex items-center gap-1.5">
                         <i class="fa-solid fa-expand"></i> <span id="layoutText">目前: 白框</span>
@@ -139,6 +137,7 @@
                         <button onclick="applyFilter('Film', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 sepia-[.3] contrast-125"><span class="text-[10px] font-light">底片感</span></button>
                         <button onclick="applyFilter('Vintage', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: sepia(1);"><span class="text-[10px] font-light">即可拍</span></button>
                         <button onclick="applyFilter('Fresh', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: saturate(1.5);"><span class="text-[10px] font-light">清新</span></button>
+                        <button onclick="applyFilter('Mono', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: grayscale(1);"><span class="text-[10px] font-light">黑白</span></button>
                     </div>
                 </div>
 
@@ -267,7 +266,7 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaCLSapAY7-odkPz8f8Vct843Ub001UGVmj92dckJtOkCieCa7iDWvysf5BwXmM_Bo/exec";
         let canvas, overlayFrameGroup, safeZoneRect;
-        let guideLines = []; // 存放粉紅對齊線
+        let guideLines = []; 
         const C_W = 300, C_H = 456, P_LEFT = 18, P_TOP = 18, P_WIDTH = 264, P_HEIGHT = 338; 
         
         let currentLayout = 'polaroid';
@@ -325,8 +324,7 @@
         function unlockStep2() {
             document.getElementById('step1-container').classList.add('hidden');
             document.getElementById('step2-container').classList.remove('hidden');
-            updateProgressUI();
-            setTimeout(() => { if (!canvas) initCanvas(); }, 50);
+            updateProgressUI(); setTimeout(() => { if (!canvas) initCanvas(); }, 50);
         }
 
         function updateProgressUI() {
@@ -355,28 +353,23 @@
             });
 
             fabric.Object.prototype.set({ transparentCorners: false, cornerColor: '#fff', borderColor: '#000', cornerStrokeColor: '#000', cornerSize: 12 });
-            canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection); canvas.on('selection:cleared', () => document.getElementById('objectTools').classList.add('hidden'));
             
-            // 🚀 建立安全出血虛線 (往內縮 12px)
             safeZoneRect = new fabric.Rect({
                 left: 12, top: 12, width: C_W - 24, height: C_H - 24,
-                fill: 'transparent', stroke: 'rgba(239, 68, 68, 0.6)', strokeWidth: 1.5, strokeDashArray: [6, 6],
-                selectable: false, evented: false, id: 'safeZone'
+                fill: 'transparent', stroke: 'rgba(239, 68, 68, 0.6)', strokeWidth: 1.5, strokeDashArray: [6, 6], selectable: false, evented: false, id: 'safeZone'
             });
             canvas.add(safeZoneRect);
 
             drawOverlay(); 
-            initSnapping(); // 啟動磁吸對齊引擎
+            initSnapping(); 
+
+            canvas.on('selection:created', onSelection); canvas.on('selection:updated', onSelection); canvas.on('selection:cleared', () => document.getElementById('objectTools').classList.add('hidden'));
         }
 
-        // 🚀 Canva 級別的「智慧對齊線」引擎
-        function clearGuidelines() {
-            guideLines.forEach(line => canvas.remove(line)); guideLines = [];
-        }
+        function clearGuidelines() { guideLines.forEach(line => canvas.remove(line)); guideLines = []; }
 
         function initSnapping() {
-            const snapZone = 12; // 磁吸範圍
-            const snapColor = '#ec4899'; // 粉紅色輔助線
+            const snapZone = 12; const snapColor = '#ec4899';
 
             canvas.on('object:moving', function(e) {
                 clearGuidelines();
@@ -385,25 +378,20 @@
 
                 const objCenter = obj.getCenterPoint();
                 let snapX = null, snapY = null;
+                let targetLinesX = [canvas.width / 2]; let targetLinesY = [canvas.height / 2];
 
-                // 畫布正中心
-                let targetLinesX = [canvas.width / 2];
-                let targetLinesY = [canvas.height / 2];
-
-                // 加上所有照片的中心點
                 canvas.getObjects().filter(o => o.isUserImage).forEach(img => {
-                    const imgCenter = img.getCenterPoint();
-                    targetLinesX.push(imgCenter.x); targetLinesY.push(imgCenter.y);
+                    const imgCenter = img.getCenterPoint(); targetLinesX.push(imgCenter.x); targetLinesY.push(imgCenter.y);
                 });
 
-                for (let x of targetLinesX) {
+                for (let x of [...new Set(targetLinesX)]) {
                     if (Math.abs(objCenter.x - x) < snapZone) {
                         snapX = x;
                         let line = new fabric.Line([x, 0, x, canvas.height], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 });
                         guideLines.push(line); canvas.add(line); break; 
                     }
                 }
-                for (let y of targetLinesY) {
+                for (let y of [...new Set(targetLinesY)]) {
                     if (Math.abs(objCenter.y - y) < snapZone) {
                         snapY = y;
                         let line = new fabric.Line([0, y, canvas.width, y], { stroke: snapColor, strokeWidth: 1, strokeDashArray: [4, 4], selectable: false, evented: false, opacity: 0.8 });
@@ -415,10 +403,9 @@
                     obj.setPositionByOrigin(new fabric.Point(snapX !== null ? snapX : objCenter.x, snapY !== null ? snapY : objCenter.y), 'center', 'center');
                     obj.setCoords(); 
                 }
-
-                guideLines.forEach(l => canvas.bringToFront(l));
-                if (overlayFrameGroup) canvas.bringToFront(overlayFrameGroup); 
-                if (safeZoneRect) canvas.bringToFront(safeZoneRect);
+                
+                // 🛑 這裡就是剛剛的 Bug，不要單獨把遮罩拉上來，直接呼叫完整的排序！
+                sortLayers(); 
             });
 
             canvas.on('mouse:up', clearGuidelines); canvas.on('object:modified', clearGuidelines);
@@ -463,14 +450,14 @@
             drawOverlay();
         }
 
+        // 🚀 嚴格的圖層排序系統 (解決遮擋 Bug)
         function sortLayers() {
             canvas.getObjects().filter(o => o.isFrame).forEach(o => canvas.sendToBack(o));
             if (overlayFrameGroup) canvas.bringToFront(overlayFrameGroup);
             canvas.getObjects().filter(o => o.isSticker).forEach(o => canvas.bringToFront(o));
             canvas.getObjects().filter(o => o.type === 'i-text').forEach(o => canvas.bringToFront(o));
-            // 永遠把紅虛線放最上層
             if (safeZoneRect) canvas.bringToFront(safeZoneRect);
-            canvas.requestRenderAll();
+            guideLines.forEach(l => canvas.bringToFront(l)); 
         }
 
         function onSelection() {
@@ -552,7 +539,10 @@
 
         function addFrame(url) {
             closeModal('frameModal'); removeFrame();
-            fabric.Image.fromURL(url, (img) => { img.set({ scaleX: C_W/img.width, scaleY: C_H/img.height, left: 0, top: 0, selectable: false, evented: false, isFrame: true }); canvas.add(img); switchLayout('full'); sortLayers(); });
+            fabric.Image.fromURL(url, (img) => { 
+                img.set({ scaleX: C_W/img.width, scaleY: C_H/img.height, left: 0, top: 0, selectable: false, evented: false, isFrame: true }); 
+                canvas.add(img); switchLayout('full'); sortLayers(); 
+            });
         }
         function removeFrame() { const frames = canvas.getObjects().filter(o => o.isFrame); frames.forEach(f => canvas.remove(f)); canvas.requestRenderAll(); }
 
@@ -581,7 +571,7 @@
         function deleteObj() { const obj = canvas.getActiveObject(); if(obj) { canvas.remove(obj); canvas.discardActiveObject(); document.getElementById('objectTools').classList.add('hidden'); } }
         function clearCanvas() { if(confirm("確定重置當前版面？")) { const objects = canvas.getObjects().filter(o => o.id !== 'overlayFrame' && o.id !== 'safeZone'); objects.forEach(o => canvas.remove(o)); document.querySelectorAll('.filter-item').forEach(b => b.classList.remove('active')); document.querySelector('.filter-item').classList.add('active'); } }
 
-        // 🚀 隱形輸出黑科技：匯出時瞬間關閉安全線與對齊線
+        // 🚀 隱形輸出黑科技
         function exportCanvas() {
             if (safeZoneRect) safeZoneRect.set('opacity', 0);
             guideLines.forEach(l => l.set('opacity', 0));
