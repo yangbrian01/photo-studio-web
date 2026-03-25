@@ -137,6 +137,7 @@
                         <button onclick="applyFilter('Film', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5 sepia-[.3] contrast-125"><span class="text-[10px] font-light">底片感</span></button>
                         <button onclick="applyFilter('Vintage', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: sepia(1);"><span class="text-[10px] font-light">即可拍</span></button>
                         <button onclick="applyFilter('Fresh', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: saturate(1.5);"><span class="text-[10px] font-light">清新</span></button>
+                        <button onclick="applyFilter('Mono', this)" class="filter-item text-center snap-center"><img src="https://i.imgur.com/7bA7y6P.png" class="w-full h-10 object-cover rounded mb-1.5" style="filter: grayscale(1);"><span class="text-[10px] font-light">黑白</span></button>
                     </div>
                 </div>
 
@@ -194,8 +195,7 @@
                 <div id="galleryContainer" class="grid grid-cols-2 gap-4"></div>
             </div>
         </div>
-        
-        </div>
+    </div>
 
     <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center hidden fade-in backdrop-blur-sm">
         <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm w-full mx-4 text-center">
@@ -273,7 +273,6 @@
 
         const PREMIUM_COLORS = ['#000000', '#595959', '#ffffff', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#1976d2', '#64b5f6', '#ffd700'];
 
-        // 🚀 Loading 系統
         function showLoading(text) {
             document.getElementById('loadingText').innerText = text;
             document.getElementById('loadingOverlay').classList.remove('hidden');
@@ -312,12 +311,8 @@
                             gallery.innerHTML += `<div class="bg-gray-50 rounded-xl p-2 border border-gray-100 shadow-sm flex flex-col items-center justify-center min-h-[150px]"><img src="${displayUrl}" class="w-full h-auto rounded shadow-sm object-cover" onerror="this.onerror=null; this.src='https://placehold.co/300x456/f3f4f6/a1a1aa?text=Loading...';"><p class="text-center text-[10px] text-gray-400 mt-2 font-light">第 ${index+1} 張</p></div>`;
                         });
                     }
-                } else { 
-                    alert(data.message);
-                }
-            } catch (error) { 
-                alert("驗證失敗，請檢查網路連線。"); 
-            }
+                } else { alert(data.message); }
+            } catch (error) { alert("驗證失敗，請檢查網路連線。"); }
             hideLoading();
         }
 
@@ -329,17 +324,42 @@
             updateProgressUI(); setTimeout(() => { if (!canvas) initCanvas(); }, 50);
         }
 
+        // 🚀 終極防呆：到最後一張時，洗照片按鈕反白不可按
         function updateProgressUI() {
             const current = photoCart.length + 1;
             document.getElementById('progressText').innerText = isPreviewMode ? "體驗模式" : `第 ${current} / ${expectedPhotos} 張`;
-            const saveBtn = document.getElementById('saveNextBtn'); const batchBtn = document.getElementById('batchBtn');
+            const saveBtn = document.getElementById('saveNextBtn'); 
+            const batchBtn = document.getElementById('batchBtn');
+
+            // 先重置所有 class，避免衝突
+            saveBtn.className = "w-full bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md";
+            batchBtn.className = "w-1/2 bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md flex justify-center items-center gap-2";
 
             if (isPreviewMode) {
-                saveBtn.innerText = "預覽完成，前往綁定單號"; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
+                saveBtn.innerText = "預覽完成，前往綁定單號"; 
+                saveBtn.className = "w-full bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md";
+                batchBtn.classList.add('hidden');
             } else if (current > expectedPhotos) {
-                saveBtn.innerText = "確認並上傳所有設計"; saveBtn.classList.replace('bg-black', 'bg-blue-600'); saveBtn.classList.remove('w-1/2'); saveBtn.classList.add('w-full'); batchBtn.classList.add('hidden');
+                saveBtn.innerText = "確認並上傳所有設計"; 
+                saveBtn.className = "w-full bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md";
+                batchBtn.classList.add('hidden');
+            } else if (current === expectedPhotos) {
+                // 🛑 最後一張了，洗照片按鈕反白！
+                saveBtn.innerText = `存檔單張 (第 ${current} 張)`;
+                saveBtn.className = "w-1/2 bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md";
+                
+                batchBtn.classList.remove('hidden');
+                batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 無法批量`;
+                batchBtn.className = "w-1/2 bg-gray-200 text-gray-400 py-3.5 rounded-xl font-light tracking-widest transition text-sm shadow-sm flex justify-center items-center gap-2 cursor-not-allowed";
+                batchBtn.disabled = true;
             } else {
-                saveBtn.innerText = `存檔單張 (第 ${current} 張)`; saveBtn.classList.replace('bg-blue-600', 'bg-black'); saveBtn.classList.remove('w-full'); saveBtn.classList.add('w-1/2'); batchBtn.classList.remove('hidden'); batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 洗相片(剩 ${expectedPhotos - current + 1} 張)`;
+                saveBtn.innerText = `存檔單張 (第 ${current} 張)`; 
+                saveBtn.className = "w-1/2 bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md";
+                
+                batchBtn.classList.remove('hidden');
+                batchBtn.innerHTML = `<i class="fa-solid fa-copy"></i> 洗相片(剩 ${expectedPhotos - current + 1} 張)`;
+                batchBtn.className = "w-1/2 bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md flex justify-center items-center gap-2 cursor-pointer";
+                batchBtn.disabled = false;
             }
         }
 
@@ -594,11 +614,12 @@
 
         function batchDuplicate() {
             if (canvas.getObjects().filter(o => o.isUserImage || o.isFrame).length === 0) { alert("請先設計好要洗的照片！"); return; }
-            const remaining = expectedPhotos - photoCart.length; if (remaining <= 0) return;
+            const remaining = expectedPhotos - photoCart.length; 
+            // 🛑 如果只剩 1 張或更少，直接阻擋執行，因為沒有額度可以「批量」了
+            if (remaining <= 1) return; 
             
             showLoading("正在為您洗照片中...");
             
-            // 使用 setTimeout 讓 Loading 動畫有時間跑出來
             setTimeout(() => {
                 const base64 = exportCanvas();
                 for (let i = 0; i < remaining; i++) { photoCart.push(base64); }
