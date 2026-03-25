@@ -37,7 +37,12 @@
     </div>
 
     <div style="visibility: hidden; position: absolute; top: -9999px;">
-        <span style="font-family: 'Noto Serif TC';">預載</span><span style="font-family: 'Ma Shan Zheng';">預載</span><span style="font-family: 'Zhi Mang Xing';">預載</span><span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span><span style="font-family: 'ZCOOL KuaiLe';">預載</span><span style="font-family: 'Special Elite';">預載</span><span style="font-family: 'Permanent Marker';">預載</span><span style="font-family: 'Playfair Display';">預載</span><span style="font-family: 'Dancing Script';">預載</span><span style="font-family: 'Pacifico';">預載</span><span style="font-family: 'Press Start 2P';">預載</span><span style="font-family: 'Righteous';">預載</span>
+        <span style="font-family: 'Noto Serif TC';">預載</span><span style="font-family: 'Ma Shan Zheng';">預載</span>
+        <span style="font-family: 'Zhi Mang Xing';">預載</span><span style="font-family: 'ZCOOL QingKe HuangYou';">預載</span>
+        <span style="font-family: 'ZCOOL KuaiLe';">預載</span><span style="font-family: 'Special Elite';">預載</span>
+        <span style="font-family: 'Permanent Marker';">預載</span><span style="font-family: 'Playfair Display';">預載</span>
+        <span style="font-family: 'Dancing Script';">預載</span><span style="font-family: 'Pacifico';">預載</span>
+        <span style="font-family: 'Press Start 2P';">預載</span><span style="font-family: 'Righteous';">預載</span>
     </div>
 
     <div class="max-w-3xl mx-auto px-5">
@@ -64,7 +69,6 @@
         </div>
 
         <div id="step2-container" class="bg-white rounded-2xl shadow-sm border border-gray-100 hidden fade-in overflow-hidden relative">
-            
             <div class="bg-gray-900 text-white px-5 py-3 flex justify-between items-center text-sm font-light tracking-wider">
                 <span><i class="fa-solid fa-camera mr-2"></i>進度 <span id="progressText" class="text-blue-400 font-medium ml-1">1 / ?</span></span>
                 <button onclick="openGalleryCheck()" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1.5"><i class="fa-solid fa-images"></i> 設計總覽</button>
@@ -150,7 +154,7 @@
             
             <div class="px-5 py-4 bg-gray-50 border-t border-gray-200 flex gap-3">
                 <button id="saveNextBtn" onclick="saveAndNext()" class="w-1/2 bg-black text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-gray-800 transition text-sm shadow-md">
-                    存單張
+                    存檔單張
                 </button>
                 <button id="batchBtn" onclick="batchDuplicate()" class="w-1/2 bg-blue-600 text-white py-3.5 rounded-xl font-light tracking-widest hover:bg-blue-700 transition text-sm shadow-md flex justify-center items-center gap-2">
                     <i class="fa-solid fa-copy"></i> 自動洗滿
@@ -184,10 +188,7 @@
                 <h3 class="font-medium tracking-wide"><i class="fa-solid fa-images mr-2 text-blue-400"></i>設計總覽 (<span id="galleryCount">0</span>)</h3>
                 <button onclick="closeModal('galleryModal')" class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-white hover:bg-gray-700 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
-            <div id="galleryGrid" class="flex-1 overflow-y-auto p-4 grid grid-cols-2 md:grid-cols-3 gap-4 content-start">
-                </div>
-            
+            <div id="galleryGrid" class="flex-1 overflow-y-auto p-4 grid grid-cols-2 md:grid-cols-3 gap-4 content-start"></div>
             <div class="p-4 bg-black border-t border-gray-800 flex gap-3 pb-8">
                 <button onclick="closeModal('galleryModal')" class="w-1/2 bg-gray-800 text-white py-3.5 rounded-xl text-sm font-light tracking-widest hover:bg-gray-700 transition">繼續設計</button>
                 <button id="gallerySubmitBtn" onclick="executeUpload()" class="w-1/2 bg-blue-600 text-white py-3.5 rounded-xl text-sm font-light tracking-widest shadow-md hover:bg-blue-700 transition hidden">確認並上傳全部</button>
@@ -225,16 +226,13 @@
     <div id="libraryModal" class="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-end justify-center hidden backdrop-blur-sm">
         <div class="bg-white w-full max-w-md h-[50vh] rounded-t-3xl shadow-2xl flex flex-col slide-up">
             <div class="p-4 flex justify-between items-center border-b border-gray-100">
-                <h3 class="font-medium tracking-wide ml-2 text-gray-800"><i class="fa-solid fa-store text-pink-400 mr-2"></i>素材商店</h3>
+                <h3 class="font-medium tracking-wide ml-2 text-gray-800"><i class="fa-solid fa-store text-pink-400 mr-2"></i>專業素材庫</h3>
                 <button onclick="closeModal('libraryModal')" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="flex overflow-x-auto gap-2 p-3 border-b border-gray-50 filter-scroll" id="stickerCategoryBar">
-                </div>
-
+            <div class="flex overflow-x-auto gap-2 p-3 border-b border-gray-50 filter-scroll" id="stickerCategoryBar"></div>
             <div class="flex-1 overflow-y-auto p-4 bg-gray-50">
-                <div id="stickerGrid" class="grid grid-cols-4 gap-3 content-start">
-                    </div>
+                <div id="stickerGrid" class="grid grid-cols-4 gap-3 content-start"></div>
             </div>
         </div>
     </div>
@@ -277,26 +275,28 @@
 
         const PREMIUM_COLORS = ['#000000', '#595959', '#ffffff', '#a6a6a6', '#d9d9d9', '#6d4c41', '#a1887f', '#d7ccc8', '#faf0e6', '#ef5350', '#f48fb1', '#1976d2', '#64b5f6', '#ffd700'];
 
-        // 🚀 頂級無版權貼紙庫 (採用 Base64 內嵌高解析 SVG 向量圖)
+        // 🚀 老闆的專業貼紙資料庫 (請在此替換你的 Imgur 網址)
         const STICKER_DB = {
-            "🦉 專屬原創": [
-                // 這裡請換成你自己的原創透明底 PNG 網址！
+            "🦉 品牌原創貓頭鷹": [
                 "https://i.imgur.com/B9O6zF6.png",
                 "https://i.imgur.com/L1MhM2P.png",
                 "https://i.imgur.com/R3O2b9S.png"
             ],
-            "✨ 韓系閃星": [
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAgMEM1MCA0MCA2MCA1MCAxMDAgNTBDNjAgNTAgNTAgNjAgNTAgMTAwQzUwIDYwIDQwIDUwIDAgNTBDNDAgNTAgNTAgNDAgNTAgMFoiIGZpbGw9IiNmZmZmZmYiIGZpbHRlcj0iZHJvcC1zaGFkb3coMHB4IDBweCAycHggcmdiYSgwLDAsMCwwLjQpKSIvPjwvc3ZnPg==", // 發光白星
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAgMEM1MCA0MCA2MCA1MCAxMDAgNTBDNjAgNTAgNTAgNjAgNTAgMTAwQzUwIDYwIDQwIDUwIDAgNTBDNDAgNTAgNTAgNDAgNTAgMFoiIGZpbGw9IiMyMjIyMjIiLz48L3N2Zz4=", // 質感黑星
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBkPSJNNTAgMEM1MCA0MCA2MCA1MCAxMDAgNTBDNjAgNTAgNTAgNjAgNTAgMTAwQzUwIDYwIDQwIDUwIDAgNTBDNDAgNTAgNTAgNDAgNTAgMFoiIGZpbGw9IiNmZmQ3MDAiLz48L3N2Zz4=" // 復古金星
+            "🎀 緞帶與愛心 (請替換)": [
+                "https://placehold.co/200x200/ffe4e6/be185d?text=立體粉蝴蝶結\n(請替換網址)",
+                "https://placehold.co/200x200/f3f4f6/374151?text=黑色酷愛心\n(請替換網址)",
+                "https://placehold.co/200x200/e0f2fe/1d4ed8?text=泡泡愛心\n(請替換網址)",
+                "https://placehold.co/200x200/fef08a/a16207?text=緞帶邊框\n(請替換網址)"
             ],
-            "🤍 簡約線條": [
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNiI+PHBhdGggZD0iTTUwIDg1QzUwIDg1IDE1IDU1IDE1IDMwQzE1IDE1IDMwIDUgNDUgMTVDNTAgMTggNTAgMTggNTAgMThDNTAgMTggNTAgMTggNTUgMTVDNzAgNSA4NSAxNSA4NSAzMEM4NSA1NSA1MCA4NSA1MCA4NVoiIGZpbHRlcj0iZHJvcC1zaGFkb3coMHB4IDBweCAxcHggcmdiYSgwLDAsMCwwLjQpKSIvPjwvc3ZnPg==", // 白框愛心
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSJub25lIiBzdHJva2U9IiMyMjIyMjIiIHN0cm9rZS13aWR0aD0iNiI+PHBhdGggZD0iTTUwIDg1QzUwIDg1IDE1IDU1IDE1IDMwQzE1IDE1IDMwIDUgNDUgMTVDNTAgMTggNTAgMTggNTAgMThDNTAgMTggNTAgMTggNTUgMTVDNzAgNSA4NSAxNSA4NSAzMEM4NSA1NSA1MCA4NSA1MCA4NVoiLz48L3N2Zz4=" // 黑框愛心
+            "✨ 鐳射閃星 (請替換)": [
+                "https://placehold.co/200x200/f3f4f6/374151?text=鐳射碎星\n(請替換網址)",
+                "https://placehold.co/200x200/f3f4f6/374151?text=十字光芒\n(請替換網址)",
+                "https://placehold.co/200x200/f3f4f6/374151?text=彩色泡泡\n(請替換網址)"
             ],
-            "📌 質感紙膠帶": [
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNjAiPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iNjAiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC43KSIvPjwvc3ZnPg==", // 半透明白膠帶
-                "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgNjAiPjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iNjAiIGZpbGw9InJnYmEoMjAsMjAsMjAsMC44KSIvPjwvc3ZnPg=="  // 半透明黑膠帶
+            "💬 應援文字 (請替換)": [
+                "https://placehold.co/200x200/fce7f3/be185d?text=HAPPY\n(請替換網址)",
+                "https://placehold.co/200x200/fce7f3/be185d?text=LOVE\n(請替換網址)",
+                "https://placehold.co/200x200/fce7f3/be185d?text=生日快樂(韓文)\n(請替換網址)"
             ]
         };
 
@@ -514,7 +514,7 @@
         function setTextColor(hex) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { obj.set('fill', hex); canvas.requestRenderAll(); } }
         document.getElementById('fontFamily').addEventListener('change', async function(e) { const obj = canvas.getActiveObject(); if (obj && obj.type === 'i-text') { await document.fonts.load(`16px "${e.target.value}"`); obj.set('fontFamily', e.target.value); canvas.requestRenderAll(); } });
 
-        // 🚀 動態貼紙庫引擎
+        // 🚀 動態貼紙庫初始化
         function initStickerLibrary() {
             const bar = document.getElementById('stickerCategoryBar'); bar.innerHTML = '';
             let isFirst = true;
@@ -527,24 +527,26 @@
                 if (isFirst) { renderStickers(category, btn); isFirst = false; }
             }
         }
+
         function renderStickers(category, activeBtn) {
             const buttons = document.getElementById('stickerCategoryBar').children;
             for(let btn of buttons) { btn.className = "layout-btn px-4 py-1.5 rounded-full text-xs font-medium transition border border-gray-200 text-gray-600 bg-white hover:bg-gray-50"; }
             activeBtn.className = "layout-btn px-4 py-1.5 rounded-full text-xs font-medium transition border border-black bg-black text-white";
-            
             const grid = document.getElementById('stickerGrid'); grid.innerHTML = '';
+            
             STICKER_DB[category].forEach(url => { 
                 grid.innerHTML += `<img onclick="addSticker('${url}')" src="${url}" class="w-full aspect-square object-contain bg-white border border-gray-200 rounded-xl p-2 cursor-pointer hover:-translate-y-1 hover:shadow-md transition shadow-sm">`; 
             });
         }
+
         function openLibrary() { 
             if (document.getElementById('stickerCategoryBar').children.length === 0) { initStickerLibrary(); }
             openModal('libraryModal'); 
         }
+
         function addSticker(url) { 
             closeModal('libraryModal'); 
             fabric.Image.fromURL(url, (img) => { 
-                // 依據原始比例縮小
                 const scale = 80 / Math.max(img.width, img.height);
                 img.set({ scaleX: scale, scaleY: scale, originX: 'center', originY: 'center', left: C_W / 2, top: C_H / 2, isSticker: true }); 
                 canvas.add(img); canvas.setActiveObject(img); sortLayers(); 
@@ -586,12 +588,10 @@
         }
 
         function exportCanvas() {
-            if (safeZoneRect) safeZoneRect.set('opacity', 0);
-            guideLines.forEach(l => l.set('opacity', 0));
+            if (safeZoneRect) safeZoneRect.set('opacity', 0); guideLines.forEach(l => l.set('opacity', 0));
             canvas.discardActiveObject(); canvas.requestRenderAll();
             const base64 = canvas.toDataURL({ format: 'png', multiplier: 3 });
-            if (safeZoneRect) safeZoneRect.set('opacity', 1);
-            canvas.requestRenderAll();
+            if (safeZoneRect) safeZoneRect.set('opacity', 1); canvas.requestRenderAll();
             return base64;
         }
 
